@@ -1,0 +1,41 @@
+name: core-config
+version: "0.1"
+summary: Ubuntu Core Configuration
+description: |
+  Device configuration for Ubuntu Core.
+#icon: icons/verticals.png
+confinement: strict
+grade: stable
+base: core18
+
+apps:
+  run:
+    command: configurator
+    daemon: simple
+    plugs:
+      - network
+      - network-bind
+
+parts:
+  application:
+    plugin: go
+    go-importpath: github.com/CanonicalLtd/configurator
+    source: .
+    source-type: git
+    build-packages:
+      - gcc
+
+#  react:
+#    plugin: nil
+#    source: .
+#    build-packages:
+#      - nodejs
+#      - npm
+#    override-build: |
+#      yarn install
+#      yarn run build
+#      # npm install
+#      # npm run build
+#      # Install
+#      mkdir -p $SNAPCRAFT_PART_INSTALL/webapp/
+#      cp -r $SNAPCRAFT_PART_BUILD/webapp/build $SNAPCRAFT_PART_INSTALL/webapp/
