@@ -10,7 +10,7 @@ base: core18
 
 apps:
   run:
-    command: configurator
+    command: bin/run
     daemon: simple
     plugs:
       - network
@@ -25,17 +25,15 @@ parts:
     build-packages:
       - gcc
 
-#  react:
-#    plugin: nil
-#    source: .
-#    build-packages:
-#      - nodejs
-#      - npm
-#    override-build: |
-#      yarn install
-#      yarn run build
-#      # npm install
-#      # npm run build
-#      # Install
-#      mkdir -p $SNAPCRAFT_PART_INSTALL/webapp/
-#      cp -r $SNAPCRAFT_PART_BUILD/webapp/build $SNAPCRAFT_PART_INSTALL/webapp/
+  static:
+    source: static
+    plugin: dump
+    organize:
+      "*": /static/
+
+  bin:
+    source: snap/local
+    plugin: dump
+    organize:
+      "*": /bin/
+
