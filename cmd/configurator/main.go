@@ -1,7 +1,12 @@
+// Ubuntu Core Configuration
+// Copyright 2020 Canonical Ltd.  All rights reserved.
+
 package main
 
 import (
 	"github.com/CanonicalLtd/configurator/config"
+	"github.com/CanonicalLtd/configurator/datastore/memory"
+	"github.com/CanonicalLtd/configurator/service"
 	"github.com/CanonicalLtd/configurator/web"
 	"log"
 )
@@ -11,7 +16,9 @@ func main() {
 	settings := config.ParseArgs()
 
 	// Set up the dependency chain
-	srv := web.NewWebService(settings)
+	memorySrv := memory.NewStore()
+	authSrv := service.NewAuthService(memorySrv)
+	srv := web.NewWebService(settings, authSrv)
 
 	// Start the web service
 	log.Fatal(srv.Start())

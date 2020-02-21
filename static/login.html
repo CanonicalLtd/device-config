@@ -1,0 +1,26 @@
+{{ define "content" }}
+
+
+    <section class="row">
+        <div class="p-card--highlighted">
+            <h2>Login</h2>
+            <p class="u-no-padding--top p-heading--four">Login to configure the device.</p>
+
+            {{ if .Error }}
+                <div class="p-notification--negative">
+                    <p class="p-notification__response">
+                        <span class="p-notification__status">Error:</span>{{.Error}}
+                    </p>
+                </div>
+            {{ end}}
+
+            <form method="post">
+                <label for="macaddress">MAC Address:</label>
+                    <input name="macaddress" type="text" placeholder="enter the MAC address for the device">
+
+                <button type="submit" class="p-button--positive">Submit</button>
+            </form>
+        </div>
+    </section>
+
+{{ end }}

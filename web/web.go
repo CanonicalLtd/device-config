@@ -6,6 +6,7 @@ package web
 import (
 	"fmt"
 	"github.com/CanonicalLtd/configurator/config"
+	"github.com/CanonicalLtd/configurator/service"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -13,20 +14,22 @@ import (
 // Web implements the web service
 type Web struct {
 	Settings *config.Settings
-	//BoardSrv service.Board
+	Auth     service.AuthService
 }
 
 // NewWebService starts a new web service
-func NewWebService(settings *config.Settings) *Web {
+func NewWebService(settings *config.Settings, auth service.AuthService) *Web {
 	return &Web{
 		Settings: settings,
+		Auth:     auth,
 	}
 }
 
 // Start the web service
 func (srv Web) Start() error {
-	fmt.Printf("Starting service on port %s\n", srv.Settings.Port)
-	return http.ListenAndServe(srv.Settings.Port, srv.Router())
+	listenOn := fmt.Sprintf("%s:%s", srv.Settings.NetworkInterface, srv.Settings.Port)
+	fmt.Printf("Starting service on port %s\n", listenOn)
+	return http.ListenAndServe(listenOn, srv.Router())
 }
 
 // Router returns the application router
@@ -34,10 +37,9 @@ func (srv Web) Router() *mux.Router {
 	// Start the web service router
 	router := mux.NewRouter()
 
-	//router.Handle("/v1/boards", Middleware(http.HandlerFunc(srv.BoardsList))).Methods("GET")
-	//router.Handle("/v1/store/snaps/{snapName}", Middleware(http.HandlerFunc(srv.StoreSearchHandler))).Methods("POST")
-	//router.Handle("/v1/build", Middleware(http.HandlerFunc(srv.Build))).Methods("POST")
-	//router.Handle("/v1/build/fetch", Middleware(http.HandlerFunc(srv.GetLiveFSBuild))).Methods("POST")
+	router.Handle("/login", Middleware(http.HandlerFunc(srv.Login))).Methods("GET", "POST")
+	router.Handle("/network", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Network))).Methods("GET")
+	router.Handle("/time", Middleware(http.HandlerFunc(srv.Index))).Methods("GET")
 
 	// Serve the static path
 	//p := path.Join(srv.Settings.DocRoot, "/static/")

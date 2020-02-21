@@ -5,6 +5,7 @@ package config
 
 // Default settings
 const (
+	DefaultInterface     = "0.0.0.0"
 	DefaultPort          = "8888"
 	DefaultDocRoot       = "./static"
 	DefaultIndexTemplate = "index.html"
@@ -12,16 +13,18 @@ const (
 
 // Settings defines the application configuration
 type Settings struct {
-	Port          string
-	DocRoot       string
-	IndexTemplate string
+	NetworkInterface string
+	Port             string
+	DocRoot          string
+	IndexTemplate    string
 }
 
 // ParseArgs checks the environment variables
 func ParseArgs() *Settings {
 	return &Settings{
-		Port:          ":" + DefaultPort,
-		DocRoot:       DefaultDocRoot,
-		IndexTemplate: DefaultIndexTemplate,
+		NetworkInterface: DefaultInterface,
+		Port:             DefaultPort,
+		DocRoot:          DefaultDocRoot,
+		IndexTemplate:    DefaultIndexTemplate,
 	}
 }
