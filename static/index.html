@@ -1,9 +1,24 @@
 {{ define "content" }}
-<div class="p-strip--dark">
-    <div class="u-fixed-width">
-        <h2>Ubuntu Core Configuration</h2>
-        <p class="u-no-padding--top p-heading--four">Configure the Ubuntu Core device.</p>
+    <div class="p-strip--dark">
+        <div class="u-fixed-width">
+            <h2>Ubuntu Core Configuration</h2>
+            <p class="u-no-padding--top p-heading--four">Configure the Ubuntu Core device.</p>
+        </div>
     </div>
-</div>
+
+    {{ if not .Common.Username }}
+        <div class="row">
+            <p><a href="/login">Login</a> to configure the device.</p>
+        </div>
+    {{end}}
+
+    <div class="row">
+        <p>Use the device configuration tool to:</p>
+        <ul>
+            <li>Configure the network interface.</li>
+            <li>Configure the network proxy.</li>
+            <li>Configure the time server.</li>
+        </ul>
+    </div>
 
 {{ end }}

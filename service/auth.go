@@ -1,11 +1,10 @@
 package service
 
 import (
-	"bytes"
 	"fmt"
 	"github.com/CanonicalLtd/configurator/datastore"
 	"github.com/google/uuid"
-	"net"
+	"strings"
 )
 
 // AuthService is the interface for the authentication service
@@ -29,7 +28,7 @@ func NewAuthService(store datastore.DataStore) *Auth {
 // CreateSession creates a new session, validating the token
 func (auth *Auth) CreateSession(token string) (*datastore.Session, error) {
 	// Check the token against the MAC addresses
-	if err := checkMacAddress(token); err != nil {
+	if err := auth.checkMacAddress(token); err != nil {
 		return nil, err
 	}
 
@@ -47,18 +46,17 @@ func (auth *Auth) ValidateSession(username, sessionID string) (*datastore.Sessio
 	return auth.DataStore.GetSession(username, sessionID)
 }
 
-func checkMacAddress(token string) error {
-	interfaces, err := net.Interfaces()
+func (auth *Auth) checkMacAddress(token string) error {
+	// Get the hardware interfaces
+	interfaces, err := Interfaces()
 	if err != nil {
 		return err
 	}
 
-	for _, i := range interfaces {
-		if i.Flags&net.FlagUp != 0 && bytes.Compare(i.HardwareAddr, nil) != 0 {
-			// Checking against real addresses only
-			if i.HardwareAddr.String() == token {
-				return nil
-			}
+	// Check that we have a matching MAC address
+	for _, n := range interfaces {
+		if strings.EqualFold(n.MACAddress, token) {
+			return nil
 		}
 	}
 

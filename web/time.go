@@ -8,21 +8,21 @@ import (
 	"net/http"
 )
 
-type indexData struct {
+type timeData struct {
 	Common commonData
 }
 
-// Index is the front page of the web application
-func (srv Web) Index(w http.ResponseWriter, r *http.Request) {
-	data := indexData{commonData{Username: getUsername(r)}}
+// Network is the web page for configuring the network and proxy
+func (srv Web) Time(w http.ResponseWriter, r *http.Request) {
+	data := timeData{commonData{Username: getUsername(r)}}
 
-	t, err := srv.templates("index.html")
+	// Parse the templates
+	t, err := srv.templates("time.html")
 	if err != nil {
 		log.Printf("Error loading the application template: %v\n", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 	err = t.Execute(w, data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

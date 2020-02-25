@@ -6,10 +6,10 @@
             <h2>Login</h2>
             <p class="u-no-padding--top p-heading--four">Login to configure the device.</p>
 
-            {{ if .Error }}
+            {{ if .Common.Error }}
                 <div class="p-notification--negative">
                     <p class="p-notification__response">
-                        <span class="p-notification__status">Error:</span>{{.Error}}
+                        <span class="p-notification__status">Error:</span>{{.Common.Error}}
                     </p>
                 </div>
             {{ end}}

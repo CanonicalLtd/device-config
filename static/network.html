@@ -5,5 +5,40 @@
         </div>
     </section>
 
+    <section class="row">
+        {{ if .Common.Error }}
+            <div class="p-notification--negative">
+                <p class="p-notification__response">
+                    <span class="p-notification__status">Error:</span>{{.Common.Error}}
+                </p>
+            </div>
+        {{ end}}
+        <form method="post">
+            <label for="method">Method:</label>
+            <select name="method">
+                <option value="">--</option>
+                <option value="dhcp" {{if (eq .Method "dhcp")}}selected{{end}}>DHCP</option>
+                <option value="manual" {{if (eq .Method "manual")}}selected{{end}}>Manual</option>
+            </select>
+            <label for="method">Interface:</label>
+            <select name="interface" placeholder="select the interface to configure">
+                <option value="">--</option>
+                {{ range .Interfaces }}
+                    <option value="{{.}}">{{.}}</option>
+                {{end}}
+            </select>
+            <label for="dns">DNS:</label>
+            <input name="dns" type="text" placeholder="comma-separated list of the domain name servers" value="{{.DNS}}">
+
+            <label for="address">IPv4 address:</label>
+            <input name="address" type="text" placeholder="IPv4 address" value="{{.Address}}">
+            <label for="netmask">Subnet mask:</label>
+            <input name="netmask" type="text" placeholder="subnet mask" value="{{.Mask}}">
+            <label for="gateway">Gateway:</label>
+            <input name="gateway" type="text" placeholder="gateway address" value="{{.Gateway}}">
+
+            <button type="submit" class="p-button--positive">Submit</button>
+        </form>
+    </section>
 
 {{ end}}

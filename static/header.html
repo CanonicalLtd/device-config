@@ -16,7 +16,7 @@
           </span>
             <ul class="p-navigation__links" role="menu">
                 <li
-                        class="p-navigation__link {{ if .SlugNetwork }}is-selected{{ end }}"
+                        class="p-navigation__link {{/* if .SlugNetwork }}is-selected{{ end */}}"
                         role="menuitem"
                 >
                     <a href="/network">
@@ -24,12 +24,26 @@
                     </a>
                 </li>
                 <li
-                        class="p-navigation__link {{ if .SlugTime }}is-selected{{ end }}"
+                        class="p-navigation__link {{/* if .SlugTime }}is-selected{{ end */}}"
                         role="menuitem"
                 >
                     <a href="/time">
                         Time
                     </a>
+                </li>
+                <li
+                        class="p-navigation__link"
+                        role="menuitem"
+                >
+                    {{ if .Common.Username }}
+                        <a href="/logout">
+                            Logout
+                        </a>
+                    {{else}}
+                        <a href="/login" class="p-button--brand">
+                            Login
+                        </a>
+                    {{end}}
                 </li>
             </ul>
 
