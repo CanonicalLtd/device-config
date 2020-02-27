@@ -76,7 +76,11 @@ func (np *Netplan) Apply() error {
 
 // Store stores the updated network settings
 func (np *Netplan) Store(ethernet Ethernet) error {
-	np.deviceNetplan.Network.Ethernets = map[string]Ethernet{ethernet.Name: ethernet}
+	if np.deviceNetplan.Network.Ethernets == nil {
+		np.deviceNetplan.Network.Ethernets = map[string]Ethernet{ethernet.Name: ethernet}
+	} else {
+		np.deviceNetplan.Network.Ethernets[ethernet.Name] = ethernet
+	}
 
 	// Serialize the data to YAML
 	data, err := yaml.Marshal(np.deviceNetplan)

@@ -1,0 +1,83 @@
+
+
+// Main theme changes
+$color-brand: #11791e;
+$color-link: #111111;
+$color-accent: #2d2d2d;
+
+$button-text-color: #f7f7f7;
+
+
+@import 'node_modules/vanilla-framework/scss/build';
+
+/* no pesky blue border on buttons */
+button:focus {
+  outline:none !important;
+}
+
+.header {
+  background-image: url("/static/images/aubergine.png");
+}
+
+.header-slim {
+  background-color: #2d2d2d;
+  color: #ffffff;
+}
+
+.header-slim h1 {
+  font-size: large;
+  font-weight: 300;
+}
+
+
+#footer {
+  margin: 2em 0;
+  padding-top: 2em;
+  border-top: 1px solid #cccccc;
+}
+
+.footer p {
+  font-size: 16px;
+}
+
+.p-footer__link {
+  margin-right: 1rem;
+  position: relative;
+  color: #111;
+}
+
+.p-footer__link:visited {
+  color: #111;
+}
+
+.p-footer__links {
+  margin: 0;
+  padding: 0;
+}
+
+.p-footer__item {
+  font-size: 16px;
+  display: inline-block;
+}
+
+.p-footer__link:after {
+  content: "\00b7";
+  display: inline-block;
+  font-size: 1.5rem;
+  position: absolute;
+  right: -.75rem;
+}
+
+.p-footer__item:last-child a:after {
+  opacity: 0;
+}
+
+.p-navigation a, .p-navigation a:focus, .p-navigation a:hover, .p-navigation a:visited, .p-navigation .p-navigation__link>a {
+  color: #f7f7f7 !important;
+  font-size: 16px;
+  /*text-decoration: none;*/
+}
+
+fieldset :disabled {
+  background-color: #f7f7f7;
+}

@@ -4,59 +4,75 @@
 package web
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/CanonicalLtd/configurator/service"
+	"io"
 	"log"
 	"net/http"
 	"strings"
 )
 
-type networkData struct {
-	Method     string
-	Interface  string
-	Interfaces []string
-	DNS        string
-	Address    string
-	Mask       string
-	Gateway    string
-	Common     commonData
+// InterfaceData defines the configuration of an interface
+type InterfaceConfig struct {
+	Use         bool     `json:"use"`
+	Method      string   `json:"method"`
+	Interface   string   `json:"interface"`
+	NameServers []string `json:"nameServers"`
+	Address     string   `json:"address"`
+	Mask        string   `json:"mask"`
+	Gateway     string   `json:"gateway"`
 }
 
-// Network is the web page for configuring the network and proxy
+// Network is the API to get the network interface config
 func (srv Web) Network(w http.ResponseWriter, r *http.Request) {
-	data := networkData{Method: "", Interfaces: interfaces(), Common: commonData{Username: getUsername(r)}}
+	// Get the current netplan settings
+	netYAML := srv.Netplan.Current()
 
-	switch r.Method {
-	case http.MethodPost:
-		// Validate the settings
-		data = networkData{
-			Method:    r.FormValue("method"),
-			Interface: r.FormValue("interface"),
-			DNS:       r.FormValue("dns"),
-			Address:   r.FormValue("address"),
-			Mask:      r.FormValue("netmask"),
-			Gateway:   r.FormValue("gateway"),
-		}
-		ethernet, err := srv.formToNetplan(data)
-		if err != nil {
-			data.Common.Error = err.Error()
-
-			fmt.Println(data)
-
-			//srv.netplanToForm(&data)
-			srv.networkTemplate(w, data)
-			return
-		}
-
-		// Store the settings
-		srv.Netplan.Store(ethernet)
+	// Get the hardware interfaces
+	hardware, err := service.Interfaces()
+	if err != nil {
+		formatStandardResponse("interfaces", err.Error(), w)
+		return
 	}
 
-	// Set up the form from the current netplan config
-	srv.netplanToForm(&data)
+	// Decode the configuration for each hardware interface
+	interfaces := []InterfaceConfig{}
+	for _, iface := range hardware {
+		cfg := InterfaceConfig{Interface: iface.Name, Use: false}
 
-	// Display the web form
-	srv.networkTemplate(w, data)
+		// Get the current interface config
+		eth, ok := netYAML.Network.Ethernets[iface.Name]
+		if !ok {
+			// The interface is not configured
+			interfaces = append(interfaces, cfg)
+			continue
+		}
+
+		// Parse the config
+		cfg.Use = true
+		cfg.Gateway = eth.Gateway4
+		if len(eth.DHCP4) > 0 {
+			cfg.Method = "dhcp"
+		} else {
+			cfg.Method = "manual"
+		}
+		if eth.NameServers != nil {
+			cfg.NameServers = eth.NameServers["addresses"]
+		}
+		if eth.Addresses != nil {
+			addressPlusMask := strings.Split(eth.Addresses[0], "/")
+			cfg.Address = addressPlusMask[0]
+			if len(addressPlusMask) > 0 {
+				cfg.Mask = addressPlusMask[1]
+			}
+		}
+
+		interfaces = append(interfaces, cfg)
+	}
+
+	// Create the JSON response
+	formatNetworkResponse(interfaces, w)
 }
 
 func interfaces() []string {
@@ -70,83 +86,51 @@ func interfaces() []string {
 	return ifaces
 }
 
-func (srv Web) networkTemplate(w http.ResponseWriter, data networkData) {
-	// Parse the templates
-	t, err := srv.templates("network.html")
-	if err != nil {
-		log.Printf("Error loading the application template: %v\n", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	err = t.Execute(w, data)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-}
-
-func (srv Web) formToNetplan(data networkData) (service.Ethernet, error) {
-	if data.Method == "dhcp" {
-		return service.Ethernet{
-			Name:  data.Interface,
-			DHCP4: "yes",
-		}, nil
-	}
-
-	// Check the IP addresses
-	if !service.ValidateIP(data.Address) {
-		return service.Ethernet{}, fmt.Errorf("'address' is not a valid IP")
-	}
-
-	// Convert the comma-separated list into a slice and validate
-	nameServers := strings.Split(data.DNS, ",")
-	for _, ns := range nameServers {
-		if !service.ValidateIP(ns) {
-			return service.Ethernet{}, fmt.Errorf("'DNS' includes an valid IP")
-		}
-	}
-
-	address := data.Address
-	if len(data.Mask) > 0 {
-		address = fmt.Sprintf("%s/%s", data.Address, data.Mask)
-	}
-
-	eth := service.Ethernet{
-		Name:        data.Interface,
-		Addresses:   []string{address},
-		NameServers: map[string][]string{"addresses": nameServers},
-		Gateway4:    data.Gateway,
-	}
-	return eth, nil
-}
-
-func (srv Web) netplanToForm(data *networkData) {
-	// Get the current settings
-	netYAML := srv.Netplan.Current()
-
-	if len(netYAML.Network.Ethernets) == 0 {
-		// Just use the current settings
+// NetworkInterface is the API to store the network interface configuration
+func (srv Web) NetworkInterface(w http.ResponseWriter, r *http.Request) {
+	req := srv.decodeNetworkInterface(w, r)
+	if req == nil {
 		return
 	}
 
-	for k, eth := range netYAML.Network.Ethernets {
-		data.Interface = k
-		data.Gateway = eth.Gateway4
-		if len(eth.DHCP4) > 0 {
-			data.Method = "dhcp"
-		} else {
-			data.Method = "manual"
-		}
-		if eth.NameServers != nil {
-			data.DNS = strings.Join(eth.NameServers["addresses"], ",")
-		}
-		if eth.Addresses != nil {
-			addressPlusMask := strings.Split(eth.Addresses[0], "/")
-			data.Address = addressPlusMask[0]
-			if len(addressPlusMask) > 0 {
-				data.Mask = addressPlusMask[1]
-			}
-		}
+	// Encode the interface format into the netplan format
+	eth := service.Ethernet{}
+	eth.Name = req.Interface
+	if req.Method == "dhcp" {
+		eth.DHCP4 = "true"
+	} else {
+		eth.DHCP4 = ""
+		eth.NameServers = map[string][]string{"addresses": req.NameServers}
+		eth.Gateway4 = req.Gateway
 
-		break
+		addr := req.Address
+		if len(req.Mask) > 0 {
+			addr = fmt.Sprintf("%s/%s", req.Address, req.Mask)
+		}
+		eth.Addresses = []string{addr}
 	}
+
+	// Store the interface config
+	if err := srv.Netplan.Store(eth); err != nil {
+		formatStandardResponse("interface-store", err.Error(), w)
+		return
+	}
+	formatStandardResponse("", "", w)
+}
+
+func (srv Web) decodeNetworkInterface(w http.ResponseWriter, r *http.Request) *InterfaceConfig {
+	// Decode the JSON body
+	req := InterfaceConfig{}
+	err := json.NewDecoder(r.Body).Decode(&req)
+	switch {
+	// Check we have some data
+	case err == io.EOF:
+		formatStandardResponse("data", "No interface data supplied.", w)
+		return nil
+		// Check for parsing errors
+	case err != nil:
+		formatStandardResponse("decode-json", err.Error(), w)
+		return nil
+	}
+	return &req
 }

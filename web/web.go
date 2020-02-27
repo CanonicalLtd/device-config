@@ -39,9 +39,10 @@ func (srv Web) Router() *mux.Router {
 	// Start the web service router
 	router := mux.NewRouter()
 
-	router.Handle("/login", Middleware(http.HandlerFunc(srv.Login))).Methods("GET", "POST")
+	router.Handle("/v1/login", Middleware(http.HandlerFunc(srv.Login))).Methods("POST")
+	router.Handle("/v1/network", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Network))).Methods("GET")
+	router.Handle("/v1/network", srv.MiddlewareWithAuth(http.HandlerFunc(srv.NetworkInterface))).Methods("POST")
 	router.Handle("/logout", Middleware(http.HandlerFunc(srv.Logout))).Methods("GET")
-	router.Handle("/network", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Network))).Methods("GET", "POST")
 	router.Handle("/time", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Time))).Methods("GET")
 
 	// Serve the static path
@@ -51,6 +52,8 @@ func (srv Web) Router() *mux.Router {
 
 	// Default path is the index page
 	router.Handle("/", Middleware(http.HandlerFunc(srv.Index))).Methods("GET")
+	router.Handle("/login", Middleware(http.HandlerFunc(srv.Index))).Methods("GET")
+	router.Handle("/network", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
 	router.NotFoundHandler = Middleware(http.HandlerFunc(srv.Index))
 
 	return router
