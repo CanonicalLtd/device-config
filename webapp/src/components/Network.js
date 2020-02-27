@@ -168,7 +168,7 @@ class Network extends Component {
                                     <input name="mask" type="text" value={this.state.interface.mask} onChange={this.handleMaskChange}/>
                                     <label for={"gateway"}>{T('gateway')}:</label>
                                     <input name="gateway" type="text" value={this.state.interface.gateway} onChange={this.handleGatewayChange}/>
-                                    <button onClick={this.handleSave}>{T('save')}</button>
+                                    <button onClick={this.handleSave} className="p-button--positive">{T('save')}</button>
                                 </fieldset>
                             </form>
                             :

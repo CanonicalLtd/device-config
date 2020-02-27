@@ -19,7 +19,8 @@ func main() {
 	memorySrv := memory.NewStore()
 	netplanSrv := service.NewNetplan("/etc/netplan/configurator.yaml")
 	authSrv := service.NewAuthService(memorySrv)
-	srv := web.NewWebService(settings, authSrv, netplanSrv)
+	snapdClient := service.NewClientAdapter()
+	srv := web.NewWebService(settings, authSrv, netplanSrv, snapdClient)
 
 	// Start the web service
 	log.Fatal(srv.Start())

@@ -18,7 +18,16 @@ let service = {
 
     networkUpdate: (iface) => {
         return axios.post(constants.baseUrl + 'network', iface);
-    }
+    },
+
+    proxyGet: () => {
+        return axios.get(constants.baseUrl + 'proxy');
+    },
+
+    proxyUpdate: (iface) => {
+        return axios.post(constants.baseUrl + 'proxy', iface);
+    },
+
 }
 
 export default service

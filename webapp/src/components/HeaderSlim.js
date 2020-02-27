@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import {checkSession, T} from "./Utils";
 
 
-const links = ['network', 'time'];
+const links = ['network','proxy','time'];
 
 class HeaderSlim extends Component {
     constructor(props) {
@@ -37,7 +37,9 @@ class HeaderSlim extends Component {
                 <div className="p-navigation__banner row">
                     <div className="p-navigation__logo">
                         <div className="u-vertically-center">
-                            <img src="/static/images/logo.png" width="150px"  />
+                            <a href="/" className="p-navigation__link">
+                                <img src="/static/images/logo.png" width="150px"  />
+                            </a>
                         </div>
                     </div>
 

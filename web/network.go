@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"github.com/CanonicalLtd/configurator/service"
 	"io"
-	"log"
 	"net/http"
 	"strings"
 )

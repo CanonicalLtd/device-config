@@ -12,6 +12,7 @@ import api from './components/api'
 
 import createHistory from 'history/createBrowserHistory'
 import Network from "./components/Network";
+import Proxy from "./components/Proxy";
 const history = createHistory()
 
 class App extends Component {
@@ -21,6 +22,7 @@ class App extends Component {
         location: history.location,
         token: props.token || {},
         interfaces: [],
+        proxy: {},
     }
     this.refresh()
   }
@@ -39,7 +41,7 @@ class App extends Component {
         this.setState({interfaces: response.data.interfaces, message: ''})
     })
     .catch(e => {
-        this.setState({message: formatError(e.response), snaps: []});
+        this.setState({message: formatError(e.response)});
     })
   }
 
@@ -60,6 +62,12 @@ class App extends Component {
       }
   }
 
+  renderProxy(sectionId, subsection) {
+    if (!sectionId) {
+        return <Proxy />
+    }
+  }
+
   render() {
     const r = parseRoute()
     console.log(r)
@@ -73,6 +81,7 @@ class App extends Component {
             {r.section===''? <Index /> : ''}
             {r.section==='login'? this.renderLogin() : ''}
             {r.section==='network'? this.renderNetwork(r.sectionId, r.subsection) : ''}
+            {r.section==='proxy'? this.renderProxy(r.sectionId, r.subsection) : ''}
           </div>
 
           <Footer />

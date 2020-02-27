@@ -34,6 +34,12 @@ type NetworkResponse struct {
 	Interfaces []InterfaceConfig `json:"interfaces"`
 }
 
+// ProxyResponse the JSON response from a network call
+type ProxyResponse struct {
+	StandardResponse
+	Proxy interface{} `json:"proxy"`
+}
+
 // formatStandardResponse returns a JSON response from an API method, indicating success or failure
 func formatStandardResponse(code, message string, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", JSONHeader)
@@ -60,6 +66,15 @@ func formatLoginResponse(username, sessionID string, w http.ResponseWriter) {
 func formatNetworkResponse(interfaces []InterfaceConfig, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", JSONHeader)
 	response := NetworkResponse{StandardResponse{}, interfaces}
+
+	// Encode the response as JSON
+	encodeResponse(w, response)
+}
+
+// formatProxyResponse returns a JSON response from a login
+func formatProxyResponse(proxy interface{}, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", JSONHeader)
+	response := ProxyResponse{StandardResponse{}, proxy}
 
 	// Encode the response as JSON
 	encodeResponse(w, response)
