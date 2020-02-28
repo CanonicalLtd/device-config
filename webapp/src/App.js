@@ -21,28 +21,13 @@ class App extends Component {
     this.state = {
         location: history.location,
         token: props.token || {},
-        interfaces: [],
         proxy: {},
     }
-    this.refresh()
   }
 
   handleNavigation(location) {
     this.setState({ location: location })
     window.scrollTo(0, 0)
-  }
-
-  refresh() {
-      this.getNetworkConfig()
-  }
-
-  getNetworkConfig = () => {
-    api.networkGet().then(response => {
-        this.setState({interfaces: response.data.interfaces, message: ''})
-    })
-    .catch(e => {
-        this.setState({message: formatError(e.response)});
-    })
   }
 
   // Get the data that's conditional on the route
@@ -58,7 +43,7 @@ class App extends Component {
 
   renderNetwork(sectionId, subsection) {
       if (!sectionId) {
-          return <Network interfaces={this.state.interfaces} onRefresh={this.getNetworkConfig} />
+          return <Network />
       }
   }
 

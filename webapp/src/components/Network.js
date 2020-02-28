@@ -15,11 +15,30 @@ class Network extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            selected: '',
+            selected: null,
+            interfaces: [],
             interface: {},
             error: '',
             message: '',
         };
+    }
+
+    componentDidMount() {
+        this.getNetworkConfig()
+    }
+
+    getNetworkConfig = () => {
+        api.networkGet().then(response => {
+            this.setState({interfaces: response.data.interfaces, error: ''})
+            if ((!this.state.selected) && (response.data.interfaces.length > 0)) {
+
+                this.getInterface(response.data.interfaces[0].interface)
+                this.setState({selected: response.data.interfaces[0].interface})
+            }
+        })
+        .catch(e => {
+            this.setState({message: formatError(e.response)});
+        })
     }
 
     handleSelectTab = (e) => {
@@ -76,8 +95,8 @@ class Network extends Component {
 
         // Save the interface config
         api.networkUpdate(this.state.interface).then(response => {
+            this.getNetworkConfig()
             this.setState({message: T('interface-updated'), error: ''})
-            this.props.onRefresh()
         })
         .catch(e => {
             this.setState({error: formatError(e.response), message: ''});
@@ -85,7 +104,7 @@ class Network extends Component {
     }
 
     getInterface(iface) {
-        let matches = this.props.interfaces.filter(i => {
+        let matches = this.state.interfaces.filter(i => {
             return i.interface===iface
         })
         if (matches.length>0) {
@@ -132,7 +151,7 @@ class Network extends Component {
                     <div>
                         <nav className="p-tabs">
                             <ul className="p-tabs__list" role="tablist">
-                            {this.props.interfaces.map((iface) => {
+                            {this.state.interfaces.map((iface) => {
                                 let selected = "false"
                                 if (this.state.selected===iface.interface) {
                                     selected = "true"
@@ -177,9 +196,7 @@ class Network extends Component {
                     </div>
                 </section>
             </div>
-
         )
-
     }
 
 }

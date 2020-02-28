@@ -17,7 +17,7 @@ func main() {
 
 	// Set up the dependency chain
 	memorySrv := memory.NewStore()
-	netplanSrv := service.NewNetplan("/etc/netplan/configurator.yaml")
+	netplanSrv := service.NewNetplan()
 	authSrv := service.NewAuthService(memorySrv)
 	snapdClient := service.NewClientAdapter()
 	srv := web.NewWebService(settings, authSrv, netplanSrv, snapdClient)

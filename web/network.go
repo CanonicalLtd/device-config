@@ -48,30 +48,34 @@ func (srv Web) Network(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		// Parse the config
-		cfg.Use = true
-		cfg.Gateway = eth.Gateway4
-		if len(eth.DHCP4) > 0 {
-			cfg.Method = "dhcp"
-		} else {
-			cfg.Method = "manual"
-		}
-		if eth.NameServers != nil {
-			cfg.NameServers = eth.NameServers["addresses"]
-		}
-		if eth.Addresses != nil {
-			addressPlusMask := strings.Split(eth.Addresses[0], "/")
-			cfg.Address = addressPlusMask[0]
-			if len(addressPlusMask) > 0 {
-				cfg.Mask = addressPlusMask[1]
-			}
-		}
+		srv.decodeNetplanInterface(&cfg, eth)
 
 		interfaces = append(interfaces, cfg)
 	}
 
 	// Create the JSON response
 	formatNetworkResponse(interfaces, w)
+}
+
+func (srv Web) decodeNetplanInterface(cfg *InterfaceConfig, eth service.Ethernet) {
+	// Parse the config
+	cfg.Use = true
+	cfg.Gateway = eth.Gateway4
+	if len(eth.DHCP4) > 0 {
+		cfg.Method = "dhcp"
+	} else {
+		cfg.Method = "manual"
+	}
+	if eth.NameServers != nil {
+		cfg.NameServers = eth.NameServers["addresses"]
+	}
+	if eth.Addresses != nil {
+		addressPlusMask := strings.Split(eth.Addresses[0], "/")
+		cfg.Address = addressPlusMask[0]
+		if len(addressPlusMask) > 1 {
+			cfg.Mask = addressPlusMask[1]
+		}
+	}
 }
 
 func interfaces() []string {
@@ -92,6 +96,17 @@ func (srv Web) NetworkInterface(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	eth := srv.encodeNetplanInterface(req)
+
+	// Store the interface config
+	if err := srv.Netplan.Store(eth); err != nil {
+		formatStandardResponse("interface-store", err.Error(), w)
+		return
+	}
+	formatStandardResponse("", "", w)
+}
+
+func (srv Web) encodeNetplanInterface(req *InterfaceConfig) service.Ethernet {
 	// Encode the interface format into the netplan format
 	eth := service.Ethernet{}
 	eth.Name = req.Interface
@@ -108,13 +123,7 @@ func (srv Web) NetworkInterface(w http.ResponseWriter, r *http.Request) {
 		}
 		eth.Addresses = []string{addr}
 	}
-
-	// Store the interface config
-	if err := srv.Netplan.Store(eth); err != nil {
-		formatStandardResponse("interface-store", err.Error(), w)
-		return
-	}
-	formatStandardResponse("", "", w)
+	return eth
 }
 
 func (srv Web) decodeNetworkInterface(w http.ResponseWriter, r *http.Request) *InterfaceConfig {

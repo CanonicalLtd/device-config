@@ -4,7 +4,6 @@
 package web
 
 import (
-	"fmt"
 	"github.com/CanonicalLtd/configurator/datastore"
 	"log"
 	"net/http"
@@ -59,7 +58,6 @@ func (srv Web) MiddlewareWithAuth(inner http.Handler) http.Handler {
 
 		// Check that we have the session cookies and that they are valid
 		_, err := srv.AuthCheck(r)
-		fmt.Println("---", err)
 		if err != nil {
 			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return

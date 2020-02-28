@@ -4,11 +4,15 @@
 package service
 
 import (
+	"bufio"
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
+	"os"
 )
+
+const netplanFilePath = "/etc/netplan/config.yaml"
 
 // NetplanYAML defines the structure of the netplan YAML file
 type NetplanYAML struct {
@@ -44,12 +48,13 @@ type Netplan struct {
 }
 
 // NewNetplan creates a netplan object from a config file
-func NewNetplan(path string) *Netplan {
+func NewNetplan() *Netplan {
 	deviceNetplan := &NetplanYAML{Network: Network{Version: 2, Renderer: "networkd"}}
 
-	data, err := ioutil.ReadFile(path)
+	data, err := ioutil.ReadFile(netplanFilePath)
 	if err != nil {
 		// Cannot find the file, so set up an empty structure
+		log.Println("Error reading netplan config:", err)
 		return &Netplan{defaultNetplan()}
 	}
 
@@ -88,6 +93,17 @@ func (np *Netplan) Store(ethernet Ethernet) error {
 		return nil
 	}
 
+	// Write the YAML to the config file
+	f, err := os.Create(netplanFilePath)
+	if err != nil {
+		return err
+	}
+	w := bufio.NewWriter(f)
+	if _, err := w.Write(data); err != nil {
+		return err
+	}
+	w.Flush()
 	fmt.Println(string(data))
+
 	return nil
 }
