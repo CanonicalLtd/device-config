@@ -34,10 +34,16 @@ type NetworkResponse struct {
 	Interfaces []InterfaceConfig `json:"interfaces"`
 }
 
-// ProxyResponse the JSON response from a network call
+// ProxyResponse the JSON response from a proxy config call
 type ProxyResponse struct {
 	StandardResponse
 	Proxy interface{} `json:"proxy"`
+}
+
+// TimeResponse the JSON response from a time config call
+type TimeResponse struct {
+	StandardResponse
+	Time interface{} `json:"time"`
 }
 
 // formatStandardResponse returns a JSON response from an API method, indicating success or failure
@@ -62,7 +68,7 @@ func formatLoginResponse(username, sessionID string, w http.ResponseWriter) {
 	encodeResponse(w, response)
 }
 
-// formatNetworkResponse returns a JSON response from a login
+// formatNetworkResponse returns a JSON response from a network call
 func formatNetworkResponse(interfaces []InterfaceConfig, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", JSONHeader)
 	response := NetworkResponse{StandardResponse{}, interfaces}
@@ -71,10 +77,19 @@ func formatNetworkResponse(interfaces []InterfaceConfig, w http.ResponseWriter) 
 	encodeResponse(w, response)
 }
 
-// formatProxyResponse returns a JSON response from a login
+// formatProxyResponse returns a JSON response from a proxy call
 func formatProxyResponse(proxy interface{}, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", JSONHeader)
 	response := ProxyResponse{StandardResponse{}, proxy}
+
+	// Encode the response as JSON
+	encodeResponse(w, response)
+}
+
+// formatTimeResponse returns a JSON response from a time config call
+func formatTimeResponse(cfg interface{}, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", JSONHeader)
+	response := TimeResponse{StandardResponse{}, cfg}
 
 	// Encode the response as JSON
 	encodeResponse(w, response)

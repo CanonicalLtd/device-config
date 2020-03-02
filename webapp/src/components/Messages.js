@@ -27,7 +27,7 @@ export default {
     'method': 'Method',
     'network': 'Network',
     'network-config': 'Network Configuration',
-    'privacy': 'Data privacy',
+    'ntp': 'Synchronize system clock ',
     'proxy': 'Proxy',
     'proxy-config': 'Proxy Configuration',
     'proxy-help': 'IP address and port',
@@ -41,6 +41,8 @@ export default {
     'site-description4': `Configure network time server`,
     'subtitle': 'Configuration service for Ubuntu Core devices.',
     'time': 'Time',
+    'timezone': 'Time zone',
+    'time-config': 'Time Configuration',
     'title': 'Ubuntu Core Configuration',
     'use': 'Use the interface',
 }

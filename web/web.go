@@ -17,15 +17,17 @@ type Web struct {
 	Auth     service.AuthService
 	Netplan  service.NetplanService
 	Snapd    service.SnapdClient
+	TimeSrv  service.TimeService
 }
 
 // NewWebService starts a new web service
-func NewWebService(settings *config.Settings, auth service.AuthService, netplan service.NetplanService, snapd service.SnapdClient) *Web {
+func NewWebService(settings *config.Settings, auth service.AuthService, netplan service.NetplanService, snapd service.SnapdClient, t service.TimeService) *Web {
 	return &Web{
 		Settings: settings,
 		Auth:     auth,
 		Netplan:  netplan,
 		Snapd:    snapd,
+		TimeSrv:  t,
 	}
 }
 
@@ -46,6 +48,8 @@ func (srv Web) Router() *mux.Router {
 	router.Handle("/v1/network", srv.MiddlewareWithAuth(http.HandlerFunc(srv.NetworkInterface))).Methods("POST")
 	router.Handle("/v1/proxy", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Proxy))).Methods("GET")
 	router.Handle("/v1/proxy", srv.MiddlewareWithAuth(http.HandlerFunc(srv.ProxyUpdate))).Methods("POST")
+	router.Handle("/v1/time", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Time))).Methods("GET")
+	router.Handle("/v1/time", srv.MiddlewareWithAuth(http.HandlerFunc(srv.TimeConfig))).Methods("POST")
 	router.Handle("/logout", Middleware(http.HandlerFunc(srv.Logout))).Methods("GET")
 
 	// Serve the static path

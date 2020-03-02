@@ -20,7 +20,8 @@ func main() {
 	netplanSrv := service.NewNetplan()
 	authSrv := service.NewAuthService(memorySrv)
 	snapdClient := service.NewClientAdapter()
-	srv := web.NewWebService(settings, authSrv, netplanSrv, snapdClient)
+	timeSrv, _ := service.NewTime()
+	srv := web.NewWebService(settings, authSrv, netplanSrv, snapdClient, timeSrv)
 
 	// Start the web service
 	log.Fatal(srv.Start())

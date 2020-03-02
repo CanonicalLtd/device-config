@@ -7,12 +7,12 @@ import HeaderSlim from './components/HeaderSlim';
 import Index from './components/Index';
 import Footer from './components/Footer';
 import Login from './components/Login';
-import {parseRoute, formatError} from './components/Utils'
-import api from './components/api'
+import {parseRoute} from './components/Utils'
 
 import createHistory from 'history/createBrowserHistory'
 import Network from "./components/Network";
 import Proxy from "./components/Proxy";
+import Time from "./components/Time";
 const history = createHistory()
 
 class App extends Component {
@@ -53,6 +53,12 @@ class App extends Component {
     }
   }
 
+  renderTime(sectionId, subsection) {
+    if (!sectionId) {
+        return <Time />
+    }
+  }
+
   render() {
     const r = parseRoute()
     console.log(r)
@@ -67,6 +73,7 @@ class App extends Component {
             {r.section==='login'? this.renderLogin() : ''}
             {r.section==='network'? this.renderNetwork(r.sectionId, r.subsection) : ''}
             {r.section==='proxy'? this.renderProxy(r.sectionId, r.subsection) : ''}
+            {r.section==='time'? this.renderTime(r.sectionId, r.subsection) : ''}
           </div>
 
           <Footer />

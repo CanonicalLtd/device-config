@@ -116,14 +116,14 @@ class Network extends Component {
         if (this.state.interface.use) {
             return (
                 <div>
-                    <a href="#" className="p-button--base has-icon" onClick={this.handleUseChange}><img src="/static/images/checkbox_checked_16.png" /></a>
+                    <a href="#use" className="p-button--base has-icon" onClick={this.handleUseChange}><img src="/static/images/checkbox_checked_16.png" alt="checked" /></a>
                     <span>{T('use')}</span>
                 </div>
             )
         } else {
             return (
                 <div>
-                    <a href="#" className="p-button--base has-icon" onClick={this.handleUseChange}><img src="/static/images/checkbox_unchecked_16.png" /></a>
+                    <a href="#use" className="p-button--base has-icon" onClick={this.handleUseChange}><img src="/static/images/checkbox_unchecked_16.png" alt="unchecked"  /></a>
                     <span>{T('use')}</span>
                 </div>
             )

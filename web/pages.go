@@ -18,10 +18,6 @@ type commonData struct {
 func (srv Web) templates(name string) (*template.Template, error) {
 	// Parse the templates
 	p := filepath.Join(srv.Settings.DocRoot, name)
-	//pHeader := filepath.Join(srv.Settings.DocRoot, "header.html")
-	//pLayout := filepath.Join(srv.Settings.DocRoot, "layout.html")
-
-	//t, err := template.ParseFiles(pLayout, pHeader, p)
 	t, err := template.ParseFiles(p)
 	if err != nil {
 		log.Printf("Error loading the application template: %v\n", err)

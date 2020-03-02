@@ -28,6 +28,14 @@ let service = {
         return axios.post(constants.baseUrl + 'proxy', iface);
     },
 
+    timeGet: () => {
+        return axios.get(constants.baseUrl + 'time');
+    },
+
+    timeUpdate: (t) => {
+        return axios.post(constants.baseUrl + 'time', {ntp: t.ntp, time: t.time, timezone: t.timezone});
+    },
+
 }
 
 export default service

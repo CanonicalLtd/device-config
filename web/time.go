@@ -4,27 +4,54 @@
 package web
 
 import (
+	"encoding/json"
+	"io"
 	"log"
 	"net/http"
 )
 
-type timeData struct {
-	Common commonData
+// TimeConfig allows update of the time config
+type TimeConfig struct {
+	NTP      bool   `json:"ntp"`
+	Time     string `json:"time"`
+	Timezone string `json:"timezone"`
 }
 
-// Network is the web page for configuring the network and proxy
+// Time is the API for fetching the time config
 func (srv Web) Time(w http.ResponseWriter, r *http.Request) {
-	data := timeData{commonData{Username: getUsername(r)}}
+	t := srv.TimeSrv.Current()
 
-	// Parse the templates
-	t, err := srv.templates("time.html")
-	if err != nil {
-		log.Printf("Error loading the application template: %v\n", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	formatTimeResponse(t, w)
+}
+
+// TimeConfig is the API for configuring the time
+func (srv Web) TimeConfig(w http.ResponseWriter, r *http.Request) {
+	t := srv.decodeTimeConfig(w, r)
+	if t == nil {
 		return
 	}
-	err = t.Execute(w, data)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	log.Println("---", t)
+
+	if err := srv.TimeSrv.Apply(t.NTP, t.Timezone, t.Time); err != nil {
+		formatStandardResponse("time-config", err.Error(), w)
+		return
 	}
+	formatStandardResponse("", "", w)
+}
+
+func (srv Web) decodeTimeConfig(w http.ResponseWriter, r *http.Request) *TimeConfig {
+	// Decode the JSON body
+	req := TimeConfig{}
+	err := json.NewDecoder(r.Body).Decode(&req)
+	switch {
+	// Check we have some data
+	case err == io.EOF:
+		formatStandardResponse("data", "No time data supplied.", w)
+		return nil
+		// Check for parsing errors
+	case err != nil:
+		formatStandardResponse("decode-json", err.Error(), w)
+		return nil
+	}
+	return &req
 }
