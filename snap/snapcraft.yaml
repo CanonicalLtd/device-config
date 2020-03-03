@@ -19,7 +19,7 @@ apps:
 parts:
   application:
     plugin: go
-    go-importpath: github.com/CanonicalLtd/device-config
+    #go-importpath: github.com/CanonicalLtd/device-config
     source: .
     source-type: git
     build-packages:
