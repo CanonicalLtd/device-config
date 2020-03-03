@@ -7,6 +7,8 @@
 export default {
     'address': 'Address',
     'address-help': 'IP address of the interface',
+    'apply': 'Apply',
+    'apply-desc': 'Apply the current network configuration to the system. This may cause you to lose the connection to this configuration interface',
     'copyright': '© 2020 Canonical Ltd. Ubuntu and Canonical are registered trademarks of Canonical Ltd.',
     'dhcp': 'DHCP',
     'dns': 'Name servers (DNS)',
@@ -28,6 +30,7 @@ export default {
     'network': 'Network',
     'network-config': 'Network Configuration',
     'ntp': 'Synchronize system clock ',
+    'privacy': 'Privacy',
     'proxy': 'Proxy',
     'proxy-config': 'Proxy Configuration',
     'proxy-help': 'IP address and port',
@@ -43,6 +46,7 @@ export default {
     'time': 'Time',
     'timezone': 'Time zone',
     'time-config': 'Time Configuration',
+    'time-updated': 'Time configuration was updated successfully',
     'title': 'Ubuntu Core Configuration',
     'use': 'Use the interface',
 }

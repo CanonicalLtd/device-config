@@ -2,7 +2,7 @@ package service
 
 import (
 	"fmt"
-	"github.com/CanonicalLtd/configurator/datastore"
+	"github.com/CanonicalLtd/device-config/datastore"
 	"github.com/google/uuid"
 	"strings"
 )

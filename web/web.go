@@ -5,8 +5,8 @@ package web
 
 import (
 	"fmt"
-	"github.com/CanonicalLtd/configurator/config"
-	"github.com/CanonicalLtd/configurator/service"
+	"github.com/CanonicalLtd/device-config/config"
+	"github.com/CanonicalLtd/device-config/service"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -46,6 +46,7 @@ func (srv Web) Router() *mux.Router {
 	router.Handle("/v1/login", Middleware(http.HandlerFunc(srv.Login))).Methods("POST")
 	router.Handle("/v1/network", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Network))).Methods("GET")
 	router.Handle("/v1/network", srv.MiddlewareWithAuth(http.HandlerFunc(srv.NetworkInterface))).Methods("POST")
+	router.Handle("/v1/network/apply", srv.MiddlewareWithAuth(http.HandlerFunc(srv.NetworkApply))).Methods("POST")
 	router.Handle("/v1/proxy", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Proxy))).Methods("GET")
 	router.Handle("/v1/proxy", srv.MiddlewareWithAuth(http.HandlerFunc(srv.ProxyUpdate))).Methods("POST")
 	router.Handle("/v1/time", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Time))).Methods("GET")

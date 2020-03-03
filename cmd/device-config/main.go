@@ -4,10 +4,10 @@
 package main
 
 import (
-	"github.com/CanonicalLtd/configurator/config"
-	"github.com/CanonicalLtd/configurator/datastore/memory"
-	"github.com/CanonicalLtd/configurator/service"
-	"github.com/CanonicalLtd/configurator/web"
+	"github.com/CanonicalLtd/device-config/config"
+	"github.com/CanonicalLtd/device-config/datastore/memory"
+	"github.com/CanonicalLtd/device-config/service"
+	"github.com/CanonicalLtd/device-config/web"
 	"log"
 )
 
@@ -17,10 +17,14 @@ func main() {
 
 	// Set up the dependency chain
 	memorySrv := memory.NewStore()
-	netplanSrv := service.NewNetplan()
 	authSrv := service.NewAuthService(memorySrv)
 	snapdClient := service.NewClientAdapter()
-	timeSrv, _ := service.NewTime()
+	dBus, err := service.NewDBus()
+	if err != nil {
+		log.Fatal(err)
+	}
+	netplanSrv := service.NewNetplan(dBus)
+	timeSrv := service.NewTime(dBus)
 	srv := web.NewWebService(settings, authSrv, netplanSrv, snapdClient, timeSrv)
 
 	// Start the web service

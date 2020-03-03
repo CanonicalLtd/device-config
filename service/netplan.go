@@ -12,7 +12,7 @@ import (
 	"os"
 )
 
-const netplanFilePath = "/etc/netplan/config.yaml"
+const netplanFilePath = "/etc/netplan/device-config.yaml"
 
 // NetplanYAML defines the structure of the netplan YAML file
 type NetplanYAML struct {
@@ -45,27 +45,29 @@ type NetplanService interface {
 // Netplan implements actions for managing netplan
 type Netplan struct {
 	deviceNetplan *NetplanYAML
+	dBus          DBusService
 }
 
 // NewNetplan creates a netplan object from a config file
-func NewNetplan() *Netplan {
+func NewNetplan(dBus DBusService) *Netplan {
 	deviceNetplan := &NetplanYAML{Network: Network{Version: 2, Renderer: "networkd"}}
 
 	data, err := ioutil.ReadFile(netplanFilePath)
 	if err != nil {
 		// Cannot find the file, so set up an empty structure
 		log.Println("Error reading netplan config:", err)
-		return &Netplan{defaultNetplan()}
+		return &Netplan{defaultNetplan(), dBus}
 	}
 
 	if err := yaml.Unmarshal(data, deviceNetplan); err != nil {
 		log.Printf("Error parsing the netplan file: %v", err)
-		return &Netplan{defaultNetplan()}
+		return &Netplan{defaultNetplan(), dBus}
 	}
-	return &Netplan{deviceNetplan}
+	return &Netplan{deviceNetplan, dBus}
 }
 
 func defaultNetplan() *NetplanYAML {
+	log.Println("Using the default netplan configuration")
 	return &NetplanYAML{Network: Network{Version: 2, Renderer: "networkd"}}
 }
 
@@ -74,9 +76,9 @@ func (np *Netplan) Current() *NetplanYAML {
 	return np.deviceNetplan
 }
 
-// Apply applies the netplan configuration
+// Apply applies the netplan configuration using dbus
 func (np *Netplan) Apply() error {
-	return fmt.Errorf("NOT Implemented")
+	return np.dBus.NetplanApply()
 }
 
 // Store stores the updated network settings

@@ -30,8 +30,13 @@ class Time extends Component {
             this.setState({time: response.data.time, error: ''})
         })
         .catch(e => {
-            this.setState({message: formatError(e.response)});
+            this.setState({message: formatError(e.response.data)});
         })
+    }
+
+    poll = () => {
+        // Poll every second
+        setTimeout(this.getTimeConfig.bind(this), 1000);
     }
 
     setField(field, value) {
@@ -63,7 +68,7 @@ class Time extends Component {
             this.setState({message: T('time-updated'), error: ''})
         })
         .catch(e => {
-            this.setState({error: formatError(e.response), message: ''});
+            this.setState({error: formatError(e.response.data), message: ''});
         })
     }
 

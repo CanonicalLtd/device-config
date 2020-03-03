@@ -4,7 +4,7 @@
 package web
 
 import (
-	"github.com/CanonicalLtd/configurator/datastore"
+	"github.com/CanonicalLtd/device-config/datastore"
 	"log"
 	"net/http"
 	"time"

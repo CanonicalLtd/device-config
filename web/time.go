@@ -6,7 +6,6 @@ package web
 import (
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 )
 
@@ -30,7 +29,6 @@ func (srv Web) TimeConfig(w http.ResponseWriter, r *http.Request) {
 	if t == nil {
 		return
 	}
-	log.Println("---", t)
 
 	if err := srv.TimeSrv.Apply(t.NTP, t.Timezone, t.Time); err != nil {
 		formatStandardResponse("time-config", err.Error(), w)

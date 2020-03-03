@@ -2,7 +2,7 @@ package memory
 
 import (
 	"fmt"
-	"github.com/CanonicalLtd/configurator/datastore"
+	"github.com/CanonicalLtd/device-config/datastore"
 	"sync"
 )
 

@@ -1,4 +1,4 @@
-module github.com/CanonicalLtd/configurator
+module github.com/CanonicalLtd/device-config
 
 go 1.13
 

@@ -37,7 +37,7 @@ class Network extends Component {
             }
         })
         .catch(e => {
-            this.setState({message: formatError(e.response)});
+            this.setState({message: formatError(e.response.data)});
         })
     }
 
@@ -99,7 +99,20 @@ class Network extends Component {
             this.setState({message: T('interface-updated'), error: ''})
         })
         .catch(e => {
-            this.setState({error: formatError(e.response), message: ''});
+            this.setState({error: formatError(e.response.data), message: ''});
+        })
+    }
+
+    handleApply = (e) => {
+        e.preventDefault()
+
+        // Apply the config
+        api.networkApply().then(response => {
+            this.getNetworkConfig()
+            this.setState({message: T('interface-updated'), error: ''})
+        })
+        .catch(e => {
+            this.setState({error: formatError(e.response.data), message: ''});
         })
     }
 
@@ -193,6 +206,10 @@ class Network extends Component {
                             :
                             <h4>{T('select-interface')}</h4>
                         }
+                    </div>
+                    <div className="row">
+                        <p className="col-10">{T('apply-desc')}</p>
+                        <button onClick={this.handleApply} className="p-button--brand col-2">{T('apply')}</button>
                     </div>
                 </section>
             </div>

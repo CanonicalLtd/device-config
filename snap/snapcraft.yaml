@@ -1,6 +1,6 @@
-name: core-config
+name: device-config
 version: "0.1"
-summary: Ubuntu Core Configuration
+summary: Ubuntu Device Configuration
 description: |
   Device configuration for Ubuntu Core.
 #icon: icons/verticals.png
@@ -19,7 +19,7 @@ apps:
 parts:
   application:
     plugin: go
-    go-importpath: github.com/CanonicalLtd/configurator
+    go-importpath: github.com/CanonicalLtd/device-config
     source: .
     source-type: git
     build-packages:

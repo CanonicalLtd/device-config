@@ -6,7 +6,7 @@ package web
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/CanonicalLtd/configurator/service"
+	"github.com/CanonicalLtd/device-config/service"
 	"io"
 	"net/http"
 	"strings"
@@ -55,6 +55,16 @@ func (srv Web) Network(w http.ResponseWriter, r *http.Request) {
 
 	// Create the JSON response
 	formatNetworkResponse(interfaces, w)
+}
+
+// NetworkApply is the API to apply the current network configuration
+func (srv Web) NetworkApply(w http.ResponseWriter, r *http.Request) {
+	// Store the interface config
+	if err := srv.Netplan.Apply(); err != nil {
+		formatStandardResponse("interface-apply", err.Error(), w)
+		return
+	}
+	formatStandardResponse("", "", w)
 }
 
 func (srv Web) decodeNetplanInterface(cfg *InterfaceConfig, eth service.Ethernet) {

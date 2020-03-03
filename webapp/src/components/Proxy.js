@@ -28,7 +28,7 @@ class Proxy extends Component {
             this.setState({proxy: response.data.proxy, message: ''})
         })
         .catch(e => {
-            this.setState({message: formatError(e.response)});
+            this.setState({message: formatError(e.response.data)});
         })
     }
 
@@ -61,7 +61,7 @@ class Proxy extends Component {
             this.setState({message: T('proxy-updated'), error: ''})
         })
         .catch(e => {
-            this.setState({error: formatError(e.response), message: ''});
+            this.setState({error: formatError(e.response.data), message: ''});
         })
     }
 

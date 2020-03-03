@@ -20,6 +20,10 @@ let service = {
         return axios.post(constants.baseUrl + 'network', iface);
     },
 
+    networkApply: () => {
+        return axios.post(constants.baseUrl + 'network/apply');
+    },
+
     proxyGet: () => {
         return axios.get(constants.baseUrl + 'proxy');
     },
