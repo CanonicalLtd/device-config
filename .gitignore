@@ -6,5 +6,6 @@ build/
 .coverage/
 *.log
 *.snap
+parts/
 main
 run
