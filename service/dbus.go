@@ -106,6 +106,6 @@ func (db *DBus) SetTime(setTime string) error {
 // NetplanApply applies the current netplan configuration
 func (db *DBus) NetplanApply() error {
 	nPlan := db.systemBus.Object("io.netplan.Netplan", "/io/netplan/Netplan")
-	call := nPlan.Call("io.netplan.Netplan.Apply", 0, false)
+	call := nPlan.Call("io.netplan.Netplan.Apply", 0)
 	return call.Err
 }

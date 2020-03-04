@@ -12,7 +12,7 @@ import (
 	"os"
 )
 
-const netplanFilePath = "/etc/netplan/device-config.yaml"
+const netplanFilePath = "/etc/netplan/00-device-config.yaml"
 
 // NetplanYAML defines the structure of the netplan YAML file
 type NetplanYAML struct {
