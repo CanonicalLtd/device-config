@@ -25,11 +25,16 @@ yarn install
 
 ### Building the application
 The application is packaged as a [snap](https://snapcraft.io/docs) and can be
-built using the `snapcraft` command. For testing purposes, it can be run via
+built using the `snapcraft` command. The [snapcraft.yaml](snap/snapcraft.yaml)
+is the source for building the application and the name of the snap needs to be
+modified in that file. The application needs a number of privileged interfaces
+that need to be enabled if it is to run in strict mode. However, it can be built
+and installed in devmode without them.
+
+For testing purposes, it can also be run via:
 ```
 go run device-config.go
 ```
-
 
 ## Contributing
 

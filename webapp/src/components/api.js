@@ -51,6 +51,10 @@ let service = {
         return axios.post(constants.baseUrl + 'time', {ntp: t.ntp, time: t.time, timezone: t.timezone});
     },
 
+    servicesGet: () => {
+        return axios.get(constants.baseUrl + 'services');
+    },
+
 }
 
 export default service

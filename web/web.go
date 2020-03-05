@@ -51,6 +51,7 @@ func (srv Web) Router() *mux.Router {
 	router.Handle("/v1/proxy", srv.MiddlewareWithAuth(http.HandlerFunc(srv.ProxyUpdate))).Methods("POST")
 	router.Handle("/v1/time", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Time))).Methods("GET")
 	router.Handle("/v1/time", srv.MiddlewareWithAuth(http.HandlerFunc(srv.TimeConfig))).Methods("POST")
+	router.Handle("/v1/services", srv.MiddlewareWithAuth(http.HandlerFunc(srv.AppServices))).Methods("GET")
 	router.Handle("/logout", Middleware(http.HandlerFunc(srv.Logout))).Methods("GET")
 
 	// Serve the static path
@@ -64,6 +65,7 @@ func (srv Web) Router() *mux.Router {
 	router.Handle("/network", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
 	router.Handle("/proxy", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
 	router.Handle("/time", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
+	router.Handle("/service", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
 	router.NotFoundHandler = Middleware(http.HandlerFunc(srv.Index))
 
 	return router

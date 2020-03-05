@@ -26,6 +26,7 @@ import (
 type SnapdClient interface {
 	Conf(name string) (map[string]interface{}, error)
 	SetConf(name string, patch map[string]interface{}) (string, error)
+	AppServices(names []string) ([]*client.AppInfo, error)
 }
 
 // ClientAdapter adapts our expectations to the snapd client API.
@@ -55,4 +56,9 @@ func (a *ClientAdapter) Conf(name string) (map[string]interface{}, error) {
 // SetConf requests a snap to apply the provided patch to the configuration
 func (a *ClientAdapter) SetConf(name string, patch map[string]interface{}) (string, error) {
 	return a.snapdClient.SetConf(name, patch)
+}
+
+// AppServices requests the status of the application services
+func (a *ClientAdapter) AppServices(names []string) ([]*client.AppInfo, error) {
+	return a.snapdClient.Apps(names, client.AppOptions{Service: true})
 }

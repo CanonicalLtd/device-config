@@ -19,7 +19,7 @@ import React, { Component } from 'react';
 import {checkSession, T} from "./Utils";
 
 
-const links = ['network','proxy','time'];
+const links = ['services','network','proxy','time'];
 
 class HeaderSlim extends Component {
     constructor(props) {

@@ -15,6 +15,12 @@ apps:
     plugs:
       - network
       - network-bind
+      #- snapd-control          # it needs these privileged interfaces
+      #- dbus                   #             --- " ---
+      #- network-setup-control  #             --- " ---
+      #- time-control           #             --- " ---
+      #- timeserver-control     #             --- " ---
+      #- timezone-control       #             --- " ---
 
 parts:
   application:
