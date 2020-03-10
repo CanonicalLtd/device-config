@@ -1,0 +1,17 @@
+language: go
+go_import_path: github.com/CanonicalLtd/device-config
+go:
+  - 1.13
+env:
+  matrix:
+    - TEST_SUITE="--static"
+    - TEST_SUITE="--unit"
+
+before_install:
+  - go get golang.org/x/lint/golint
+
+install:
+  - echo $GOPATH
+  - echo "Remaining install is done by the test script."
+  - true
+script: sh -v ./run-checks $TEST_SUITE

@@ -1,3 +1,6 @@
+[![Build Status][travis-image]][travis-url]
+[![Go Report Card][goreportcard-image]][goreportcard-url]
+[![codecov][codecov-image]][codecov-url]
 # Ubuntu Configuration
 
 This configuration application for Ubuntu Core provides a password-protected web interface
@@ -46,3 +49,11 @@ first.
 - to report an issue, please file [a bug
   report](https://github.com/CanonicalLtd/device-config/issues/new) on our [GitHub issue
 tracker](https://github.com/CanonicalLtd/device-config/issues)
+
+
+[travis-image]: https://travis-ci.org/CanonicalLtd/device-config.svg?branch=master
+[travis-url]: https://travis-ci.org/CanonicalLtd/device-config
+[goreportcard-image]: https://goreportcard.com/badge/github.com/CanonicalLtd/device-config
+[goreportcard-url]: https://goreportcard.com/report/github.com/CanonicalLtd/device-config
+[codecov-url]: https://codecov.io/gh/CanonicalLtd/device-config
+[codecov-image]: https://codecov.io/gh/CanonicalLtd/device-config/branch/master/graph/badge.svg
