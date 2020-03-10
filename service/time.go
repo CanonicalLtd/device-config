@@ -36,7 +36,7 @@ type Time struct {
 	NTP       bool      `json:"ntp"`
 	Time      time.Time `json:"time"`
 
-	dBus DBusService `json:"-"`
+	dBus DBusService
 }
 
 // NewTime creates a time object from the device settings

@@ -57,6 +57,7 @@ func NewDBus() (*DBus, error) {
 	return &DBus{bus}, nil
 }
 
+// TimeDateStatus gets the current time settings on the device
 func (db *DBus) TimeDateStatus() *DBusTime {
 	t := DBusTime{}
 	timedate1 := db.systemBus.Object("org.freedesktop.timedate1", "/org/freedesktop/timedate1")
@@ -77,6 +78,7 @@ func (db *DBus) TimeDateStatus() *DBusTime {
 	return &t
 }
 
+// SetNTP sets whether the time should be synced
 func (db *DBus) SetNTP(value bool) error {
 	// Set to use the NTP
 	timedate1 := db.systemBus.Object("org.freedesktop.timedate1", "/org/freedesktop/timedate1")
@@ -84,6 +86,7 @@ func (db *DBus) SetNTP(value bool) error {
 	return call.Err
 }
 
+// SetTimezone sets the device time zone
 func (db *DBus) SetTimezone(timezone string) error {
 	// Check we have a valid time zone
 	i := sort.Search(len(timezones), func(i int) bool { return timezones[i] >= timezone })
@@ -97,6 +100,7 @@ func (db *DBus) SetTimezone(timezone string) error {
 	return call.Err
 }
 
+// SetTime sets the current time
 func (db *DBus) SetTime(setTime string) error {
 	parsed, err := time.Parse("2006-01-02T15:04:05Z", setTime)
 	if err != nil {

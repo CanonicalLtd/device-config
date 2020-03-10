@@ -26,7 +26,7 @@ import (
 	"strings"
 )
 
-// InterfaceData defines the configuration of an interface
+// InterfaceConfig defines the configuration of an interface
 type InterfaceConfig struct {
 	Use         bool     `json:"use"`
 	Method      string   `json:"method"`

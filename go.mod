@@ -10,6 +10,7 @@ require (
 	github.com/snapcore/snapd v0.0.0-20200228192509-9d0f438e3dd4
 	github.com/snapcore/squashfuse v0.0.0-20171220165323-319f6d41a041 // indirect
 	golang.org/x/crypto v0.0.0-20200302210943-78000ba7a073 // indirect
+	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
 	golang.org/x/sys v0.0.0-20200302150141-5c8b2ff67527 // indirect
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543 // indirect
 	gopkg.in/tomb.v2 v2.0.0-20161208151619-d5d1b5820637 // indirect

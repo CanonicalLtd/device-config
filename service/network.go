@@ -45,7 +45,7 @@ var Interfaces = func() ([]NetworkInterface, error) {
 	return ifaces, nil
 }
 
-// ValidateIP4 checks that we have a valid IPv4 address
+// ValidateIP checks that we have a valid IPv4 address
 func ValidateIP(ip string) bool {
 	return net.ParseIP(ip) != nil
 }
