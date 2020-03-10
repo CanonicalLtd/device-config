@@ -22,12 +22,13 @@ import (
 	"github.com/CanonicalLtd/device-config/datastore"
 	"github.com/google/uuid"
 	"strings"
+	"time"
 )
 
 // AuthService is the interface for the authentication service
 type AuthService interface {
 	ValidateSession(username, sessionID string) (*datastore.Session, error)
-	CreateSession(token string) (*datastore.Session, error)
+	CreateSession(token string, expires time.Time) (*datastore.Session, error)
 }
 
 // Auth is the implementation of the authentication service
@@ -43,9 +44,9 @@ func NewAuthService(store datastore.DataStore) *Auth {
 }
 
 // CreateSession creates a new session, validating the token
-func (auth *Auth) CreateSession(token string) (*datastore.Session, error) {
+func (auth *Auth) CreateSession(token string, expires time.Time) (*datastore.Session, error) {
 	// Check the token against the MAC addresses
-	if err := auth.checkMacAddress(token); err != nil {
+	if err := checkMacAddress(token); err != nil {
 		return nil, err
 	}
 
@@ -53,6 +54,7 @@ func (auth *Auth) CreateSession(token string) (*datastore.Session, error) {
 	user := datastore.Session{
 		Username:  uuid.New().String(),
 		SessionID: uuid.New().String(),
+		Expires:   expires,
 	}
 	_, err := auth.DataStore.CreateSession(user)
 	return &user, err
@@ -63,7 +65,7 @@ func (auth *Auth) ValidateSession(username, sessionID string) (*datastore.Sessio
 	return auth.DataStore.GetSession(username, sessionID)
 }
 
-func (auth *Auth) checkMacAddress(token string) error {
+func checkMacAddress(token string) error {
 	// Get the hardware interfaces
 	interfaces, err := Interfaces()
 	if err != nil {

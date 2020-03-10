@@ -19,7 +19,6 @@ package service
 
 import (
 	"bufio"
-	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
@@ -66,7 +65,7 @@ type Netplan struct {
 func NewNetplan(dBus DBusService) *Netplan {
 	deviceNetplan := &NetplanYAML{Network: Network{Version: 2, Renderer: "networkd"}}
 
-	data, err := ioutil.ReadFile(netplanFilePath)
+	data, err := readNetplanFile()
 	if err != nil {
 		// Cannot find the file, so set up an empty structure
 		log.Println("Error reading netplan config:", err)
@@ -110,6 +109,16 @@ func (np *Netplan) Store(ethernet Ethernet) error {
 	}
 
 	// Write the YAML to the config file
+	return writeNetplan(data)
+}
+
+// readNetplanFile reads the current netplan file
+var readNetplanFile = func() ([]byte, error) {
+	return ioutil.ReadFile(netplanFilePath)
+}
+
+var writeNetplan = func(data []byte) error {
+	// Write the YAML to the config file
 	f, err := os.Create(netplanFilePath)
 	if err != nil {
 		return err
@@ -119,7 +128,6 @@ func (np *Netplan) Store(ethernet Ethernet) error {
 		return err
 	}
 	w.Flush()
-	fmt.Println(string(data))
 
 	return nil
 }

@@ -18,31 +18,28 @@
 package web
 
 import (
-	"html/template"
-	"log"
+	"github.com/CanonicalLtd/device-config/config"
 	"net/http"
-	"path/filepath"
+	"testing"
 )
 
-type commonData struct {
-	Username string
-	Error    string
-}
-
-func (srv Web) templates(name string) (*template.Template, error) {
-	// Parse the templates
-	p := filepath.Join(srv.Settings.DocRoot, name)
-	t, err := template.ParseFiles(p)
-	if err != nil {
-		log.Printf("Error loading the application template: %v\n", err)
+func TestWeb_AppServices(t *testing.T) {
+	tests := []struct {
+		name        string
+		servicesErr bool
+		wantStatus  int
+	}{
+		{"valid", false, http.StatusOK},
+		{"invalid", true, http.StatusBadRequest},
 	}
-	return t, err
-}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			srv := NewWebService(config.ParseArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{false, false, tt.servicesErr}, &mockTime{})
 
-func getUsername(r *http.Request) string {
-	username, err := r.Cookie("username")
-	if err != nil {
-		return ""
+			w := sendRequestWithAuth("GET", "/v1/services", nil, srv)
+			if w.Code != tt.wantStatus {
+				t.Errorf("AppServices() expected HTTP status '%d', got: %v", tt.wantStatus, w.Code)
+			}
+		})
 	}
-	return username.String()
 }

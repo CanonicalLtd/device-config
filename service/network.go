@@ -29,7 +29,7 @@ type NetworkInterface struct {
 }
 
 // Interfaces fetches the list of network interfaces
-func Interfaces() ([]NetworkInterface, error) {
+var Interfaces = func() ([]NetworkInterface, error) {
 	ifaces := []NetworkInterface{}
 	interfaces, err := net.Interfaces()
 	if err != nil {

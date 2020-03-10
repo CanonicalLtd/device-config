@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"github.com/CanonicalLtd/device-config/datastore"
 	"sync"
+	"time"
 )
 
 // Store implements an in-memory store for sessions
@@ -38,6 +39,9 @@ func NewStore() *Store {
 
 // CreateSession creates a new user session
 func (mem *Store) CreateSession(user datastore.Session) (int64, error) {
+	// Remove old sessions first
+	mem.removeExpiredSessions()
+
 	mem.lock.Lock()
 	defer mem.lock.Unlock()
 
@@ -48,6 +52,9 @@ func (mem *Store) CreateSession(user datastore.Session) (int64, error) {
 
 // GetSession gets an existing user session
 func (mem *Store) GetSession(username, sessionID string) (*datastore.Session, error) {
+	// Remove old sessions first
+	mem.removeExpiredSessions()
+
 	mem.lock.RLock()
 	defer mem.lock.RUnlock()
 
@@ -58,4 +65,17 @@ func (mem *Store) GetSession(username, sessionID string) (*datastore.Session, er
 	}
 
 	return nil, fmt.Errorf("cannot find the user session `%s`", username)
+}
+
+func (mem *Store) removeExpiredSessions() {
+	mem.lock.Lock()
+	defer mem.lock.Unlock()
+
+	sessions := []datastore.Session{}
+	for _, u := range mem.Sessions {
+		if u.Expires.Unix() > time.Now().Unix() {
+			sessions = append(sessions, u)
+		}
+	}
+	mem.Sessions = sessions
 }

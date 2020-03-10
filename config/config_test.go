@@ -15,14 +15,25 @@
  *
  */
 
-package datastore
+package config
 
-import "time"
+import (
+	"reflect"
+	"testing"
+)
 
-// Session details for a specific user session
-type Session struct {
-	ID        int64
-	Username  string
-	SessionID string
-	Expires   time.Time
+func TestParseArgs(t *testing.T) {
+	tests := []struct {
+		name string
+		want *Settings
+	}{
+		{"valid", &Settings{DefaultInterface, DefaultPort, DefaultDocRoot, DefaultIndexTemplate}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ParseArgs(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ParseArgs() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }

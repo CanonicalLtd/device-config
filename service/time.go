@@ -60,7 +60,7 @@ func (t *Time) Current() *Time {
 // Apply updates the time settings
 func (t *Time) Apply(ntp bool, timezone, setTime string) error {
 	if err := t.dBus.SetTimezone(timezone); err != nil {
-		return nil
+		return err
 	}
 
 	// Set up time sync
