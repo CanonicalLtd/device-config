@@ -132,9 +132,9 @@ func (t *mockTime) Apply(ntp bool, timezone, setTime string) error {
 
 func mockInterfacesValid() ([]service.NetworkInterface, error) {
 	return []service.NetworkInterface{
-		{"enp3s0", "enp3s0-mac-address"},
-		{"eth0", "eth0-mac-address"},
-		{"eth1", "eth1-mac-address"},
+		{Name: "enp3s0", MACAddress: "enp3s0-mac-address"},
+		{Name: "eth0", MACAddress: "eth0-mac-address"},
+		{Name: "eth1", MACAddress: "eth1-mac-address"},
 	}, nil
 }
 
