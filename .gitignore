@@ -8,5 +8,4 @@ build/
 *.snap
 parts/
 main
-run
 device-config
