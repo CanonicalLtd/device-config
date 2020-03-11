@@ -36,7 +36,12 @@ class Proxy extends Component {
 
     getProxyConfig = () => {
         api.proxyGet().then(response => {
-            this.setState({proxy: response.data.proxy, message: ''})
+            let p = response.data.proxy
+            if (!p) {
+                p = {}
+            }
+
+            this.setState({proxy: p, message: ''})
         })
         .catch(e => {
             this.setState({message: formatError(e.response.data)});
