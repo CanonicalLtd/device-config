@@ -39,6 +39,11 @@ For testing purposes, it can also be run via:
 go run device-config.go
 ```
 
+## Documentation
+The [Getting Started](docs/GettingStarted.md) guide provides instructions on
+installing and using the application.
+
+
 ## Contributing
 
 This is an [open source](COPYING) project and we warmly welcome community
