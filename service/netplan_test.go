@@ -18,7 +18,6 @@
 package service
 
 import (
-	"log"
 	"reflect"
 	"testing"
 )
@@ -63,7 +62,6 @@ func TestNetplan_Current(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			readNetplanFile = tt.mockRead
 			np := NewNetplan(&mockDbus{})
-			log.Println("---", np)
 			if got := np.Current(); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Current() = %v, want %v", got, tt.want)
 			}

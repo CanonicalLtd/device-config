@@ -15,31 +15,33 @@
  *
  */
 
-package web
+package main
 
 import (
+	"flag"
+	"fmt"
 	"github.com/CanonicalLtd/device-config/config"
-	"net/http"
-	"testing"
+	"os"
 )
 
-func TestWeb_AppServices(t *testing.T) {
-	tests := []struct {
-		name        string
-		servicesErr bool
-		wantStatus  int
-	}{
-		{"valid", false, http.StatusOK},
-		{"invalid", true, http.StatusBadRequest},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{false, false, tt.servicesErr}, &mockTime{})
+func main() {
+	var (
+		iface       string
+		manageProxy bool
+	)
+	flag.StringVar(&iface, "interface", config.DefaultInterface, "The default network interface for the service")
+	flag.BoolVar(&manageProxy, "proxy", config.DefaultManageProxy, "Allow proxy configuration (needs the snapd-control interface)")
+	flag.Parse()
 
-			w := sendRequestWithAuth("GET", "/v1/services", nil, srv)
-			if w.Code != tt.wantStatus {
-				t.Errorf("AppServices() expected HTTP status '%d', got: %v", tt.wantStatus, w.Code)
-			}
-		})
+	// Read the config settings
+	cfg := config.ReadParameters()
+
+	// Update the settings
+	cfg.NetworkInterface = iface
+	cfg.ManageProxy = manageProxy
+	err := config.StoreParameters(cfg)
+	if err != nil {
+		fmt.Println("Error saving parameters:", err)
+		os.Exit(1)
 	}
 }

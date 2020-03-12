@@ -34,7 +34,7 @@ func TestWeb_Index(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cfg := config.ParseArgs()
+			cfg := config.DefaultArgs()
 			cfg.DocRoot = "../static"
 			cfg.IndexTemplate = tt.template
 			srv := NewWebService(cfg, &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{})
@@ -57,7 +57,7 @@ func TestWeb_NoAuth(t *testing.T) {
 		{"network-api", "/v1/network", http.StatusSeeOther},
 		{"network", "/network", http.StatusSeeOther},
 		{"services-api", "/v1/services", http.StatusSeeOther},
-		{"services", "/service", http.StatusSeeOther},
+		{"services", "/services", http.StatusSeeOther},
 		{"proxy-api", "/v1/proxy", http.StatusSeeOther},
 		{"proxy", "/proxy", http.StatusSeeOther},
 		{"time-api", "/v1/time", http.StatusSeeOther},
@@ -65,7 +65,7 @@ func TestWeb_NoAuth(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			srv := NewWebService(config.ParseArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{})
+			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{})
 
 			w := sendRequest("GET", tt.url, nil, srv)
 			if w.Code != tt.wantStatus {

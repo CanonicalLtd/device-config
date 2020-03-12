@@ -18,22 +18,51 @@
 package config
 
 import (
+	"os"
 	"reflect"
 	"testing"
 )
 
-func TestParseArgs(t *testing.T) {
+func TestDefaultArgs(t *testing.T) {
 	tests := []struct {
 		name string
 		want *Settings
 	}{
-		{"valid", &Settings{DefaultInterface, DefaultPort, DefaultDocRoot, DefaultIndexTemplate}},
+		{"valid", &Settings{DefaultInterface, DefaultPort, DefaultDocRoot, DefaultIndexTemplate, DefaultManageProxy}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ParseArgs(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ParseArgs() = %v, want %v", got, tt.want)
+			if got := DefaultArgs(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("DefaultArgs() = %v, want %v", got, tt.want)
 			}
 		})
 	}
+}
+
+func TestReadParameters(t *testing.T) {
+	got := ReadParameters()
+	if got.ManageProxy != DefaultManageProxy {
+		t.Errorf("ReadParameters() got = %v, want %v", got.ManageProxy, DefaultManageProxy)
+	}
+	if got.NetworkInterface != DefaultInterface {
+		t.Errorf("ReadParameters() got = %v, want %v", got.NetworkInterface, DefaultInterface)
+	}
+
+	_ = os.Remove(paramsFilename)
+}
+
+func TestStoreParameters(t *testing.T) {
+	cfg := &Settings{}
+	err := StoreParameters(cfg)
+	if err != nil {
+		t.Errorf("StoreParameters() error = %v", err)
+	}
+	if cfg.ManageProxy != DefaultManageProxy {
+		t.Errorf("ReadParameters() got = %v, want %v", cfg.ManageProxy, DefaultManageProxy)
+	}
+	if cfg.NetworkInterface != DefaultInterface {
+		t.Errorf("ReadParameters() got = %v, want %v", cfg.NetworkInterface, DefaultInterface)
+	}
+
+	_ = os.Remove(paramsFilename)
 }

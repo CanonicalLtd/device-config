@@ -63,6 +63,12 @@ type ServiceResponse struct {
 	Services interface{} `json:"services"`
 }
 
+// AppConfigResponse the JSON response from a app config call
+type AppConfigResponse struct {
+	StandardResponse
+	Services interface{} `json:"config"`
+}
+
 // formatStandardResponse returns a JSON response from an API method, indicating success or failure
 func formatStandardResponse(code, message string, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", JSONHeader)
@@ -116,6 +122,15 @@ func formatTimeResponse(cfg interface{}, w http.ResponseWriter) {
 func formatServicesResponse(status interface{}, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", JSONHeader)
 	response := ServiceResponse{StandardResponse{}, status}
+
+	// Encode the response as JSON
+	encodeResponse(w, response)
+}
+
+// formatAppConfigResponse returns a JSON response from an app services call
+func formatAppConfigResponse(cfg interface{}, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", JSONHeader)
+	response := AppConfigResponse{StandardResponse{}, cfg}
 
 	// Encode the response as JSON
 	encodeResponse(w, response)

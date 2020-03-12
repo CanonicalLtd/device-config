@@ -12,8 +12,8 @@ import (
 )
 
 func main() {
-	// Parse the command-line arguments
-	settings := config.ParseArgs()
+	// Get the application parameters
+	settings := config.ReadParameters()
 
 	// Set up the dependency chain
 	memorySrv := memory.NewStore()

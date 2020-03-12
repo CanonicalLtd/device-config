@@ -41,6 +41,7 @@ type Network struct {
 
 // Ethernet defines a single interface
 type Ethernet struct {
+	Use         bool                `yaml:"-"`
 	Name        string              `yaml:"-"`
 	DHCP4       string              `yaml:"dhcp4,omitempty"`
 	Addresses   []string            `yaml:"addresses,omitempty"`
@@ -96,9 +97,16 @@ func (np *Netplan) Apply() error {
 
 // Store stores the updated network settings
 func (np *Netplan) Store(ethernet Ethernet) error {
+	// Initialize the list of interfaces
 	if np.deviceNetplan.Network.Ethernets == nil {
-		np.deviceNetplan.Network.Ethernets = map[string]Ethernet{ethernet.Name: ethernet}
+		np.deviceNetplan.Network.Ethernets = map[string]Ethernet{}
+	}
+
+	if !ethernet.Use {
+		// Remove the configuration if it is not to be used
+		delete(np.deviceNetplan.Network.Ethernets, ethernet.Name)
 	} else {
+		// Update the configuration for the interface
 		np.deviceNetplan.Network.Ethernets[ethernet.Name] = ethernet
 	}
 

@@ -48,7 +48,7 @@ class Network extends Component {
             }
         })
         .catch(e => {
-            this.setState({message: formatError(e.response.data)});
+            this.setState({error: formatError(e.response.data)});
         })
     }
 
@@ -211,8 +211,8 @@ class Network extends Component {
                                     <input name="mask" type="text" value={this.state.interface.mask} onChange={this.handleMaskChange}/>
                                     <label for={"gateway"}>{T('gateway')}:</label>
                                     <input name="gateway" type="text" value={this.state.interface.gateway} onChange={this.handleGatewayChange}/>
-                                    <button onClick={this.handleSave} className="p-button--positive">{T('save')}</button>
                                 </fieldset>
+                                <button onClick={this.handleSave} className="p-button--positive">{T('save')}</button>
                             </form>
                             :
                             <h4>{T('select-interface')}</h4>

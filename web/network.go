@@ -122,6 +122,7 @@ func (srv Web) NetworkInterface(w http.ResponseWriter, r *http.Request) {
 func (srv Web) encodeNetplanInterface(req *InterfaceConfig) service.Ethernet {
 	// Encode the interface format into the netplan format
 	eth := service.Ethernet{}
+	eth.Use = req.Use
 	eth.Name = req.Interface
 	if req.Method == "dhcp" {
 		eth.DHCP4 = "true"

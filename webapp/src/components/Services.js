@@ -18,6 +18,7 @@
 import React, {Component} from 'react';
 import api from "./api";
 import {formatError, T} from "./Utils";
+import AlertBox from "./AlertBox";
 
 class Services extends Component {
     constructor(props) {
@@ -25,7 +26,6 @@ class Services extends Component {
         this.state = {
             services: [],
             error: '',
-            message: '',
         };
     }
 
@@ -35,11 +35,19 @@ class Services extends Component {
 
     getServices = () => {
         api.servicesGet().then(response => {
+            console.log('---', response)
             this.setState({services: response.data.services, error: ''})
         })
         .catch(e => {
-            this.setState({message: formatError(e.response.data)});
+            console.log('---', e.response)
+            this.setState({error: formatError(e.response.data)});
         })
+    }
+
+    renderError() {
+        if (this.state.error) {
+            return <AlertBox message={this.state.error}/>
+        }
     }
 
     render() {
@@ -48,6 +56,7 @@ class Services extends Component {
                 <h2>{T('service-status')}</h2>
 
                 <section className="row">
+                    {this.renderError()}
                     <table>
                         <thead>
                             <tr>

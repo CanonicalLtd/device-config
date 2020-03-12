@@ -19,7 +19,7 @@ import React, { Component } from 'react';
 import {checkSession, T} from "./Utils";
 
 
-const links = ['services','network','proxy','time'];
+const links = ['services','network','time'];
 
 class HeaderSlim extends Component {
     constructor(props) {
@@ -42,6 +42,21 @@ class HeaderSlim extends Component {
         } else {
             return <li key={'login'} className="p-navigation__link" role="menuitem"><a href="/login">{T("login")}</a></li>
         }
+    }
+
+    renderProxy() {
+        if ((!this.props.config) || (!this.props.config.manageProxy)) {
+            return
+        }
+
+        let l = 'proxy'
+        let active = '';
+        if ((this.props.section === l) || (this.props.subsection === l)) {
+            active = ' active'
+        }
+        return (
+            <li key={l} className={'p-navigation__link' + active} role="menuitem"><a href={this.link(l)}>{T(l)}</a></li>
+        )
     }
 
     render() {
@@ -68,6 +83,7 @@ class HeaderSlim extends Component {
                                     <li key={l} className={'p-navigation__link' + active} role="menuitem"><a href={this.link(l)}>{T(l)}</a></li>
                                 )
                             })}
+                            {this.renderProxy()}
                             {this.renderLoginOut()}
                         </ul>
                     </nav>

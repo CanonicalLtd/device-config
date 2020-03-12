@@ -44,7 +44,7 @@ func TestWeb_Network(t *testing.T) {
 				service.Interfaces = mockInterfacesValid
 			}
 
-			srv := NewWebService(config.ParseArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{})
+			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{})
 
 			w := sendRequestWithAuth("GET", "/v1/network", nil, srv)
 			if w.Code != tt.wantStatus {
@@ -80,7 +80,7 @@ func TestWeb_NetworkInterface(t *testing.T) {
 				service.Interfaces = mockInterfacesValid
 			}
 
-			srv := NewWebService(config.ParseArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{})
+			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{})
 			w := sendRequestWithAuth("POST", "/v1/network", bytes.NewReader(tt.data), srv)
 			if w.Code != tt.wantStatus {
 				t.Errorf("NetworkInterface() expected HTTP status '%d', got: %v", tt.wantStatus, w.Code)
@@ -100,7 +100,7 @@ func TestWeb_NetworkApply(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			srv := NewWebService(config.ParseArgs(), &mockAuth{}, &mockNetplan{tt.applyError}, &mockSnapd{}, &mockTime{})
+			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{tt.applyError}, &mockSnapd{}, &mockTime{})
 			w := sendRequestWithAuth("POST", "/v1/network/apply", strings.NewReader(""), srv)
 			if w.Code != tt.wantStatus {
 				t.Errorf("NetworkApply() expected HTTP status '%d', got: %v", tt.wantStatus, w.Code)

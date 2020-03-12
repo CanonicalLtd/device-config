@@ -39,7 +39,7 @@ func TestWeb_Login(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			srv := NewWebService(config.ParseArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{})
+			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{})
 
 			w := sendRequest("POST", "/v1/login", bytes.NewReader(tt.data), srv)
 			if w.Code != tt.wantStatus {
@@ -56,7 +56,7 @@ func TestWeb_Login(t *testing.T) {
 }
 
 func TestWeb_Logout(t *testing.T) {
-	srv := NewWebService(config.ParseArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{})
+	srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{})
 
 	w := sendRequest("GET", "/logout", nil, srv)
 	if w.Code != http.StatusSeeOther {

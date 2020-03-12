@@ -9,3 +9,4 @@ build/
 parts/
 main
 device-config
+params

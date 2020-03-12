@@ -46,8 +46,6 @@ export function checkSession() {
     let username = Cookies.get('username')
     let sessionId = Cookies.get('sessionID')
 
-    console.log("Username/Session:", username, sessionId)
-
     if ((username) && (sessionId)) {
         return true
     }

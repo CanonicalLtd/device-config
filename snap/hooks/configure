@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Get the parameters from the snap settings
+interface=$(snapctl get interface)
+proxy=$(snapctl get proxy)
+
+# Store the credentials
+cd $SNAP
+bin/configure -interface $interface -proxy $proxy
+
+# Restart the service
+snapctl restart ${SNAP_NAME}.run

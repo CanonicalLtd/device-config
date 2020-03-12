@@ -19,6 +19,10 @@ import axios from 'axios'
 import constants from './constants'
 
 let service = {
+    configGet:  (query, cancelCallback) => {
+        return axios.get(constants.baseUrl + 'config');
+    },
+
     loginRequest:  (query, cancelCallback) => {
         return axios.post(constants.baseUrl + 'login', query);
     },

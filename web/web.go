@@ -57,6 +57,7 @@ func (srv Web) Router() *mux.Router {
 	// Start the web service router
 	router := mux.NewRouter()
 
+	router.Handle("/v1/config", Middleware(http.HandlerFunc(srv.AppConfig))).Methods("GET")
 	router.Handle("/v1/login", Middleware(http.HandlerFunc(srv.Login))).Methods("POST")
 	router.Handle("/v1/network", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Network))).Methods("GET")
 	router.Handle("/v1/network", srv.MiddlewareWithAuth(http.HandlerFunc(srv.NetworkInterface))).Methods("POST")
@@ -79,7 +80,7 @@ func (srv Web) Router() *mux.Router {
 	router.Handle("/network", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
 	router.Handle("/proxy", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
 	router.Handle("/time", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
-	router.Handle("/service", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
+	router.Handle("/services", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
 	router.NotFoundHandler = Middleware(http.HandlerFunc(srv.Index))
 
 	return router

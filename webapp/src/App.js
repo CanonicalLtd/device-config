@@ -21,13 +21,14 @@ import HeaderSlim from './components/HeaderSlim';
 import Index from './components/Index';
 import Footer from './components/Footer';
 import Login from './components/Login';
-import {parseRoute} from './components/Utils'
+import {formatError, parseRoute} from './components/Utils'
 
 import createHistory from 'history/createBrowserHistory'
 import Network from "./components/Network";
 import Proxy from "./components/Proxy";
 import Time from "./components/Time";
 import Services from "./components/Services";
+import api from "./components/api";
 const history = createHistory()
 
 class App extends Component {
@@ -37,7 +38,12 @@ class App extends Component {
         location: history.location,
         token: props.token || {},
         proxy: {},
+        config: {manageProxy: false}
     }
+  }
+
+  componentDidMount() {
+      this.getAppConfig()
   }
 
   handleNavigation(location) {
@@ -45,11 +51,13 @@ class App extends Component {
     window.scrollTo(0, 0)
   }
 
-  // Get the data that's conditional on the route
-  updateDataForRoute() {
-      const r = parseRoute()
-
-      if(r.section==='network') {this.getNetworkConfig()}
+  getAppConfig = () => {
+    api.configGet().then(response => {
+        this.setState({config: response.data.config, error: ''})
+    })
+    .catch(e => {
+        this.setState({error: formatError(e.response.data)});
+    })
   }
 
   renderLogin() {
@@ -86,8 +94,8 @@ class App extends Component {
 
     return (
         <div className="App">
-          {r.section===''? <Header section={r.section} subsection={r.subsection} sectionId={r.sectionId} /> : ''}
-          {r.section!==''? <HeaderSlim section={r.section} subsection={r.subsection} sectionId={r.sectionId} /> : ''}
+          {r.section===''? <Header section={r.section} subsection={r.subsection} sectionId={r.sectionId} config={this.state.config} /> : ''}
+          {r.section!==''? <HeaderSlim section={r.section} subsection={r.subsection} sectionId={r.sectionId} config={this.state.config} /> : ''}
 
           <div className="content row">
             {r.section===''? <Index /> : ''}

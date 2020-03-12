@@ -35,7 +35,7 @@ func TestWeb_Proxy(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			srv := NewWebService(config.ParseArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{tt.confError, false, false}, &mockTime{})
+			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{tt.confError, false, false}, &mockTime{})
 
 			w := sendRequestWithAuth("GET", "/v1/proxy", nil, srv)
 			if w.Code != tt.wantStatus {
@@ -62,7 +62,7 @@ func TestWeb_ProxyUpdate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			srv := NewWebService(config.ParseArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{false, tt.setconfErr, false}, &mockTime{})
+			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{false, tt.setconfErr, false}, &mockTime{})
 
 			w := sendRequestWithAuth("POST", "/v1/proxy", bytes.NewReader(tt.data), srv)
 			if w.Code != tt.wantStatus {
