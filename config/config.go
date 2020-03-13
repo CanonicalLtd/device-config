@@ -65,7 +65,6 @@ func ReadParameters() *Settings {
 	dat, err := ioutil.ReadFile(p)
 	if err != nil {
 		log.Printf("Error reading config parameters: %v", err)
-		_ = StoreParameters(config)
 		return config
 	}
 
@@ -95,6 +94,8 @@ func StoreParameters(c *Settings) error {
 	if len(c.IndexTemplate) == 0 {
 		c.IndexTemplate = DefaultIndexTemplate
 	}
+
+	log.Println("---Store:", c)
 
 	// Create the output file
 	f, err := os.Create(p)
