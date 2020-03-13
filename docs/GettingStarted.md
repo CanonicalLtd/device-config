@@ -10,11 +10,21 @@ command. A pre-built demo is available in the global store: `device-config-demo`
 To try it out:
 
 ```
-sudo snap install --devmode device-config-demo
+sudo snap install device-config-demo
+sudo snap connect device-config-demo:network-setup-control :network-setup-control
+sudo snap connect device-config-demo:time-control :time-control
+sudo snap connect device-config-demo:timeserver-control :timeserver-control
+sudo snap connect device-config-demo:timezone-control :timezone-control
 ```
-The snap uses some privileged interfaces, so `--devmode` is required. To use the
-snap in `strict` mode will need a Brand store, which is a commercial service
-from Canonical.
+The snap uses some privileged interfaces, that need to be connected. The option
+to set the proxy configuration needs the `snapd-control` interface, which will
+need a Brand store to host the snap - a commercial service from Canonical.
+
+The snap can be tested locally with the proxy settings by installing it in
+`--devmode` and enabling the proxy setting:
+```
+sudo snap set device-config-demo proxy=true
+```
 
 ## Accessing the web interface
 The web interface is accessible at [http://<ip-address>:8888/](http://<ip-address>:8888/)
