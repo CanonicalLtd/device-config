@@ -72,7 +72,7 @@ class Login extends Component {
 
                 {this.renderError()}
                 <form>
-                    <label for="macaddress">MAC Address:</label>
+                    <label for="macaddress">{T('macaddress')}:</label>
                     <input name="macaddress" type="text" value={this.state.macAddress} onChange={this.handleMacAddressChange} />
                     <button className="p-button--positive" onClick={this.handleSubmit}>{T("submit")}</button>
                 </form>

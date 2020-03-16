@@ -21,7 +21,7 @@ import HeaderSlim from './components/HeaderSlim';
 import Index from './components/Index';
 import Footer from './components/Footer';
 import Login from './components/Login';
-import {formatError, parseRoute} from './components/Utils'
+import {formatError, getLanguage, parseRoute, saveLanguage} from './components/Utils'
 
 import createHistory from 'history/createBrowserHistory'
 import Network from "./components/Network";
@@ -35,6 +35,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
+        language: getLanguage(),
         location: history.location,
         token: props.token || {},
         proxy: {},
@@ -58,6 +59,12 @@ class App extends Component {
     .catch(e => {
         this.setState({error: formatError(e.response.data)});
     })
+  }
+
+  changeLanguage = (l) => {
+      console.log('---', l)
+      saveLanguage(l)
+      this.setState({language: l})
   }
 
   renderLogin() {
@@ -94,8 +101,8 @@ class App extends Component {
 
     return (
         <div className="App">
-          {r.section===''? <Header section={r.section} subsection={r.subsection} sectionId={r.sectionId} config={this.state.config} /> : ''}
-          {r.section!==''? <HeaderSlim section={r.section} subsection={r.subsection} sectionId={r.sectionId} config={this.state.config} /> : ''}
+          {r.section===''? <Header section={r.section} subsection={r.subsection} sectionId={r.sectionId} config={this.state.config} changeLanguage={this.changeLanguage} /> : ''}
+          {r.section!==''? <HeaderSlim section={r.section} subsection={r.subsection} sectionId={r.sectionId} config={this.state.config} changeLanguage={this.changeLanguage} /> : ''}
 
           <div className="content row">
             {r.section===''? <Index /> : ''}

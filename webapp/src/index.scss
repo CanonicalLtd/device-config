@@ -93,6 +93,24 @@ table th.xsmall, table td.xsmall {
   width: 10%;
 }
 
+form#lang-form {
+  border-left: 1px solid #cdcdcd;
+  background-color: #2d2d2d;
+}
+
+form#lang-form select {
+  background-color: transparent;
+  border: 0;
+  margin: .3rem;
+  color: #fff;
+  font-size: 1.0rem;
+  background-position-x: right;
+}
+
+form#lang-form option {
+  background-color: #2C001E;
+}
+
 /* LED */
 .container {
   background-size: cover;

@@ -16,7 +16,8 @@
  */
 
 import React, { Component } from 'react';
-import {checkSession, T} from "./Utils";
+import {checkSession, getLanguage, T} from "./Utils";
+import Constants from "./constants";
 
 
 const links = ['services','network','time'];
@@ -34,6 +35,10 @@ class HeaderSlim extends Component {
         } else {
             return '/' + l;
         }
+    }
+
+    handleLanguageChange = (e) => {
+        this.props.changeLanguage(e.target.value)
     }
 
     renderLoginOut() {
@@ -56,6 +61,25 @@ class HeaderSlim extends Component {
         }
         return (
             <li key={l} className={'p-navigation__link' + active} role="menuitem"><a href={this.link(l)}>{T(l)}</a></li>
+        )
+    }
+
+    renderLanguage() {
+        let language = getLanguage()
+        let languages = Constants.languages
+        return (
+            <li className="p-navigation__link">
+                <form id="lang-form">
+                    <select onChange={this.handleLanguageChange}>
+                    {languages.map(lang => {
+                        let selected = lang===language ? 'selected' : ''
+                        return (
+                            <option key={lang} value={lang} selected={selected}>{T(lang)}</option>
+                        )
+                    })}
+                    </select>
+                </form>
+            </li>
         )
     }
 
@@ -85,6 +109,7 @@ class HeaderSlim extends Component {
                             })}
                             {this.renderProxy()}
                             {this.renderLoginOut()}
+                            {this.renderLanguage()}
                         </ul>
                     </nav>
                 </div>

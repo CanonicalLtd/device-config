@@ -24,7 +24,7 @@ class Header extends Component {
     render() {
         return (
             <div>
-                <HeaderSlim section={this.props.section} subsection={this.props.subsection} sectionId={this.props.sectionId} config={this.props.config} />
+                <HeaderSlim section={this.props.section} subsection={this.props.subsection} sectionId={this.props.sectionId} config={this.props.config} changeLanguage={this.props.changeLanguage} />
                 <section className="p-strip--image is-dark header">
                     <div className="row">
                         <div className="col-5 title">

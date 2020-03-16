@@ -19,7 +19,8 @@ import Messages from './Messages'
 import Cookies from 'js-cookie'
 
 export function T(message) {
-    const msg = Messages[message] || message;
+    let lang = getLanguage()
+    const msg = Messages[lang][message] || message;
     return msg
 }
 
@@ -63,4 +64,12 @@ export function formatError(data) {
         message += ': ' + data.message;
     }
     return message;
+}
+
+export function saveLanguage(l) {
+    sessionStorage.setItem('language', l);
+}
+
+export function getLanguage() {
+    return sessionStorage.getItem('language') || 'en'
 }
