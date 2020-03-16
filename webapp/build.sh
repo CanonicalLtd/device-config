@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Build the project
-yarn run build
+npm run build
 
 # Create the static directory
 rm -rf ../static/

@@ -6,7 +6,6 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "acorn": "^7.1.1",
     "js-cookie": "^2.2.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -14,9 +13,9 @@
   },
   "scripts": {
     "build-css": "node-sass src/ -o src/",
-    "start": "yarn run build-css && react-scripts start",
-    "build": "yarn run build-css && react-scripts build",
-    "test": "yarn run build-css && react-scripts test",
+    "start": "npm run build-css && react-scripts start",
+    "build": "npm run build-css && react-scripts build",
+    "test": "npm run build-css && react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

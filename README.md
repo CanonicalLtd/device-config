@@ -22,7 +22,7 @@ that are provided are:
  which needs an up-to-date version of Node.
  ```
 cd webapp
-yarn install
+npm install
 ./build.sh
 ```
 
