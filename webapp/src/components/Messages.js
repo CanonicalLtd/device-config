@@ -15,10 +15,12 @@
  *
  */
 
+import messages_de from "./messages_de";
 import messages_en from "./messages_en";
 import messages_sv from "./messages_sv";
 
 export default {
+    'de': messages_de,
     'en': messages_en,
     'sv': messages_sv,
 }

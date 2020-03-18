@@ -24,7 +24,7 @@ function getBaseURL() {
 let Constants = {
     baseUrl: getBaseURL(),
     LoadingImage: '/static/images/ajax-loader.gif',
-    languages: ['en','sv'],
+    languages: ['de', 'en','sv'],
     //missingIcon: '/static/images/snapcraft-missing-icon.svg',
 }
 
