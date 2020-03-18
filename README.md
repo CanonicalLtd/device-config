@@ -15,7 +15,7 @@ that are provided are:
 
  
  ## Development Environment
- The build needs Go 13.* and Yarn installed.
+ The build needs Go 13.* and npm installed.
  
  ### Building the web pages
  The web pages use [create-react-app](https://github.com/facebook/create-react-app)
