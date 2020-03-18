@@ -24,6 +24,7 @@ export default {
     'dhcp': 'DHCP',
     'dns': 'Name servers (DNS)',
     'dns-help': 'Comma-separated list of IP addresses',
+    'de': 'German',
     'en': 'English',
     'ftp': 'FTP',
     'gateway': 'Gateway',
