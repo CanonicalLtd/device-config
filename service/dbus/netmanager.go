@@ -27,7 +27,7 @@ import (
 
 // NMIsRunning checks if the network manager service is running
 func (db *DBus) NMIsRunning() error {
-	netman := db.systemBus.Object("org.freedesktop.DBus", "/org/freedesktop/DBus")
+	netman := db.getBusObject("org.freedesktop.DBus", "/org/freedesktop/DBus")
 	call := netman.Call("org.freedesktop.DBus.GetNameOwner", 0, "org.freedesktop.NetworkManager", false)
 	return call.Err
 }
@@ -44,7 +44,7 @@ func (db *DBus) NMDevices() (map[string]string, error) {
 
 	// Get the interface name for the device paths
 	for _, dev := range devices {
-		netman1 := db.systemBus.Object("org.freedesktop.NetworkManager", dbus.ObjectPath(dev))
+		netman1 := db.getBusObject("org.freedesktop.NetworkManager", dev)
 
 		// Interface name
 		iface, err := netman1.GetProperty("org.freedesktop.NetworkManager.Device.Interface")
@@ -60,7 +60,7 @@ func (db *DBus) NMDevices() (map[string]string, error) {
 // NMInterfaceConfig gets the details of the active interfaces
 func (db *DBus) NMInterfaceConfig(p string) map[string]string {
 	eth := map[string]string{}
-	netman := db.systemBus.Object("org.freedesktop.NetworkManager", dbus.ObjectPath(p))
+	netman := db.getBusObject("org.freedesktop.NetworkManager", p)
 
 	// Check if the interface is used
 	state, err := netman.GetProperty("org.freedesktop.NetworkManager.Device.State")
@@ -90,7 +90,7 @@ func (db *DBus) NMInterfaceConfig(p string) map[string]string {
 
 // ip4Config decodes the IPv4 config object
 func (db *DBus) ip4Config(p string, eth map[string]string) map[string]string {
-	netman := db.systemBus.Object("org.freedesktop.NetworkManager", dbus.ObjectPath(p))
+	netman := db.getBusObject("org.freedesktop.NetworkManager", p)
 
 	gateway, err := netman.GetProperty("org.freedesktop.NetworkManager.IP4Config.Gateway")
 	if err == nil {
@@ -123,7 +123,7 @@ func (db *DBus) ip4Config(p string, eth map[string]string) map[string]string {
 
 // getDevices gets the paths of the network interfaces
 func (db *DBus) getDevices() ([]string, error) {
-	netman := db.systemBus.Object("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager")
+	netman := db.getBusObject("org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager")
 	var devices []string
 	err := netman.Call("org.freedesktop.NetworkManager.GetAllDevices", 0).Store(&devices)
 	if err != nil {

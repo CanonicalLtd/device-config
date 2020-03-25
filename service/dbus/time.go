@@ -34,7 +34,7 @@ type Time struct {
 // TimeDateStatus gets the current time settings on the device
 func (db *DBus) TimeDateStatus() *Time {
 	t := Time{}
-	timedate1 := db.systemBus.Object("org.freedesktop.timedate1", "/org/freedesktop/timedate1")
+	timedate1 := db.getBusObject("org.freedesktop.timedate1", "/org/freedesktop/timedate1")
 
 	timeZone, err := timedate1.GetProperty("org.freedesktop.timedate1.Timezone")
 	if err == nil {
@@ -55,7 +55,7 @@ func (db *DBus) TimeDateStatus() *Time {
 // SetNTP sets whether the time should be synced
 func (db *DBus) SetNTP(value bool) error {
 	// Set to use the NTP
-	timedate1 := db.systemBus.Object("org.freedesktop.timedate1", "/org/freedesktop/timedate1")
+	timedate1 := db.getBusObject("org.freedesktop.timedate1", "/org/freedesktop/timedate1")
 	call := timedate1.Call("org.freedesktop.timedate1.SetNTP", 0, value, false)
 	return call.Err
 }
@@ -69,7 +69,7 @@ func (db *DBus) SetTimezone(timezone string) error {
 	}
 
 	// Set the time zone
-	timedate1 := db.systemBus.Object("org.freedesktop.timedate1", "/org/freedesktop/timedate1")
+	timedate1 := db.getBusObject("org.freedesktop.timedate1", "/org/freedesktop/timedate1")
 	call := timedate1.Call("org.freedesktop.timedate1.SetTimezone", 0, timezone, false)
 	return call.Err
 }
@@ -87,7 +87,7 @@ func (db *DBus) SetTime(setTime string) error {
 	}
 
 	// Set the time
-	timedate1 := db.systemBus.Object("org.freedesktop.timedate1", "/org/freedesktop/timedate1")
+	timedate1 := db.getBusObject("org.freedesktop.timedate1", "/org/freedesktop/timedate1")
 	call := timedate1.Call("org.freedesktop.timedate1.SetTime", 0, parsed.UnixNano()/1000, false, false)
 	return call.Err
 }

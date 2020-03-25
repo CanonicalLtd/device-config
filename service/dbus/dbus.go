@@ -53,7 +53,16 @@ func NewDBus() (*DBus, error) {
 
 // NetplanApply applies the current netplan configuration
 func (db *DBus) NetplanApply() error {
-	nPlan := db.systemBus.Object("io.netplan.NetSrv", "/io/netplan/NetSrv")
+	nPlan := db.getBusObject("io.netplan.NetSrv", "/io/netplan/NetSrv")
 	call := nPlan.Call("io.netplan.NetSrv.Apply", 0)
 	return call.Err
+}
+
+func (db *DBus) getBusObject(dest, path string) dbus.BusObject {
+	return busObject(db.systemBus, dest, path)
+}
+
+// busObject returns a dbus bus object interface (mockable for tests)
+var busObject = func(systemBus interface{}, dest, path string) dbus.BusObject {
+	return systemBus.(*dbus.Conn).Object(dest, dbus.ObjectPath(path))
 }
