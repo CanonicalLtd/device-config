@@ -28,7 +28,7 @@ func TestDefaultArgs(t *testing.T) {
 		name string
 		want *Settings
 	}{
-		{"valid", &Settings{DefaultInterface, DefaultPort, DefaultDocRoot, DefaultIndexTemplate, DefaultManageProxy}},
+		{"valid", &Settings{DefaultInterface, DefaultPort, DefaultDocRoot, DefaultIndexTemplate, DefaultManageProxy, DefaultUseNetworkManager}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

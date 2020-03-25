@@ -15,9 +15,10 @@
  *
  */
 
-package service
+package dbus
 
-var timezones = []string{"Africa/Abidjan",
+// Timezones is the system time zones
+var Timezones = []string{"Africa/Abidjan",
 	"Africa/Accra",
 	"Africa/Addis_Ababa",
 	"Africa/Algiers",

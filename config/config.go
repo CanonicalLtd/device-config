@@ -27,32 +27,35 @@ import (
 
 // Default settings
 const (
-	DefaultInterface     = "0.0.0.0"
-	DefaultPort          = "8888"
-	DefaultDocRoot       = "./static"
-	DefaultIndexTemplate = "index.html"
-	DefaultManageProxy   = false
-	paramsEnvVar         = "SNAP_DATA"
-	paramsFilename       = "params"
+	DefaultInterface         = "0.0.0.0"
+	DefaultPort              = "8888"
+	DefaultDocRoot           = "./static"
+	DefaultIndexTemplate     = "index.html"
+	DefaultManageProxy       = false
+	DefaultUseNetworkManager = false
+	paramsEnvVar             = "SNAP_DATA"
+	paramsFilename           = "params"
 )
 
 // Settings defines the application configuration
 type Settings struct {
-	NetworkInterface string
-	Port             string
-	DocRoot          string
-	IndexTemplate    string
-	ManageProxy      bool
+	NetworkInterface  string
+	Port              string
+	DocRoot           string
+	IndexTemplate     string
+	ManageProxy       bool
+	UseNetworkManager bool
 }
 
 // DefaultArgs checks the environment variables
 func DefaultArgs() *Settings {
 	return &Settings{
-		NetworkInterface: DefaultInterface,
-		Port:             DefaultPort,
-		DocRoot:          DefaultDocRoot,
-		IndexTemplate:    DefaultIndexTemplate,
-		ManageProxy:      DefaultManageProxy,
+		NetworkInterface:  DefaultInterface,
+		Port:              DefaultPort,
+		DocRoot:           DefaultDocRoot,
+		IndexTemplate:     DefaultIndexTemplate,
+		ManageProxy:       DefaultManageProxy,
+		UseNetworkManager: DefaultUseNetworkManager,
 	}
 }
 
@@ -94,8 +97,6 @@ func StoreParameters(c *Settings) error {
 	if len(c.IndexTemplate) == 0 {
 		c.IndexTemplate = DefaultIndexTemplate
 	}
-
-	log.Println("---Store:", c)
 
 	// Create the output file
 	f, err := os.Create(p)

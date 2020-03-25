@@ -15,12 +15,30 @@
  *
  */
 
-package service
+package network
 
 import (
+	"fmt"
+	"github.com/CanonicalLtd/device-config/service/dbus"
 	"reflect"
 	"testing"
 )
+
+var readNetplanFileError = func() ([]byte, error) {
+	return nil, fmt.Errorf("MOCK error reading netplan file")
+}
+var readNetplanFileSuccess = func() ([]byte, error) {
+	return []byte(`
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp3s0:
+      dhcp4: true`), nil
+}
+var readNetplanFileBad = func() ([]byte, error) {
+	return []byte("\u1000"), nil
+}
 
 func TestNetplan_Apply(t *testing.T) {
 	tests := []struct {
@@ -31,7 +49,7 @@ func TestNetplan_Apply(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			np := NewNetplan(&mockDbus{})
+			np := NewNetplan(&dbus.MockDbus{})
 			if err := np.Apply(); (err != nil) != tt.wantErr {
 				t.Errorf("Apply() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -61,7 +79,7 @@ func TestNetplan_Current(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			readNetplanFile = tt.mockRead
-			np := NewNetplan(&mockDbus{})
+			np := NewNetplan(&dbus.MockDbus{})
 			if got := np.Current(); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Current() = %v, want %v", got, tt.want)
 			}
@@ -89,7 +107,7 @@ func TestNetplan_Store(t *testing.T) {
 			// Mock the reading of the netplan file
 			readNetplanFile = tt.mockRead
 
-			np := NewNetplan(&mockDbus{})
+			np := NewNetplan(&dbus.MockDbus{})
 			if err := np.Store(tt.ethernet); (err != nil) != tt.wantErr {
 				t.Errorf("Store() error = %v, wantErr %v", err, tt.wantErr)
 			}

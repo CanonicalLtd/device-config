@@ -15,10 +15,11 @@
  *
  */
 
-package service
+package network
 
 import (
 	"bufio"
+	"github.com/CanonicalLtd/device-config/service/dbus"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
@@ -59,11 +60,11 @@ type NetplanService interface {
 // Netplan implements actions for managing netplan
 type Netplan struct {
 	deviceNetplan *NetplanYAML
-	dBus          DBusService
+	dBus          dbus.Service
 }
 
 // NewNetplan creates a netplan object from a config file
-func NewNetplan(dBus DBusService) *Netplan {
+func NewNetplan(dBus dbus.Service) *Netplan {
 	deviceNetplan := &NetplanYAML{Network: Network{Version: 2, Renderer: "networkd"}}
 
 	data, err := readNetplanFile()

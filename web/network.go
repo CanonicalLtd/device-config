@@ -20,7 +20,7 @@ package web
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/CanonicalLtd/device-config/service"
+	"github.com/CanonicalLtd/device-config/service/network"
 	"io"
 	"net/http"
 	"strings"
@@ -40,10 +40,10 @@ type InterfaceConfig struct {
 // Network is the API to get the network interface config
 func (srv Web) Network(w http.ResponseWriter, r *http.Request) {
 	// Get the current netplan settings
-	netYAML := srv.Netplan.Current()
+	netYAML := srv.NetSrv.Current()
 
 	// Get the hardware interfaces
-	hardware, err := service.Interfaces()
+	hardware, err := network.Interfaces()
 	if err != nil {
 		formatStandardResponse("interfaces", err.Error(), w)
 		return
@@ -74,14 +74,14 @@ func (srv Web) Network(w http.ResponseWriter, r *http.Request) {
 // NetworkApply is the API to apply the current network configuration
 func (srv Web) NetworkApply(w http.ResponseWriter, r *http.Request) {
 	// Store the interface config
-	if err := srv.Netplan.Apply(); err != nil {
+	if err := srv.NetSrv.Apply(); err != nil {
 		formatStandardResponse("interface-apply", err.Error(), w)
 		return
 	}
 	formatStandardResponse("", "", w)
 }
 
-func (srv Web) decodeNetplanInterface(cfg *InterfaceConfig, eth service.Ethernet) {
+func (srv Web) decodeNetplanInterface(cfg *InterfaceConfig, eth network.Ethernet) {
 	// Parse the config
 	cfg.Use = true
 	cfg.Gateway = eth.Gateway4
@@ -112,16 +112,16 @@ func (srv Web) NetworkInterface(w http.ResponseWriter, r *http.Request) {
 	eth := srv.encodeNetplanInterface(req)
 
 	// Store the interface config
-	if err := srv.Netplan.Store(eth); err != nil {
+	if err := srv.NetSrv.Store(eth); err != nil {
 		formatStandardResponse("interface-store", err.Error(), w)
 		return
 	}
 	formatStandardResponse("", "", w)
 }
 
-func (srv Web) encodeNetplanInterface(req *InterfaceConfig) service.Ethernet {
+func (srv Web) encodeNetplanInterface(req *InterfaceConfig) network.Ethernet {
 	// Encode the interface format into the netplan format
-	eth := service.Ethernet{}
+	eth := network.Ethernet{}
 	eth.Use = req.Use
 	eth.Name = req.Interface
 	if req.Method == "dhcp" {

@@ -15,12 +15,19 @@
  *
  */
 
-package service
+package network
 
 import (
 	"bytes"
 	"net"
 )
+
+// NetworkService is the interface for the netplan/network-manager services
+type NetworkService interface {
+	Apply() error
+	Current() *NetplanYAML
+	Store(ethernet Ethernet) error
+}
 
 // NetworkInterface represents a hardware network interface
 type NetworkInterface struct {

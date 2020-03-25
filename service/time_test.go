@@ -18,6 +18,7 @@
 package service
 
 import (
+	"github.com/CanonicalLtd/device-config/service/dbus"
 	"testing"
 )
 
@@ -38,7 +39,7 @@ func TestTime_Apply(t1 *testing.T) {
 	}
 	for _, tt := range tests {
 		t1.Run(tt.name, func(t1 *testing.T) {
-			t := NewTime(&mockDbus{})
+			t := NewTime(&dbus.MockDbus{})
 			if err := t.Apply(tt.args.ntp, tt.args.timezone, tt.args.setTime); (err != nil) != tt.wantErr {
 				t1.Errorf("Apply() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -47,15 +48,15 @@ func TestTime_Apply(t1 *testing.T) {
 }
 
 func TestTime_Current(t1 *testing.T) {
-	t := NewTime(&mockDbus{})
+	t := NewTime(&dbus.MockDbus{})
 	got := t.Current()
 
 	if got == nil {
 		t1.Errorf("Current() nil response")
 		return
 	}
-	if len(got.Timezones) != len(timezones) {
-		t1.Errorf("Current() timezones got = %v, want %v", len(got.Timezones), len(timezones))
+	if len(got.Timezones) != len(dbus.Timezones) {
+		t1.Errorf("Current() Timezones got = %v, want %v", len(got.Timezones), len(dbus.Timezones))
 	}
 	if got.Time.Hour() != 22 && got.Time.Minute() != 22 && got.Time.Second() != 22 {
 		t1.Errorf("Current() time got = %v, want %v", got.Time, "22:22:22")

@@ -18,6 +18,7 @@
 package service
 
 import (
+	"github.com/CanonicalLtd/device-config/service/dbus"
 	"time"
 )
 
@@ -31,18 +32,18 @@ type TimeService interface {
 
 // Time implements actions for managing time
 type Time struct {
-	Timezones []string  `json:"timezones"`
+	Timezones []string  `json:"Timezones"`
 	Timezone  string    `json:"timezone"`
 	NTP       bool      `json:"ntp"`
 	Time      time.Time `json:"time"`
 
-	dBus DBusService
+	dBus dbus.Service
 }
 
 // NewTime creates a time object from the device settings
-func NewTime(dBus DBusService) *Time {
+func NewTime(dBus dbus.Service) *Time {
 	return &Time{
-		Timezones: timezones,
+		Timezones: dbus.Timezones,
 		dBus:      dBus,
 	}
 }

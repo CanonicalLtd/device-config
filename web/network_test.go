@@ -20,7 +20,7 @@ package web
 import (
 	"bytes"
 	"github.com/CanonicalLtd/device-config/config"
-	"github.com/CanonicalLtd/device-config/service"
+	"github.com/CanonicalLtd/device-config/service/network"
 	"net/http"
 	"strings"
 	"testing"
@@ -39,9 +39,9 @@ func TestWeb_Network(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Mock the retrieval of network interfaces
 			if tt.ifaceErr {
-				service.Interfaces = mockInterfacesNone
+				network.Interfaces = mockInterfacesNone
 			} else {
-				service.Interfaces = mockInterfacesValid
+				network.Interfaces = mockInterfacesValid
 			}
 
 			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{})
@@ -75,9 +75,9 @@ func TestWeb_NetworkInterface(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Mock the retrieval of network interfaces
 			if tt.ifaceErr {
-				service.Interfaces = mockInterfacesNone
+				network.Interfaces = mockInterfacesNone
 			} else {
-				service.Interfaces = mockInterfacesValid
+				network.Interfaces = mockInterfacesValid
 			}
 
 			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{})

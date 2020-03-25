@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"github.com/CanonicalLtd/device-config/datastore"
 	"github.com/CanonicalLtd/device-config/service"
+	"github.com/CanonicalLtd/device-config/service/network"
 	"github.com/snapcore/snapd/client"
 	"time"
 )
@@ -61,12 +62,12 @@ func (np *mockNetplan) Apply() error {
 	return nil
 }
 
-func (np *mockNetplan) Current() *service.NetplanYAML {
-	return &service.NetplanYAML{
-		Network: service.Network{
+func (np *mockNetplan) Current() *network.NetplanYAML {
+	return &network.NetplanYAML{
+		Network: network.Network{
 			Version:  2,
 			Renderer: "networkd",
-			Ethernets: map[string]service.Ethernet{
+			Ethernets: map[string]network.Ethernet{
 				"enp3s0": {DHCP4: "true"},
 				"eth1":   {Addresses: []string{"192.168.2.200/192.168.2.255"}, Gateway4: "192.168.2.1", NameServers: map[string][]string{"addresses": {"8.8.8.8"}}},
 			},
@@ -74,7 +75,7 @@ func (np *mockNetplan) Current() *service.NetplanYAML {
 	}
 }
 
-func (np *mockNetplan) Store(ethernet service.Ethernet) error {
+func (np *mockNetplan) Store(ethernet network.Ethernet) error {
 	if ethernet.Name == "invalid" {
 		return fmt.Errorf("MOCK store error")
 	}
@@ -130,14 +131,14 @@ func (t *mockTime) Apply(ntp bool, timezone, setTime string) error {
 	return nil
 }
 
-func mockInterfacesValid() ([]service.NetworkInterface, error) {
-	return []service.NetworkInterface{
+func mockInterfacesValid() ([]network.NetworkInterface, error) {
+	return []network.NetworkInterface{
 		{Name: "enp3s0", MACAddress: "enp3s0-mac-address"},
 		{Name: "eth0", MACAddress: "eth0-mac-address"},
 		{Name: "eth1", MACAddress: "eth1-mac-address"},
 	}, nil
 }
 
-func mockInterfacesNone() ([]service.NetworkInterface, error) {
-	return []service.NetworkInterface{}, fmt.Errorf("MOCK error")
+func mockInterfacesNone() ([]network.NetworkInterface, error) {
+	return []network.NetworkInterface{}, fmt.Errorf("MOCK error")
 }

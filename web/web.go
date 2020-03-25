@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"github.com/CanonicalLtd/device-config/config"
 	"github.com/CanonicalLtd/device-config/service"
+	"github.com/CanonicalLtd/device-config/service/network"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -29,17 +30,17 @@ import (
 type Web struct {
 	Settings *config.Settings
 	Auth     service.AuthService
-	Netplan  service.NetplanService
+	NetSrv   network.NetworkService
 	Snapd    service.SnapdClient
 	TimeSrv  service.TimeService
 }
 
 // NewWebService starts a new web service
-func NewWebService(settings *config.Settings, auth service.AuthService, netplan service.NetplanService, snapd service.SnapdClient, t service.TimeService) *Web {
+func NewWebService(settings *config.Settings, auth service.AuthService, network network.NetworkService, snapd service.SnapdClient, t service.TimeService) *Web {
 	return &Web{
 		Settings: settings,
 		Auth:     auth,
-		Netplan:  netplan,
+		NetSrv:   network,
 		Snapd:    snapd,
 		TimeSrv:  t,
 	}

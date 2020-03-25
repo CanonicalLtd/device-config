@@ -20,6 +20,7 @@ package service
 import (
 	"fmt"
 	"github.com/CanonicalLtd/device-config/datastore"
+	"github.com/CanonicalLtd/device-config/service/network"
 	"github.com/google/uuid"
 	"strings"
 	"time"
@@ -67,7 +68,7 @@ func (auth *Auth) ValidateSession(username, sessionID string) (*datastore.Sessio
 
 func checkMacAddress(token string) error {
 	// Get the hardware interfaces
-	interfaces, err := Interfaces()
+	interfaces, err := network.Interfaces()
 	if err != nil {
 		return err
 	}

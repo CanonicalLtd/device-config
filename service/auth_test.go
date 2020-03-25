@@ -21,15 +21,16 @@ import (
 	"fmt"
 	"github.com/CanonicalLtd/device-config/datastore"
 	"github.com/CanonicalLtd/device-config/datastore/memory"
+	"github.com/CanonicalLtd/device-config/service/network"
 	"testing"
 	"time"
 )
 
-func mockInterfacesValid() ([]NetworkInterface, error) {
-	return []NetworkInterface{{"eth0", "eth0"}}, nil
+func mockInterfacesValid() ([]network.NetworkInterface, error) {
+	return []network.NetworkInterface{{"eth0", "eth0"}}, nil
 }
-func mockInterfacesNone() ([]NetworkInterface, error) {
-	return []NetworkInterface{}, fmt.Errorf("MOCK error")
+func mockInterfacesNone() ([]network.NetworkInterface, error) {
+	return []network.NetworkInterface{}, fmt.Errorf("MOCK error")
 }
 
 func TestAuth_CreateSession(t *testing.T) {
@@ -51,9 +52,9 @@ func TestAuth_CreateSession(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Mock the interfaces call
 			if tt.ifaceError {
-				Interfaces = mockInterfacesNone
+				network.Interfaces = mockInterfacesNone
 			} else {
-				Interfaces = mockInterfacesValid
+				network.Interfaces = mockInterfacesValid
 			}
 
 			mem := memory.NewStore()

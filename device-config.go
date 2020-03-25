@@ -9,6 +9,8 @@ import (
 	"github.com/CanonicalLtd/device-config/config"
 	"github.com/CanonicalLtd/device-config/datastore/memory"
 	"github.com/CanonicalLtd/device-config/service"
+	"github.com/CanonicalLtd/device-config/service/dbus"
+	"github.com/CanonicalLtd/device-config/service/network"
 	"github.com/CanonicalLtd/device-config/web"
 	"log"
 	"os"
@@ -23,12 +25,17 @@ func main() {
 	memorySrv := memory.NewStore()
 	authSrv := service.NewAuthService(memorySrv)
 	snapdClient := service.NewClientAdapter()
-	dBus, err := service.NewDBus()
+	dBus, err := dbus.NewDBus()
 	if err != nil {
 		log.Fatal(err)
 	}
-	netplanSrv := service.NewNetplan(dBus)
+	netplanSrv := network.NewNetplan(dBus)
 	timeSrv := service.NewTime(dBus)
+
+	nm := network.NewNetworkManager(dBus)
+	cfg := nm.Current()
+	fmt.Println("---", *cfg)
+
 	srv := web.NewWebService(settings, authSrv, netplanSrv, snapdClient, timeSrv)
 
 	// Start the web service
