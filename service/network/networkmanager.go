@@ -41,6 +41,11 @@ type NetManager struct {
 func NewNetworkManager(dBus dbus.Service) *NetManager {
 	fmt.Println("Using network manager for network configuration")
 	deviceNetplan := &NetplanYAML{Network: Network{Version: 2, Renderer: "NetworkManager", Ethernets: map[string]Ethernet{}}}
+
+	// Write the netplan file for network-manager
+	_ = serializeNetplan(deviceNetplan)
+
+	// Get the devices from dbus
 	devices, err := dBus.NMDevices()
 	if err != nil {
 		devices = map[string]string{}
@@ -103,7 +108,7 @@ func (np *NetManager) Store(ethernet Ethernet) error {
 	}
 	if ethernet.DHCP4 == "true" {
 		// Configure the device for DHCP
-		np.dBus.NMInterfaceConfigUpdate(p, eth)
+		_ = np.dBus.NMInterfaceConfigUpdate(p, eth)
 		return nil
 	}
 

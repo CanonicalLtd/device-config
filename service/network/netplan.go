@@ -27,7 +27,7 @@ import (
 	"os"
 )
 
-const netplanFilePath = "/etc/netplan/00-device-config.yaml"
+const netplanFilePath = "/etc/netplan/99-device-config.yaml"
 
 // NetplanYAML defines the structure of the netplan YAML file
 type NetplanYAML struct {
@@ -66,13 +66,15 @@ type Netplan struct {
 
 // NewNetplan creates a netplan object from a config file
 func NewNetplan(dBus dbus.Service) *Netplan {
+	fmt.Println("Using netplan for network configuration")
 	deviceNetplan := &NetplanYAML{Network: Network{Version: 2, Renderer: "networkd"}}
 
 	data, err := readNetplanFile()
 	if err != nil {
-		// Cannot find the file, so set up an empty structure
-		log.Println("Error reading netplan config:", err)
-		return &Netplan{defaultNetplan(), dBus}
+		// Cannot find the file, so set up an empty structure and store it
+		srv := &Netplan{defaultNetplan(), dBus}
+		_ = serializeNetplan(srv.deviceNetplan)
+		return srv
 	}
 
 	if err := yaml.Unmarshal(data, deviceNetplan); err != nil {
@@ -127,14 +129,7 @@ func (np *Netplan) Store(ethernet Ethernet) error {
 		np.deviceNetplan.Network.Ethernets[ethernet.Name] = ethernet
 	}
 
-	// Serialize the data to YAML
-	data, err := yaml.Marshal(np.deviceNetplan)
-	if err != nil {
-		return nil
-	}
-
-	// Write the YAML to the config file
-	return writeNetplan(data)
+	return serializeNetplan(np.deviceNetplan)
 }
 
 // readNetplanFile reads the current netplan file
@@ -152,7 +147,7 @@ var writeNetplan = func(data []byte) error {
 	if _, err := w.Write(data); err != nil {
 		return err
 	}
-	w.Flush()
+	_ = w.Flush()
 
 	return nil
 }

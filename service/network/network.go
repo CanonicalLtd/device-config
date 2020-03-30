@@ -41,6 +41,9 @@ type HardwareInterface struct {
 
 // Factory creates the relevant netplan or network manager service
 func Factory(settings *config.Settings, dBus dbus.Service) Service {
+	// Take over netplan config for this device
+	_ = TakeOver()
+
 	if settings.UseNetworkManager {
 		return NewNetworkManager(dBus)
 	}

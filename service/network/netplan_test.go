@@ -47,6 +47,11 @@ var readNetplanFileBad = func() ([]byte, error) {
 }
 
 func TestNetplan_Apply(t *testing.T) {
+	// Mock the writing of the YAML file
+	writeNetplan = func(data []byte) error {
+		return nil
+	}
+
 	tests := []struct {
 		name    string
 		wantErr bool
@@ -64,6 +69,11 @@ func TestNetplan_Apply(t *testing.T) {
 }
 
 func TestNetplan_Current(t *testing.T) {
+	// Mock the writing of the YAML file
+	writeNetplan = func(data []byte) error {
+		return nil
+	}
+
 	// Expected response from the mock
 	var yaml = &NetplanYAML{Network: Network{
 		Version:  2,
