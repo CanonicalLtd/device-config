@@ -27,7 +27,7 @@ import (
 )
 
 func mockInterfacesValid() ([]network.HardwareInterface, error) {
-	return []network.HardwareInterface{{"eth0", "eth0"}}, nil
+	return []network.HardwareInterface{{Name: "eth0", MACAddress: "eth0"}}, nil
 }
 func mockInterfacesNone() ([]network.HardwareInterface, error) {
 	return []network.HardwareInterface{}, fmt.Errorf("MOCK error")
