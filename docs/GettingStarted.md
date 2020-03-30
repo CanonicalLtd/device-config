@@ -26,6 +26,18 @@ The snap can be tested locally with the proxy settings by installing it in
 sudo snap set device-config-demo proxy=true
 ```
 
+### Snap configuration options
+The snap allows a number of settings to be configured:
+```
+sudo snap set device-config-demo key1=value1 key2=value2 ...
+```
+The valid options are:
+- `interface`: which interface the web service listens on (default=0.0.0.0)
+- `proxy`: whether configuration of the proxy is enabled** (default=false)
+- `nm`: whether network-manager configuration is used (default=false i.e. netplan is used)
+
+** Needs `devmode` or the `snapd-control` interface to be connected
+
 ## Accessing the web interface
 The web interface is accessible at [http://<ip-address>:8888/](http://<ip-address>:8888/)
 
