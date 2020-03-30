@@ -57,8 +57,14 @@ func (m *MockDbus) NMIsRunning() error {
 }
 
 //NMInterfaceConfig mocks the network manager config
-func (m *MockDbus) NMInterfaceConfig(p string) map[string]string {
-	return map[string]string{}
+func (m *MockDbus) NMInterfaceConfig(p string) *NMDeviceSettings {
+	return &NMDeviceSettings{
+		State:       100,
+		DHCP4:       false,
+		AddressData: []NMDeviceAddress{{"192.168.1.100", 24}},
+		NameServers: []string{"192.168.1.1", "8.8.8.8"},
+		Gateway:     "",
+	}
 }
 
 // NMDevices mocks fetching the configured devices
@@ -74,4 +80,9 @@ func (m *MockDbus) SetTimezone(timezone string) error {
 		}
 	}
 	return fmt.Errorf("MOCK error in timezone")
+}
+
+// NMInterfaceConfigUpdate updates network settings
+func (m *MockDbus) NMInterfaceConfigUpdate(p string, eth NMDeviceSettings) error {
+	return nil
 }

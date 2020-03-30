@@ -19,6 +19,7 @@ package network
 
 import (
 	"bufio"
+	"fmt"
 	"github.com/CanonicalLtd/device-config/service/dbus"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -98,6 +99,21 @@ func (np *Netplan) Apply() error {
 
 // Store stores the updated network settings
 func (np *Netplan) Store(ethernet Ethernet) error {
+	// Validate the network addresses (for manual config only)
+	if ethernet.DHCP4 != "true" {
+		addresses := []string{}
+		for _, a := range ethernet.Addresses {
+			ip, mask, err := validateAddress(a)
+			if err != nil {
+				return err
+			}
+			addr := fmt.Sprintf("%s/%d", ip, mask)
+
+			addresses = append(addresses, addr)
+		}
+		ethernet.Addresses = addresses
+	}
+
 	// Initialize the list of interfaces
 	if np.deviceNetplan.Network.Ethernets == nil {
 		np.deviceNetplan.Network.Ethernets = map[string]Ethernet{}

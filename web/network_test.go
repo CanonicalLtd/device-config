@@ -83,7 +83,7 @@ func TestWeb_NetworkInterface(t *testing.T) {
 			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{})
 			w := sendRequestWithAuth("POST", "/v1/network", bytes.NewReader(tt.data), srv)
 			if w.Code != tt.wantStatus {
-				t.Errorf("NetworkInterface() expected HTTP status '%d', got: %v", tt.wantStatus, w.Code)
+				t.Errorf("HardwareInterface() expected HTTP status '%d', got: %v", tt.wantStatus, w.Code)
 			}
 		})
 	}

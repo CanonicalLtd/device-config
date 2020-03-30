@@ -45,7 +45,36 @@ func TestDBus_NMInterfaceConfig(t *testing.T) {
 	db := &DBus{systemBus: nil}
 
 	got := db.NMInterfaceConfig("/org/freedesktop/NetworkManager/Device/1")
-	if got["nameservers"] != "192.168.1.1" {
-		t.Errorf("NMInterfaceConfig() nameservers = %v, want %v", got["nameservers"], "192.39.9.0")
+	if len(got.NameServers) != 1 && got.NameServers[0] != "192.168.1.1" {
+		t.Errorf("NMInterfaceConfig() nameservers = %v, want %v", got.NameServers, "[192.168.1.1]")
+	}
+}
+
+func TestDBus_NMInterfaceConfigUpdate(t *testing.T) {
+	dhcpManual := NMDeviceSettings{
+		DHCP4:       false,
+		AddressData: []NMDeviceAddress{{Address: "192.168.2.100", Prefix: 24}},
+		NameServers: []string{"192.168.2.1", "8.8.8.8"},
+		Gateway:     "192.168.2.1",
+	}
+	dhcpAuto := NMDeviceSettings{DHCP4: false}
+
+	tests := []struct {
+		name    string
+		eth     NMDeviceSettings
+		wantErr bool
+	}{
+		{"valid-manual", dhcpManual, false},
+		{"valid-dhcp", dhcpAuto, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			busObject = getMockBusObject
+			db := &DBus{systemBus: nil}
+
+			if err := db.NMInterfaceConfigUpdate("/org/freedesktop/NetworkManager/Device/1", tt.eth); (err != nil) != tt.wantErr {
+				t.Errorf("NMInterfaceConfigUpdate() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
 	}
 }

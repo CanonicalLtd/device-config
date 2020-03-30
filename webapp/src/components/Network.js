@@ -208,7 +208,7 @@ class Network extends Component {
                                     <label htmlFor={"address"}>{T('address')}:</label>
                                     <input name="address" type="text" value={this.state.interface.address} placeholder={T('address-help')} onChange={this.handleAddressChange}/>
                                     <label htmlFor={"mask"}>{T('mask')}:</label>
-                                    <input name="mask" type="text" value={this.state.interface.mask} onChange={this.handleMaskChange}/>
+                                    <input name="mask" type="text" value={this.state.interface.mask} onChange={this.handleMaskChange} placeholder={T('mask-help')}/>
                                     <label for={"gateway"}>{T('gateway')}:</label>
                                     <input name="gateway" type="text" value={this.state.interface.gateway} onChange={this.handleGatewayChange}/>
                                 </fieldset>

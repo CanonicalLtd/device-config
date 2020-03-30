@@ -36,6 +36,12 @@ network:
     enp3s0:
       dhcp4: true`), nil
 }
+var readNetplanFileUnused = func() ([]byte, error) {
+	return []byte(`
+network:
+  version: 2
+  renderer: networkd`), nil
+}
 var readNetplanFileBad = func() ([]byte, error) {
 	return []byte("\u1000"), nil
 }
@@ -99,8 +105,11 @@ func TestNetplan_Store(t *testing.T) {
 		mockRead func() ([]byte, error)
 		wantErr  bool
 	}{
-		{"valid", Ethernet{Name: "eth0", DHCP4: "true"}, readNetplanFileError, false},
-		{"valid-update", Ethernet{Name: "enp3s0", DHCP4: "true"}, readNetplanFileSuccess, false},
+		{"valid", Ethernet{Name: "eth0", DHCP4: "true", Use: true}, readNetplanFileError, false},
+		{"valid-update", Ethernet{Name: "enp3s0", DHCP4: "true", Use: true}, readNetplanFileSuccess, false},
+		{"valid-update-unused", Ethernet{Name: "enp3s0", DHCP4: "true", Use: false}, readNetplanFileSuccess, false},
+		{"valid-manual", Ethernet{Name: "eth0", DHCP4: "", Addresses: []string{"192.168.1.100/24"}, Use: true}, readNetplanFileError, false},
+		{"valid-manual-update", Ethernet{Name: "eth0", DHCP4: "", Addresses: []string{"192.168.1.100/24"}, Use: true}, readNetplanFileUnused, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

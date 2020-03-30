@@ -32,7 +32,7 @@ type TimeService interface {
 
 // Time implements actions for managing time
 type Time struct {
-	Timezones []string  `json:"Timezones"`
+	Timezones []string  `json:"timezones"`
 	Timezone  string    `json:"timezone"`
 	NTP       bool      `json:"ntp"`
 	Time      time.Time `json:"time"`

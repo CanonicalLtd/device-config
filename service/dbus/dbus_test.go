@@ -34,6 +34,8 @@ func (m *mockBusObject) Call(method string, flags dbus.Flags, args ...interface{
 	switch method {
 	case "org.freedesktop.NetworkManager.GetAllDevices":
 		c.Body = []interface{}{[]string{"/org/freedesktop/NetworkManager/Device/1"}}
+	case "org.freedesktop.NetworkManager.Settings.Connection.GetSettings":
+		c.Body = []interface{}{map[string]map[string]dbus.Variant{"ipv4": {"method": dbus.MakeVariant("manual")}}}
 	}
 	return &c
 }
@@ -53,13 +55,13 @@ func (m *mockBusObject) GetProperty(p string) (dbus.Variant, error) {
 	case "org.freedesktop.timedate1.TimeUSec":
 		return dbus.MakeVariant(uint64(time.Now().Unix() * 1e6)), nil
 	case "org.freedesktop.NetworkManager.Device.State":
-		return dbus.MakeVariant(uint64(100)), nil
+		return dbus.MakeVariant(uint32(100)), nil
 	case "org.freedesktop.NetworkManager.Device.Ip4Config":
 		return dbus.MakeVariant("/org/freedesktop/NetworkManager/Ip4Config/1"), nil
 	case "org.freedesktop.NetworkManager.IP4Config.Nameservers":
 		return dbus.MakeVariant([]uint32{16885952}), nil
 	case "org.freedesktop.NetworkManager.IP4Config.AddressData":
-		return dbus.MakeVariant([]map[string]dbus.Variant{{"address": dbus.MakeVariant("192.168.1.1"), "prefix": dbus.MakeVariant("24")}}), nil
+		return dbus.MakeVariant([]map[string]dbus.Variant{{"address": dbus.MakeVariant("192.168.1.1"), "prefix": dbus.MakeVariant(uint32(24))}}), nil
 	case "org.freedesktop.NetworkManager.Device.Dhcp4Config":
 		return dbus.MakeVariant("/org/freedesktop/NetworkManager/Dhcp4Config/1"), nil
 	}

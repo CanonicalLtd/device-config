@@ -29,14 +29,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	netplanSrv := network.NewNetplan(dBus)
 	timeSrv := service.NewTime(dBus)
+	netSrv := network.Factory(settings, dBus)
 
-	nm := network.NewNetworkManager(dBus)
-	cfg := nm.Current()
-	fmt.Println("---", *cfg)
-
-	srv := web.NewWebService(settings, authSrv, netplanSrv, snapdClient, timeSrv)
+	srv := web.NewWebService(settings, authSrv, netSrv, snapdClient, timeSrv)
 
 	// Start the web service
 	log.Fatal(srv.Start())
@@ -47,10 +43,12 @@ func configure(cfg *config.Settings) {
 		configureOnly bool
 		iface         string
 		manageProxy   bool
+		useNM         bool
 	)
 	flag.BoolVar(&configureOnly, "configure", false, "Configure the application and exit")
 	flag.StringVar(&iface, "interface", config.DefaultInterface, "The default network interface for the service")
 	flag.BoolVar(&manageProxy, "proxy", config.DefaultManageProxy, "Allow proxy configuration (needs the snapd-control interface)")
+	flag.BoolVar(&useNM, "nm", config.DefaultUseNetworkManager, "Use network manager instead of netplan")
 	flag.Parse()
 
 	log.Printf("Device config: configure=%v, proxy=%v, interface=%v", configureOnly, manageProxy, iface)
@@ -62,6 +60,7 @@ func configure(cfg *config.Settings) {
 	// Update the settings
 	cfg.NetworkInterface = iface
 	cfg.ManageProxy = manageProxy
+	cfg.UseNetworkManager = useNM
 	err := config.StoreParameters(cfg)
 	if err != nil {
 		fmt.Println("Error saving parameters:", err)

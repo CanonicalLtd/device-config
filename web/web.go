@@ -30,13 +30,13 @@ import (
 type Web struct {
 	Settings *config.Settings
 	Auth     service.AuthService
-	NetSrv   network.NetworkService
+	NetSrv   network.Service
 	Snapd    service.SnapdClient
 	TimeSrv  service.TimeService
 }
 
 // NewWebService starts a new web service
-func NewWebService(settings *config.Settings, auth service.AuthService, network network.NetworkService, snapd service.SnapdClient, t service.TimeService) *Web {
+func NewWebService(settings *config.Settings, auth service.AuthService, network network.Service, snapd service.SnapdClient, t service.TimeService) *Web {
 	return &Web{
 		Settings: settings,
 		Auth:     auth,

@@ -131,14 +131,14 @@ func (t *mockTime) Apply(ntp bool, timezone, setTime string) error {
 	return nil
 }
 
-func mockInterfacesValid() ([]network.NetworkInterface, error) {
-	return []network.NetworkInterface{
+func mockInterfacesValid() ([]network.HardwareInterface, error) {
+	return []network.HardwareInterface{
 		{Name: "enp3s0", MACAddress: "enp3s0-mac-address"},
 		{Name: "eth0", MACAddress: "eth0-mac-address"},
 		{Name: "eth1", MACAddress: "eth1-mac-address"},
 	}, nil
 }
 
-func mockInterfacesNone() ([]network.NetworkInterface, error) {
-	return []network.NetworkInterface{}, fmt.Errorf("MOCK error")
+func mockInterfacesNone() ([]network.HardwareInterface, error) {
+	return []network.HardwareInterface{}, fmt.Errorf("MOCK error")
 }

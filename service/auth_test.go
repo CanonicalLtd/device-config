@@ -26,11 +26,11 @@ import (
 	"time"
 )
 
-func mockInterfacesValid() ([]network.NetworkInterface, error) {
-	return []network.NetworkInterface{{"eth0", "eth0"}}, nil
+func mockInterfacesValid() ([]network.HardwareInterface, error) {
+	return []network.HardwareInterface{{"eth0", "eth0"}}, nil
 }
-func mockInterfacesNone() ([]network.NetworkInterface, error) {
-	return []network.NetworkInterface{}, fmt.Errorf("MOCK error")
+func mockInterfacesNone() ([]network.HardwareInterface, error) {
+	return []network.HardwareInterface{}, fmt.Errorf("MOCK error")
 }
 
 func TestAuth_CreateSession(t *testing.T) {

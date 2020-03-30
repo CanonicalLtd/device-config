@@ -40,6 +40,7 @@ export default {
     'macaddress': 'MAC Address',
     'manual': 'Manual',
     'mask': 'Subnet mask',
+    'mask-help': 'The network prefix for address e.g. 24 (leave blank for default mask)',
     'method': 'Method',
     'network': 'Network',
     'network-config': 'Network Configuration',

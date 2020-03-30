@@ -33,7 +33,8 @@ type Service interface {
 	// Network Manager
 	NMIsRunning() error
 	NMDevices() (map[string]string, error)
-	NMInterfaceConfig(p string) map[string]string
+	NMInterfaceConfig(p string) *NMDeviceSettings
+	NMInterfaceConfigUpdate(p string, eth NMDeviceSettings) error
 }
 
 // DBus implements a wrapper for the dbus service

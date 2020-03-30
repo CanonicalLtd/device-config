@@ -20,7 +20,7 @@ package network
 import (
 	"fmt"
 	"github.com/CanonicalLtd/device-config/service/dbus"
-	"strings"
+	"log"
 )
 
 // NMService is the interface for the netplan service
@@ -39,7 +39,8 @@ type NetManager struct {
 
 // NewNetworkManager creates a network manager service
 func NewNetworkManager(dBus dbus.Service) *NetManager {
-	deviceNetplan := &NetplanYAML{Network: Network{Version: 2, Renderer: "networkmanagerd", Ethernets: map[string]Ethernet{}}}
+	fmt.Println("Using network manager for network configuration")
+	deviceNetplan := &NetplanYAML{Network: Network{Version: 2, Renderer: "NetworkManager", Ethernets: map[string]Ethernet{}}}
 	devices, err := dBus.NMDevices()
 	if err != nil {
 		devices = map[string]string{}
@@ -61,25 +62,65 @@ func (np *NetManager) Current() *NetplanYAML {
 		p := np.interfaces[iface.Name]
 		ifaceConfig := np.dBus.NMInterfaceConfig(p)
 
+		dhcp4 := ""
+		if ifaceConfig.DHCP4 {
+			dhcp4 = "true"
+		}
+		addresses := []string{}
+		for _, a := range ifaceConfig.AddressData {
+			addresses = append(addresses, fmt.Sprintf("%s/%d", a.Address, a.Prefix))
+		}
+
 		eth := Ethernet{
-			Use:         ifaceConfig["use"] == "true",
+			Use:         ifaceConfig.State >= 100,
 			Name:        iface.Name,
-			DHCP4:       ifaceConfig["dhcp4"],
-			Addresses:   strings.Split(ifaceConfig["addresses"], ","),
-			NameServers: map[string][]string{"addresses": strings.Split(ifaceConfig["nameservers"], ",")},
-			Gateway4:    ifaceConfig["gateway"],
+			DHCP4:       dhcp4,
+			Addresses:   addresses,
+			NameServers: map[string][]string{"addresses": ifaceConfig.NameServers},
+			Gateway4:    ifaceConfig.Gateway,
 		}
 		np.deviceNetplan.Network.Ethernets[iface.Name] = eth
 	}
+	log.Println("---", np.deviceNetplan)
 	return np.deviceNetplan
 }
 
 // Apply applies the network manager configuration using dbus
 func (np *NetManager) Apply() error {
-	return fmt.Errorf("NM Apply: not implemented yet")
+	// This is not needed for network-manager connections
+	return nil
 }
 
 // Store stores the updated network settings
 func (np *NetManager) Store(ethernet Ethernet) error {
-	return fmt.Errorf("NM Store: not implemented yet")
+	var eth dbus.NMDeviceSettings
+
+	//  Get the dbus path for the interface
+	p := np.interfaces[ethernet.Name]
+
+	eth = dbus.NMDeviceSettings{
+		DHCP4: ethernet.DHCP4 == "true",
+	}
+	if ethernet.DHCP4 == "true" {
+		// Configure the device for DHCP
+		np.dBus.NMInterfaceConfigUpdate(p, eth)
+		return nil
+	}
+
+	// Convert the format of the settings
+	addressData := []dbus.NMDeviceAddress{}
+	for _, a := range ethernet.Addresses {
+		ip, mask, err := validateAddress(a)
+		if err != nil {
+			return err
+		}
+
+		addressData = append(addressData, dbus.NMDeviceAddress{Address: ip, Prefix: mask})
+	}
+
+	eth.AddressData = addressData
+	eth.NameServers = ethernet.NameServers["addresses"]
+	eth.Gateway = ethernet.Gateway4
+
+	return np.dBus.NMInterfaceConfigUpdate(p, eth)
 }
