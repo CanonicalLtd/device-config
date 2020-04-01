@@ -54,8 +54,8 @@ func NewDBus() (*DBus, error) {
 
 // NetplanApply applies the current netplan configuration
 func (db *DBus) NetplanApply() error {
-	nPlan := db.getBusObject("io.netplan.NetSrv", "/io/netplan/NetSrv")
-	call := nPlan.Call("io.netplan.NetSrv.Apply", 0)
+	nPlan := db.getBusObject("io.netplan.Netplan", "/io/netplan/Netplan")
+	call := nPlan.Call("io.netplan.Netplan.Apply", 0)
 	return call.Err
 }
 

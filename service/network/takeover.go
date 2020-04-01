@@ -27,10 +27,22 @@ const snapdFile = "/etc/netplan/00-snapd-config.yaml"
 // TakeOver takes over network configuration for the device by removing
 // existing netplan files
 func TakeOver() error {
-	// Remove the snapd netplan config file
-	_ = os.Remove(snapdFile)
+	// Check if we have already configured this device
+	if _, err := os.Stat(netplanFilePath); err == nil {
+		// Remove the snapd/console-conf netplan config file
+		_ = os.Remove(snapdFile)
+		return nil
+	}
 
-	return nil
+	// Check if the snapd netplan file is there
+	if _, err := os.Stat(snapdFile); err != nil {
+		// No - all done
+		return nil
+	}
+
+	// Rename the snapd/console-conf file, if it's there
+	// So we keep the existing config
+	return os.Rename(snapdFile, netplanFilePath)
 }
 
 func serializeNetplan(deviceNetplan *NetplanYAML) error {
