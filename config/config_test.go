@@ -24,11 +24,21 @@ import (
 )
 
 func TestDefaultArgs(t *testing.T) {
+	cfg := &Settings{
+		NetworkInterfaceDevice: DefaultInterfaceDevice,
+		NetworkInterfaceIP:     DefaultInterfaceIP,
+		Port:                   DefaultPort,
+		DocRoot:                DefaultDocRoot,
+		IndexTemplate:          DefaultIndexTemplate,
+		ManageProxy:            DefaultManageProxy,
+		UseNetworkManager:      DefaultUseNetworkManager,
+	}
+
 	tests := []struct {
 		name string
 		want *Settings
 	}{
-		{"valid", &Settings{DefaultInterface, DefaultPort, DefaultDocRoot, DefaultIndexTemplate, DefaultManageProxy, DefaultUseNetworkManager}},
+		{"valid", cfg},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -44,8 +54,8 @@ func TestReadParameters(t *testing.T) {
 	if got.ManageProxy != DefaultManageProxy {
 		t.Errorf("ReadParameters() got = %v, want %v", got.ManageProxy, DefaultManageProxy)
 	}
-	if got.NetworkInterface != DefaultInterface {
-		t.Errorf("ReadParameters() got = %v, want %v", got.NetworkInterface, DefaultInterface)
+	if got.NetworkInterfaceIP != DefaultInterfaceIP {
+		t.Errorf("ReadParameters() got = %v, want %v", got.NetworkInterfaceIP, DefaultInterfaceIP)
 	}
 
 	_ = os.Remove(paramsFilename)
@@ -60,8 +70,8 @@ func TestStoreParameters(t *testing.T) {
 	if cfg.ManageProxy != DefaultManageProxy {
 		t.Errorf("ReadParameters() got = %v, want %v", cfg.ManageProxy, DefaultManageProxy)
 	}
-	if cfg.NetworkInterface != DefaultInterface {
-		t.Errorf("ReadParameters() got = %v, want %v", cfg.NetworkInterface, DefaultInterface)
+	if cfg.NetworkInterfaceIP != DefaultInterfaceIP {
+		t.Errorf("ReadParameters() got = %v, want %v", cfg.NetworkInterfaceIP, DefaultInterfaceIP)
 	}
 
 	_ = os.Remove(paramsFilename)

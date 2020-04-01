@@ -4,6 +4,7 @@ exec 1>$SNAP_DATA/hook-log.out 2>&1
 
 # Get the parameters from the snap settings
 interface=$(snapctl get interface)
+listenon=$(snapctl get listenon)
 proxy=$(snapctl get proxy)
 nm=$(snapctl get nm)
 
@@ -17,9 +18,9 @@ fi
 # Store the settings
 cd $SNAP
 if [ -z "$interface" ]; then
-  bin/device-config -configure -proxy="$proxy" -nm="$nm"
+  bin/device-config -configure -proxy="$proxy" -nm="$nm" -listenon="$listenon"
 else
-  bin/device-config -configure -proxy="$proxy" -nm="$nm" -interface="$interface"
+  bin/device-config -configure -proxy="$proxy" -nm="$nm" -listenon="$listenon" -interface="$interface"
 fi
 
 # Restart the service

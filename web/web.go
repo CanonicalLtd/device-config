@@ -23,7 +23,11 @@ import (
 	"github.com/CanonicalLtd/device-config/service"
 	"github.com/CanonicalLtd/device-config/service/network"
 	"github.com/gorilla/mux"
+	"log"
+	"net"
 	"net/http"
+	"strconv"
+	"syscall"
 )
 
 // Web implements the web service
@@ -46,11 +50,42 @@ func NewWebService(settings *config.Settings, auth service.AuthService, network 
 	}
 }
 
+const (
+	soBINDTODEVICE = 0x19
+)
+
 // Start the web service
 func (srv Web) Start() error {
-	listenOn := fmt.Sprintf("%s:%s", srv.Settings.NetworkInterface, srv.Settings.Port)
+	if len(srv.Settings.NetworkInterfaceDevice) > 0 {
+		return srv.StartOnInterface(srv.Settings.NetworkInterfaceDevice)
+	}
+
+	listenOn := fmt.Sprintf("%s:%s", srv.Settings.NetworkInterfaceIP, srv.Settings.Port)
 	fmt.Printf("Starting service on port %s\n", listenOn)
 	return http.ListenAndServe(listenOn, srv.Router())
+}
+
+// StartOnInterface starts the web service on a specific network interface
+func (srv Web) StartOnInterface(iface string) error {
+	fmt.Printf("Starting service on port %s:%s (%s)\n", srv.Settings.NetworkInterfaceIP, srv.Settings.Port, iface)
+
+	// Create a TCP listener
+	port, _ := strconv.Atoi(srv.Settings.Port)
+	listenOn := net.TCPAddr{
+		IP:   net.ParseIP(srv.Settings.NetworkInterfaceIP),
+		Port: port,
+	}
+	tcpListener, err := net.ListenTCP("tcp", &listenOn)
+	if err != nil {
+		log.Fatal("net.ListenTCP()", err)
+	}
+
+	// Bind to a specific interface (SO_BINDTODEVICE is linux only)
+	f, _ := tcpListener.File()
+	syscall.SetsockoptString(int(f.Fd()), syscall.SOL_SOCKET, soBINDTODEVICE, iface)
+
+	// Service the routes
+	return http.Serve(tcpListener, srv.Router())
 }
 
 // Router returns the application router

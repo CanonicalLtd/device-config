@@ -27,7 +27,8 @@ import (
 
 // Default settings
 const (
-	DefaultInterface         = "0.0.0.0"
+	DefaultInterfaceIP       = "0.0.0.0"
+	DefaultInterfaceDevice   = ""
 	DefaultPort              = "8888"
 	DefaultDocRoot           = "./static"
 	DefaultIndexTemplate     = "index.html"
@@ -39,23 +40,25 @@ const (
 
 // Settings defines the application configuration
 type Settings struct {
-	NetworkInterface  string
-	Port              string
-	DocRoot           string
-	IndexTemplate     string
-	ManageProxy       bool
-	UseNetworkManager bool
+	NetworkInterfaceDevice string
+	NetworkInterfaceIP     string
+	Port                   string
+	DocRoot                string
+	IndexTemplate          string
+	ManageProxy            bool
+	UseNetworkManager      bool
 }
 
 // DefaultArgs checks the environment variables
 func DefaultArgs() *Settings {
 	return &Settings{
-		NetworkInterface:  DefaultInterface,
-		Port:              DefaultPort,
-		DocRoot:           DefaultDocRoot,
-		IndexTemplate:     DefaultIndexTemplate,
-		ManageProxy:       DefaultManageProxy,
-		UseNetworkManager: DefaultUseNetworkManager,
+		NetworkInterfaceDevice: DefaultInterfaceDevice,
+		NetworkInterfaceIP:     DefaultInterfaceIP,
+		Port:                   DefaultPort,
+		DocRoot:                DefaultDocRoot,
+		IndexTemplate:          DefaultIndexTemplate,
+		ManageProxy:            DefaultManageProxy,
+		UseNetworkManager:      DefaultUseNetworkManager,
 	}
 }
 
@@ -85,8 +88,11 @@ func StoreParameters(c *Settings) error {
 	p := GetPath(paramsFilename)
 
 	// Default empty parameters
-	if len(c.NetworkInterface) == 0 {
-		c.NetworkInterface = DefaultInterface
+	if len(c.NetworkInterfaceIP) == 0 {
+		c.NetworkInterfaceIP = DefaultInterfaceIP
+	}
+	if len(c.NetworkInterfaceDevice) == 0 {
+		c.NetworkInterfaceDevice = DefaultInterfaceDevice
 	}
 	if len(c.Port) == 0 {
 		c.Port = DefaultPort
