@@ -33,6 +33,8 @@ sudo snap set device-config-demo key1=value1 key2=value2 ...
 ```
 The valid options are:
 - `interface`: which interface the web service listens on (default=0.0.0.0)
+- `listenon`: Force the service to listen a specific network device e.g. eth0 (default="")
+- `hide`: Comma-separated list of interfaces to hide (default="")
 - `proxy`: whether configuration of the proxy is enabled** (default=false)
 - `nm`: whether network-manager configuration is used (default=false i.e. netplan is used)
 
