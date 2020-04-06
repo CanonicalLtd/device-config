@@ -14,6 +14,7 @@ import (
 	"github.com/CanonicalLtd/device-config/web"
 	"log"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -45,12 +46,14 @@ func configure(cfg *config.Settings) {
 		listenOn      string
 		manageProxy   bool
 		useNM         bool
+		hideIfaces    string
 	)
 	flag.BoolVar(&configureOnly, "configure", false, "Configure the application and exit")
 	flag.StringVar(&iface, "interface", config.DefaultInterfaceIP, "The default network interface for the service")
 	flag.StringVar(&listenOn, "listenon", config.DefaultInterfaceDevice, "Force the service to listen a specific network device e.g. eth0")
 	flag.BoolVar(&manageProxy, "proxy", config.DefaultManageProxy, "Allow proxy configuration (needs the snapd-control interface)")
 	flag.BoolVar(&useNM, "nm", config.DefaultUseNetworkManager, "Use network manager instead of netplan")
+	flag.StringVar(&hideIfaces, "hide", "", "Comma-separated list of interfaces to hide")
 	flag.Parse()
 
 	log.Printf("Device config: configure=%v, proxy=%v, interface=%v", configureOnly, manageProxy, iface)
@@ -64,6 +67,7 @@ func configure(cfg *config.Settings) {
 	cfg.NetworkInterfaceDevice = listenOn
 	cfg.ManageProxy = manageProxy
 	cfg.UseNetworkManager = useNM
+	cfg.HideInterfaces = strings.Split(hideIfaces, ",")
 	err := config.StoreParameters(cfg)
 	if err != nil {
 		fmt.Println("Error saving parameters:", err)

@@ -32,6 +32,7 @@ func TestDefaultArgs(t *testing.T) {
 		IndexTemplate:          DefaultIndexTemplate,
 		ManageProxy:            DefaultManageProxy,
 		UseNetworkManager:      DefaultUseNetworkManager,
+		HideInterfaces:         []string{},
 	}
 
 	tests := []struct {

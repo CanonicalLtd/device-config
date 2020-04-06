@@ -21,13 +21,14 @@ import "net/http"
 
 // AppConfig holds the config for application
 type AppConfig struct {
-	ManageProxy bool `json:"manageProxy"`
+	ManageProxy    bool     `json:"manageProxy"`
+	HideInterfaces []string `json:"hideInterfaces"`
 }
 
 // AppConfig is the API to get the application config
 func (srv Web) AppConfig(w http.ResponseWriter, r *http.Request) {
 	// Get the current settings
-	cfg := AppConfig{ManageProxy: srv.Settings.ManageProxy}
+	cfg := AppConfig{ManageProxy: srv.Settings.ManageProxy, HideInterfaces: srv.Settings.HideInterfaces}
 
 	// Return the response - snapd returns in AppConfig format
 	formatAppConfigResponse(cfg, w)

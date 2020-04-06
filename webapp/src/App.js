@@ -39,7 +39,7 @@ class App extends Component {
         location: history.location,
         token: props.token || {},
         proxy: {},
-        config: {manageProxy: false}
+        config: {manageProxy: false, hideInterfaces: []},
     }
   }
 
@@ -62,7 +62,6 @@ class App extends Component {
   }
 
   changeLanguage = (l) => {
-      console.log('---', l)
       saveLanguage(l)
       this.setState({language: l})
   }
@@ -73,7 +72,7 @@ class App extends Component {
 
   renderNetwork(sectionId, subsection) {
       if (!sectionId) {
-          return <Network />
+          return <Network config={this.state.config} />
       }
   }
 

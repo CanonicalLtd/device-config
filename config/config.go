@@ -40,6 +40,7 @@ const (
 
 // Settings defines the application configuration
 type Settings struct {
+	HideInterfaces         []string
 	NetworkInterfaceDevice string
 	NetworkInterfaceIP     string
 	Port                   string
@@ -52,6 +53,7 @@ type Settings struct {
 // DefaultArgs checks the environment variables
 func DefaultArgs() *Settings {
 	return &Settings{
+		HideInterfaces:         []string{},
 		NetworkInterfaceDevice: DefaultInterfaceDevice,
 		NetworkInterfaceIP:     DefaultInterfaceIP,
 		Port:                   DefaultPort,

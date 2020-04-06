@@ -7,6 +7,7 @@ interface=$(snapctl get interface)
 listenon=$(snapctl get listenon)
 proxy=$(snapctl get proxy)
 nm=$(snapctl get nm)
+hide=$(snapctl get hide)
 
 if [ -z "$proxy" ]; then
   proxy="false"
@@ -18,9 +19,9 @@ fi
 # Store the settings
 cd $SNAP
 if [ -z "$interface" ]; then
-  bin/device-config -configure -proxy="$proxy" -nm="$nm" -listenon="$listenon"
+  bin/device-config -configure -proxy="$proxy" -nm="$nm" -listenon="$listenon" -hide="$hide"
 else
-  bin/device-config -configure -proxy="$proxy" -nm="$nm" -listenon="$listenon" -interface="$interface"
+  bin/device-config -configure -proxy="$proxy" -nm="$nm" -listenon="$listenon" -hide="$hide" -interface="$interface"
 fi
 
 # Restart the service

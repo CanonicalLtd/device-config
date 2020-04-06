@@ -40,11 +40,16 @@ class Network extends Component {
 
     getNetworkConfig = () => {
         api.networkGet().then(response => {
-            this.setState({interfaces: response.data.interfaces, error: ''})
-            if ((!this.state.selected) && (response.data.interfaces.length > 0)) {
+            // Skip the hidden interfaces
+            let interfaces = response.data.interfaces.filter(iface => {
+                return !this.props.config.hideInterfaces.includes(iface.interface)
+            })
 
-                this.getInterface(response.data.interfaces[0].interface)
-                this.setState({selected: response.data.interfaces[0].interface})
+            this.setState({interfaces: interfaces, error: ''})
+
+            if ((!this.state.selected) && (response.data.interfaces.length > 0)) {
+                this.getInterface(interfaces[0].interface)
+                this.setState({selected: interfaces[0].interface})
             }
         })
         .catch(e => {

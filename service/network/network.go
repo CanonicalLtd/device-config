@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"github.com/CanonicalLtd/device-config/config"
 	"github.com/CanonicalLtd/device-config/service/dbus"
+	"io/ioutil"
 	"net"
 	"strings"
 )
@@ -58,13 +59,43 @@ var Interfaces = func() ([]HardwareInterface, error) {
 		return ifaces, err
 	}
 
+	// Get a list of the virtual interfaces e.g. docker, lxd etc.
+	virtual := virtualInterfaces("/sys/devices/virtual/net/")
+
 	for _, i := range interfaces {
 		// Select the real network interfaces only
 		if i.Flags&net.FlagUp != 0 && bytes.Compare(i.HardwareAddr, nil) != 0 {
+			// Ignore virtual interfaces
+			if stringInSlice(i.Name, virtual) {
+				continue
+			}
+
 			ifaces = append(ifaces, HardwareInterface{i.Name, i.HardwareAddr.String()})
 		}
 	}
 	return ifaces, nil
+}
+
+func virtualInterfaces(sysdev string) []string {
+	ifaces := []string{}
+	files, err := ioutil.ReadDir(sysdev)
+	if err != nil {
+		return ifaces
+	}
+
+	for _, f := range files {
+		ifaces = append(ifaces, f.Name())
+	}
+	return ifaces
+}
+
+func stringInSlice(needle string, haystack []string) bool {
+	for _, h := range haystack {
+		if h == needle {
+			return true
+		}
+	}
+	return false
 }
 
 // validateAddress check we have a valid network address e.g. 192.168.1.111/24
