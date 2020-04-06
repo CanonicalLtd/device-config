@@ -56,7 +56,7 @@ func configure(cfg *config.Settings) {
 	flag.StringVar(&hideIfaces, "hide", "", "Comma-separated list of interfaces to hide")
 	flag.Parse()
 
-	log.Printf("Device config: configure=%v, proxy=%v, interface=%v", configureOnly, manageProxy, iface)
+	log.Printf("Device config: configure=%v, proxy=%v, interface=%v, nm=%v, hide=%v", configureOnly, manageProxy, iface, useNM, hideIfaces)
 	if !configureOnly {
 		// No changes if we're not configuring the app
 		return

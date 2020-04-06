@@ -39,26 +39,12 @@ class App extends Component {
         location: history.location,
         token: props.token || {},
         proxy: {},
-        config: {manageProxy: false, hideInterfaces: []},
     }
-  }
-
-  componentDidMount() {
-      this.getAppConfig()
   }
 
   handleNavigation(location) {
     this.setState({ location: location })
     window.scrollTo(0, 0)
-  }
-
-  getAppConfig = () => {
-    api.configGet().then(response => {
-        this.setState({config: response.data.config, error: ''})
-    })
-    .catch(e => {
-        this.setState({error: formatError(e.response.data)});
-    })
   }
 
   changeLanguage = (l) => {
@@ -72,7 +58,7 @@ class App extends Component {
 
   renderNetwork(sectionId, subsection) {
       if (!sectionId) {
-          return <Network config={this.state.config} />
+          return <Network config={this.props.config} />
       }
   }
 
@@ -100,8 +86,8 @@ class App extends Component {
 
     return (
         <div className="App">
-          {r.section===''? <Header section={r.section} subsection={r.subsection} sectionId={r.sectionId} config={this.state.config} changeLanguage={this.changeLanguage} /> : ''}
-          {r.section!==''? <HeaderSlim section={r.section} subsection={r.subsection} sectionId={r.sectionId} config={this.state.config} changeLanguage={this.changeLanguage} /> : ''}
+          {r.section===''? <Header section={r.section} subsection={r.subsection} sectionId={r.sectionId} config={this.props.config} changeLanguage={this.changeLanguage} /> : ''}
+          {r.section!==''? <HeaderSlim section={r.section} subsection={r.subsection} sectionId={r.sectionId} config={this.props.config} changeLanguage={this.changeLanguage} /> : ''}
 
           <div className="content row">
             {r.section===''? <Index /> : ''}

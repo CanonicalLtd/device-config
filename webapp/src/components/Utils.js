@@ -17,12 +17,24 @@
 
 import Messages from './Messages'
 import Cookies from 'js-cookie'
+import api from "./api";
 
 export function T(message) {
     let lang = getLanguage()
     const msg = Messages[lang][message] || message;
     return msg
 }
+
+export function getAppConfig(callback) {
+    api.configGet().then(response => {
+        let cfg = response.data.config
+        callback(cfg)
+    })
+    .catch(e => {
+        callback({})
+    })
+}
+
 
 // URL is in the form:
 //  /section
