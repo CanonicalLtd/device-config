@@ -22,6 +22,7 @@ import (
 	"github.com/CanonicalLtd/device-config/datastore"
 	"github.com/CanonicalLtd/device-config/service"
 	"github.com/CanonicalLtd/device-config/service/network"
+	"github.com/CanonicalLtd/device-config/service/snapd"
 	"github.com/snapcore/snapd/client"
 	"time"
 )
@@ -86,6 +87,7 @@ type mockSnapd struct {
 	confError     bool
 	setConfError  bool
 	servicesError bool
+	snapsErr      bool
 }
 
 func (snap *mockSnapd) Conf(name string) (map[string]interface{}, error) {
@@ -111,6 +113,13 @@ func (snap *mockSnapd) AppServices(names []string) ([]*client.AppInfo, error) {
 		{Snap: "chuck-norris-webserver", Name: "daemon", Enabled: true, Active: true},
 		{Snap: "super-agent", Name: "service", Enabled: true, Active: false},
 	}, nil
+}
+
+func (snap *mockSnapd) List(names []string, opts *client.ListOptions) ([]snapd.Snap, error) {
+	if snap.snapsErr {
+		return nil, fmt.Errorf("MOCK snap list error")
+	}
+	return []snapd.Snap{}, nil
 }
 
 type mockTime struct{}

@@ -35,11 +35,9 @@ class Services extends Component {
 
     getServices = () => {
         api.servicesGet().then(response => {
-            console.log('---', response)
             this.setState({services: response.data.services, error: ''})
         })
         .catch(e => {
-            console.log('---', e.response)
             this.setState({error: formatError(e.response.data)});
         })
     }

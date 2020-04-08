@@ -59,6 +59,9 @@ export default {
     'site-description2': `Configure the network proxy settings`,
     'site-description3': `Set the device time zone`,
     'site-description4': `Configure network time server`,
+    'snaps': 'Snaps',
+    'snaps-config': 'Snap Configuration',
+    'snap-settings': 'Snap Settings',
     'submit': 'Submit',
     'subtitle': 'Configuration service for Ubuntu Core devices.',
     'sv': 'Swedish',
@@ -67,5 +70,7 @@ export default {
     'time-config': 'Time Configuration',
     'time-updated': 'Time configuration was updated successfully',
     'title': 'Ubuntu Core Configuration',
+    'update': 'Update',
     'use': 'Use the interface',
+    'view-settings': 'View settings',
 }

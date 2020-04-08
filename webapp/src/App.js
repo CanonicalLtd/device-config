@@ -21,14 +21,14 @@ import HeaderSlim from './components/HeaderSlim';
 import Index from './components/Index';
 import Footer from './components/Footer';
 import Login from './components/Login';
-import {formatError, getLanguage, parseRoute, saveLanguage} from './components/Utils'
+import {getLanguage, parseRoute, saveLanguage} from './components/Utils'
 
 import createHistory from 'history/createBrowserHistory'
 import Network from "./components/Network";
 import Proxy from "./components/Proxy";
 import Time from "./components/Time";
+import Snaps from "./components/Snaps";
 import Services from "./components/Services";
-import api from "./components/api";
 const history = createHistory()
 
 class App extends Component {
@@ -74,6 +74,12 @@ class App extends Component {
     }
   }
 
+    renderSnaps(sectionId, subsection) {
+        if (!sectionId) {
+            return <Snaps />
+        }
+    }
+
     renderServices(sectionId, subsection) {
         if (!sectionId) {
             return <Services />
@@ -96,6 +102,7 @@ class App extends Component {
             {r.section==='proxy'? this.renderProxy(r.sectionId, r.subsection) : ''}
             {r.section==='time'? this.renderTime(r.sectionId, r.subsection) : ''}
             {r.section==='services'? this.renderServices(r.sectionId, r.subsection) : ''}
+            {r.section==='snaps'? this.renderSnaps(r.sectionId, r.subsection) : ''}
           </div>
 
           <Footer />

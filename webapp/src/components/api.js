@@ -59,6 +59,14 @@ let service = {
         return axios.get(constants.baseUrl + 'services');
     },
 
+    snapsGet: () => {
+        return axios.get(constants.baseUrl + 'snaps');
+    },
+
+    snapsSettingsUpdate: (snap, settings) => {
+        return axios.put(constants.baseUrl + 'snaps/' + snap, settings);
+    },
+
 }
 
 export default service

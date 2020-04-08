@@ -22,6 +22,7 @@ import (
 	"github.com/CanonicalLtd/device-config/config"
 	"github.com/CanonicalLtd/device-config/service"
 	"github.com/CanonicalLtd/device-config/service/network"
+	"github.com/CanonicalLtd/device-config/service/snapd"
 	"github.com/gorilla/mux"
 	"log"
 	"net"
@@ -35,12 +36,12 @@ type Web struct {
 	Settings *config.Settings
 	Auth     service.AuthService
 	NetSrv   network.Service
-	Snapd    service.SnapdClient
+	Snapd    snapd.Client
 	TimeSrv  service.TimeService
 }
 
 // NewWebService starts a new web service
-func NewWebService(settings *config.Settings, auth service.AuthService, network network.Service, snapd service.SnapdClient, t service.TimeService) *Web {
+func NewWebService(settings *config.Settings, auth service.AuthService, network network.Service, snapd snapd.Client, t service.TimeService) *Web {
 	return &Web{
 		Settings: settings,
 		Auth:     auth,
@@ -103,6 +104,8 @@ func (srv Web) Router() *mux.Router {
 	router.Handle("/v1/time", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Time))).Methods("GET")
 	router.Handle("/v1/time", srv.MiddlewareWithAuth(http.HandlerFunc(srv.TimeConfig))).Methods("POST")
 	router.Handle("/v1/services", srv.MiddlewareWithAuth(http.HandlerFunc(srv.AppServices))).Methods("GET")
+	router.Handle("/v1/snaps", srv.MiddlewareWithAuth(http.HandlerFunc(srv.SnapList))).Methods("GET")
+	router.Handle("/v1/snaps/{snap}", srv.MiddlewareWithAuth(http.HandlerFunc(srv.SnapSet))).Methods("PUT")
 	router.Handle("/logout", Middleware(http.HandlerFunc(srv.Logout))).Methods("GET")
 
 	// Serve the static path
@@ -117,6 +120,7 @@ func (srv Web) Router() *mux.Router {
 	router.Handle("/proxy", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
 	router.Handle("/time", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
 	router.Handle("/services", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
+	router.Handle("/snaps", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
 	router.NotFoundHandler = Middleware(http.HandlerFunc(srv.Index))
 
 	return router

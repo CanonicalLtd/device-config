@@ -11,6 +11,7 @@ import (
 	"github.com/CanonicalLtd/device-config/service"
 	"github.com/CanonicalLtd/device-config/service/dbus"
 	"github.com/CanonicalLtd/device-config/service/network"
+	"github.com/CanonicalLtd/device-config/service/snapd"
 	"github.com/CanonicalLtd/device-config/web"
 	"log"
 	"os"
@@ -25,7 +26,7 @@ func main() {
 	// Set up the dependency chain
 	memorySrv := memory.NewStore()
 	authSrv := service.NewAuthService(memorySrv)
-	snapdClient := service.NewClientAdapter()
+	snapdClient := snapd.NewClientAdapter()
 	dBus, err := dbus.NewDBus()
 	if err != nil {
 		log.Fatal(err)

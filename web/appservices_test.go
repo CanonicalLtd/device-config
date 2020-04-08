@@ -34,7 +34,7 @@ func TestWeb_AppServices(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{false, false, tt.servicesErr}, &mockTime{})
+			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{servicesError: tt.servicesErr}, &mockTime{})
 
 			w := sendRequestWithAuth("GET", "/v1/services", nil, srv)
 			if w.Code != tt.wantStatus {

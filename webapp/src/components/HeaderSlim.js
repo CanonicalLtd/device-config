@@ -20,12 +20,16 @@ import {checkSession, getLanguage, T} from "./Utils";
 import Constants from "./constants";
 
 
-const links = ['services','network','time'];
+let links = ['network','time'];
 
 class HeaderSlim extends Component {
     constructor(props) {
         super(props)
         this.state = {};
+
+        if (this.props.config.manageProxy) {
+            links.unshift('services','snaps','proxy')
+        }
     }
 
     link(l) {
@@ -47,21 +51,6 @@ class HeaderSlim extends Component {
         } else {
             return <li key={'login'} className="p-navigation__link" role="menuitem"><a href="/login">{T("login")}</a></li>
         }
-    }
-
-    renderProxy() {
-        if ((!this.props.config) || (!this.props.config.manageProxy)) {
-            return
-        }
-
-        let l = 'proxy'
-        let active = '';
-        if ((this.props.section === l) || (this.props.subsection === l)) {
-            active = ' active'
-        }
-        return (
-            <li key={l} className={'p-navigation__link' + active} role="menuitem"><a href={this.link(l)}>{T(l)}</a></li>
-        )
     }
 
     renderLanguage() {
@@ -107,7 +96,6 @@ class HeaderSlim extends Component {
                                     <li key={l} className={'p-navigation__link' + active} role="menuitem"><a href={this.link(l)}>{T(l)}</a></li>
                                 )
                             })}
-                            {this.renderProxy()}
                             {this.renderLoginOut()}
                             {this.renderLanguage()}
                         </ul>

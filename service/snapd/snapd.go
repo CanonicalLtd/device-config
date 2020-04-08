@@ -15,18 +15,20 @@
  *
  */
 
-package service
+package snapd
 
 import (
+	"encoding/json"
 	"github.com/snapcore/snapd/client"
 	"sync"
 )
 
-// SnapdClient is a client of the snapd REST API
-type SnapdClient interface {
-	Conf(name string) (map[string]interface{}, error)
-	SetConf(name string, patch map[string]interface{}) (string, error)
+// Client is a client of the snapd REST API
+type Client interface {
 	AppServices(names []string) ([]*client.AppInfo, error)
+	Conf(name string) (map[string]interface{}, error)
+	List(names []string, opts *client.ListOptions) ([]Snap, error)
+	SetConf(name string, patch map[string]interface{}) (string, error)
 }
 
 // ClientAdapter adapts our expectations to the snapd client API.
@@ -61,4 +63,44 @@ func (a *ClientAdapter) SetConf(name string, patch map[string]interface{}) (stri
 // AppServices requests the status of the application services
 func (a *ClientAdapter) AppServices(names []string) ([]*client.AppInfo, error) {
 	return a.snapdClient.Apps(names, client.AppOptions{Service: true})
+}
+
+// List returns the list of all snaps installed on the system
+// with names in the given list; if the list is empty, all snaps.
+func (a *ClientAdapter) List(names []string, opts *client.ListOptions) ([]Snap, error) {
+	snaps, err := a.snapdClient.List(names, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	ss := []Snap{}
+	for _, s := range snaps {
+		// Get the config for the snap (ignore errors)
+		var conf string
+		c, err := a.Conf(s.Name)
+		if err == nil {
+			resp, err := serializeResponse(c)
+			if err == nil {
+				conf = string(resp)
+			}
+		}
+
+		ss = append(ss, Snap{
+			Name:          s.Name,
+			InstalledSize: s.InstalledSize,
+			InstalledDate: s.InstallDate,
+			Status:        s.Status,
+			Channel:       s.Channel,
+			Confinement:   s.Confinement,
+			Version:       s.Version,
+			Revision:      s.Revision.N,
+			Devmode:       s.DevMode,
+			Config:        conf,
+		})
+	}
+	return ss, nil
+}
+
+func serializeResponse(resp interface{}) ([]byte, error) {
+	return json.Marshal(resp)
 }

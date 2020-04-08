@@ -32,6 +32,12 @@ type StandardResponse struct {
 	Message string `json:"message"`
 }
 
+// RecordsResponse the JSON response from a list call
+type RecordsResponse struct {
+	StandardResponse
+	Records interface{} `json:"records"`
+}
+
 // LoginResponse is the response message from a login action
 type LoginResponse struct {
 	StandardResponse
@@ -131,6 +137,15 @@ func formatServicesResponse(status interface{}, w http.ResponseWriter) {
 func formatAppConfigResponse(cfg interface{}, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", JSONHeader)
 	response := AppConfigResponse{StandardResponse{}, cfg}
+
+	// Encode the response as JSON
+	encodeResponse(w, response)
+}
+
+// formatRecordsResponse returns a JSON response from an app services call
+func formatRecordsResponse(records interface{}, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", JSONHeader)
+	response := RecordsResponse{StandardResponse{}, records}
 
 	// Encode the response as JSON
 	encodeResponse(w, response)
