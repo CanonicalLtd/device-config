@@ -27,7 +27,7 @@ class HeaderSlim extends Component {
         super(props)
         this.state = {};
 
-        if (this.props.config.manageProxy) {
+        if (this.props.config.snapControl) {
             links.unshift('services','snaps','proxy')
         }
     }

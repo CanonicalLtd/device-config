@@ -30,7 +30,7 @@ func TestDefaultArgs(t *testing.T) {
 		Port:                   DefaultPort,
 		DocRoot:                DefaultDocRoot,
 		IndexTemplate:          DefaultIndexTemplate,
-		ManageProxy:            DefaultManageProxy,
+		SnapControl:            DefaultSnapControl,
 		UseNetworkManager:      DefaultUseNetworkManager,
 		HideInterfaces:         []string{},
 	}
@@ -52,8 +52,8 @@ func TestDefaultArgs(t *testing.T) {
 
 func TestReadParameters(t *testing.T) {
 	got := ReadParameters()
-	if got.ManageProxy != DefaultManageProxy {
-		t.Errorf("ReadParameters() got = %v, want %v", got.ManageProxy, DefaultManageProxy)
+	if got.SnapControl != DefaultSnapControl {
+		t.Errorf("ReadParameters() got = %v, want %v", got.SnapControl, DefaultSnapControl)
 	}
 	if got.NetworkInterfaceIP != DefaultInterfaceIP {
 		t.Errorf("ReadParameters() got = %v, want %v", got.NetworkInterfaceIP, DefaultInterfaceIP)
@@ -68,8 +68,8 @@ func TestStoreParameters(t *testing.T) {
 	if err != nil {
 		t.Errorf("StoreParameters() error = %v", err)
 	}
-	if cfg.ManageProxy != DefaultManageProxy {
-		t.Errorf("ReadParameters() got = %v, want %v", cfg.ManageProxy, DefaultManageProxy)
+	if cfg.SnapControl != DefaultSnapControl {
+		t.Errorf("ReadParameters() got = %v, want %v", cfg.SnapControl, DefaultSnapControl)
 	}
 	if cfg.NetworkInterfaceIP != DefaultInterfaceIP {
 		t.Errorf("ReadParameters() got = %v, want %v", cfg.NetworkInterfaceIP, DefaultInterfaceIP)

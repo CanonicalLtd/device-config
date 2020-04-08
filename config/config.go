@@ -32,7 +32,7 @@ const (
 	DefaultPort              = "8888"
 	DefaultDocRoot           = "./static"
 	DefaultIndexTemplate     = "index.html"
-	DefaultManageProxy       = false
+	DefaultSnapControl       = false
 	DefaultUseNetworkManager = false
 	paramsEnvVar             = "SNAP_DATA"
 	paramsFilename           = "params"
@@ -46,7 +46,7 @@ type Settings struct {
 	Port                   string
 	DocRoot                string
 	IndexTemplate          string
-	ManageProxy            bool
+	SnapControl            bool
 	UseNetworkManager      bool
 }
 
@@ -59,7 +59,7 @@ func DefaultArgs() *Settings {
 		Port:                   DefaultPort,
 		DocRoot:                DefaultDocRoot,
 		IndexTemplate:          DefaultIndexTemplate,
-		ManageProxy:            DefaultManageProxy,
+		SnapControl:            DefaultSnapControl,
 		UseNetworkManager:      DefaultUseNetworkManager,
 	}
 }

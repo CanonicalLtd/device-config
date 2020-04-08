@@ -20,10 +20,15 @@ The snap uses some privileged interfaces, that need to be connected. The option
 to set the proxy configuration needs the `snapd-control` interface, which will
 need a Brand store to host the snap - a commercial service from Canonical.
 
-The snap can be tested locally with the proxy settings by installing it in
-`--devmode` and enabling the proxy setting:
+The following features need the `snapd-control` interface:
+- Configuring the proxy
+- Displaying the installed services
+- Updating the configuration of snaps
+
+The snap can be tested by installing it in `--devmode` and enabling a setting
+that shows the privileged screens:
 ```
-sudo snap set device-config-demo proxy=true
+sudo snap set device-config-demo snapcontrol=true
 ```
 
 ### Snap configuration options

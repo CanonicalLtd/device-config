@@ -45,19 +45,19 @@ func configure(cfg *config.Settings) {
 		configureOnly bool
 		iface         string
 		listenOn      string
-		manageProxy   bool
+		snapControl   bool
 		useNM         bool
 		hideIfaces    string
 	)
 	flag.BoolVar(&configureOnly, "configure", false, "Configure the application and exit")
 	flag.StringVar(&iface, "interface", config.DefaultInterfaceIP, "The default network interface for the service")
 	flag.StringVar(&listenOn, "listenon", config.DefaultInterfaceDevice, "Force the service to listen a specific network device e.g. eth0")
-	flag.BoolVar(&manageProxy, "proxy", config.DefaultManageProxy, "Allow proxy configuration (needs the snapd-control interface)")
+	flag.BoolVar(&snapControl, "snapcontrol", config.DefaultSnapControl, "Display configuration that needs the snapd-control interface)")
 	flag.BoolVar(&useNM, "nm", config.DefaultUseNetworkManager, "Use network manager instead of netplan")
 	flag.StringVar(&hideIfaces, "hide", "", "Comma-separated list of interfaces to hide")
 	flag.Parse()
 
-	log.Printf("Device config: configure=%v, proxy=%v, interface=%v, nm=%v, hide=%v", configureOnly, manageProxy, iface, useNM, hideIfaces)
+	log.Printf("Device config: configure=%v, proxy=%v, interface=%v, nm=%v, hide=%v", configureOnly, snapControl, iface, useNM, hideIfaces)
 	if !configureOnly {
 		// No changes if we're not configuring the app
 		return
@@ -66,7 +66,7 @@ func configure(cfg *config.Settings) {
 	// Update the settings
 	cfg.NetworkInterfaceIP = iface
 	cfg.NetworkInterfaceDevice = listenOn
-	cfg.ManageProxy = manageProxy
+	cfg.SnapControl = snapControl
 	cfg.UseNetworkManager = useNM
 	cfg.HideInterfaces = strings.Split(hideIfaces, ",")
 	err := config.StoreParameters(cfg)
