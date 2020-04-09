@@ -35,7 +35,11 @@ func (m *mockBusObject) Call(method string, flags dbus.Flags, args ...interface{
 	case "org.freedesktop.NetworkManager.GetAllDevices":
 		c.Body = []interface{}{[]string{"/org/freedesktop/NetworkManager/Device/1"}}
 	case "org.freedesktop.NetworkManager.Settings.Connection.GetSettings":
-		c.Body = []interface{}{map[string]map[string]dbus.Variant{"ipv4": {"method": dbus.MakeVariant("manual")}}}
+		c.Body = []interface{}{map[string]map[string]dbus.Variant{
+			"ipv4":                     {"method": dbus.MakeVariant("manual")},
+			"802-11-wireless":          {"ssid": dbus.MakeVariant("AirportWifi")},
+			"802-11-wireless-security": {"psk": dbus.MakeVariant("TrustMe!")},
+		}}
 	}
 	return &c
 }
@@ -64,6 +68,8 @@ func (m *mockBusObject) GetProperty(p string) (dbus.Variant, error) {
 		return dbus.MakeVariant([]map[string]dbus.Variant{{"address": dbus.MakeVariant("192.168.1.1"), "prefix": dbus.MakeVariant(uint32(24))}}), nil
 	case "org.freedesktop.NetworkManager.Device.Dhcp4Config":
 		return dbus.MakeVariant("/org/freedesktop/NetworkManager/Dhcp4Config/1"), nil
+	case "org.freedesktop.NetworkManager.Device.DeviceType":
+		return dbus.MakeVariant(uint32(2)), nil
 	}
 	return dbus.MakeVariant(""), nil
 }

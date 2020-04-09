@@ -71,6 +71,27 @@ class Network extends Component {
         this.setState({interface: iface})
     }
 
+    handleWifiUseChange = (e) => {
+        e.preventDefault()
+        let iface =  this.state.interface
+        iface.isWifi = !iface.isWifi
+        this.setState({interface: iface})
+    }
+
+    handleWifiSSIDChange = (e) => {
+        e.preventDefault()
+        let iface =  this.state.interface
+        iface.ssid = e.target.value
+        this.setState({interface: iface})
+    }
+
+    handleWifiPasswordChange = (e) => {
+        e.preventDefault()
+        let iface =  this.state.interface
+        iface.password = e.target.value
+        this.setState({interface: iface})
+    }
+
     handleMethodChange = (e) => {
         e.preventDefault()
         let iface = this.state.interface
@@ -159,6 +180,28 @@ class Network extends Component {
         }
     }
 
+    renderWifi() {
+        if (!this.state.interface.isWifi) {
+            return (
+                <div>
+                    <a href="#wifi" className="p-button--base has-icon" onClick={this.handleWifiUseChange}><img src="/static/images/checkbox_unchecked_16.png" alt="checked" /></a>
+                    <span>{T('show-wifi')}</span>
+                </div>
+            )
+        };
+
+        return (
+            <div>
+                <a href="#wifi" className="p-button--base has-icon" onClick={this.handleWifiUseChange}><img src="/static/images/checkbox_checked_16.png" alt="unchecked"  /></a>
+                <span>{T('show-wifi')}</span>
+                <label htmlFor={"ssid"}>{T('ssid')}:</label>
+                <input name="ssid" type="text" value={this.state.interface.ssid} placeholder={T('ssid-help')} onChange={this.handleWifiSSIDChange}/>
+                <label htmlFor={"password"}>{T('password')}:</label>
+                <input name="password" type="password" value={this.state.interface.password} placeholder={T('password-help')} onChange={this.handleWifiPasswordChange}/>
+            </div>
+        )
+    }
+
     renderMessage() {
         if (this.state.message) {
             return <AlertBox type="positive" message={this.state.message}/>
@@ -200,6 +243,7 @@ class Network extends Component {
                                 {this.renderUse()}
                                 <fieldset disabled={!this.state.interface.use}>
                                     <h3>{T('interface')} {this.state.interface.interface}</h3>
+                                    {this.renderWifi()}
                                     <label htmlFor={"method"}>{T('method')}:</label>
                                     <select value={this.state.interface.method} onChange={this.handleMethodChange}>
                                         <option/>

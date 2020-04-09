@@ -57,7 +57,7 @@ func TestDBus_NMInterfaceConfigUpdate(t *testing.T) {
 		NameServers: []string{"192.168.2.1", "8.8.8.8"},
 		Gateway:     "192.168.2.1",
 	}
-	dhcpAuto := NMDeviceSettings{DHCP4: false}
+	dhcpAuto := NMDeviceSettings{DHCP4: true, IsWifi: true, SSID: "AirportWifi", Password: "TrustMe!"}
 
 	tests := []struct {
 		name    string

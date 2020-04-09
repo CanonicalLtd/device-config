@@ -24,6 +24,10 @@ import (
 	"net"
 )
 
+const (
+	wifiType = uint32(2)
+)
+
 // NMDeviceAddress holds the details of a network address
 type NMDeviceAddress struct {
 	Address string
@@ -37,6 +41,9 @@ type NMDeviceSettings struct {
 	AddressData []NMDeviceAddress
 	NameServers []string
 	Gateway     string
+	IsWifi      bool
+	SSID        string
+	Password    string
 }
 
 // NMIsRunning checks if the network manager service is running
@@ -95,6 +102,26 @@ func (db *DBus) NMInterfaceConfig(p string) *NMDeviceSettings {
 		if settings["ipv4"]["method"].Value().(string) == "auto" {
 			eth.DHCP4 = true
 		}
+	}
+
+	// Check for wifi device
+	deviceType, err := netman.GetProperty("org.freedesktop.NetworkManager.Device.DeviceType")
+	if err != nil {
+		return &eth
+	}
+	if deviceType.Value() != wifiType {
+		return &eth
+	}
+
+	// This is a wifi type
+	eth.IsWifi = true
+	ssid, ok := settings["802-11-wireless"]["ssid"]
+	if ok {
+		eth.SSID = ssid.String()
+	}
+	pwd, ok := settings["802-11-wireless-security"]["psk"]
+	if ok {
+		eth.Password = pwd.String()
 	}
 
 	return &eth
@@ -160,6 +187,15 @@ func (db *DBus) connectionConfig(p string) (map[string]map[string]dbus.Variant, 
 func (db *DBus) createSettings(eth NMDeviceSettings) map[string]map[string]dbus.Variant {
 	settings := map[string]map[string]dbus.Variant{
 		"ipv4": {},
+	}
+
+	// Wifi connection details
+	if eth.IsWifi {
+		settings["802-11-wireless"] = map[string]dbus.Variant{}
+		settings["802-11-wireless-security"] = map[string]dbus.Variant{}
+		settings["802-11-wireless"]["ssid"] = dbus.MakeVariant(eth.SSID)
+		settings["802-11-wireless-security"]["key-mgmt"] = dbus.MakeVariant("wpa-psk")
+		settings["802-11-wireless-security"]["psk"] = dbus.MakeVariant(eth.Password)
 	}
 
 	if eth.DHCP4 {

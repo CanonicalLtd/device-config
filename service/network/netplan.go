@@ -39,16 +39,23 @@ type Network struct {
 	Version   int                 `yaml:"version"`
 	Renderer  string              `yaml:"renderer,omitempty"`
 	Ethernets map[string]Ethernet `yaml:"ethernets,omitempty"`
+	WiFis     map[string]Ethernet `yaml:"wifis,omitempty"`
 }
 
 // Ethernet defines a single interface
 type Ethernet struct {
-	Use         bool                `yaml:"-"`
-	Name        string              `yaml:"-"`
-	DHCP4       string              `yaml:"dhcp4,omitempty"`
-	Addresses   []string            `yaml:"addresses,omitempty"`
-	NameServers map[string][]string `yaml:"nameservers,omitempty"`
-	Gateway4    string              `yaml:"gateway4,omitempty"`
+	Use          bool                   `yaml:"-"`
+	Name         string                 `yaml:"-"`
+	DHCP4        string                 `yaml:"dhcp4,omitempty"`
+	Addresses    []string               `yaml:"addresses,omitempty"`
+	NameServers  map[string][]string    `yaml:"nameservers,omitempty"`
+	Gateway4     string                 `yaml:"gateway4,omitempty"`
+	AccessPoints map[string]AccessPoint `yaml:"access-points,omitempty"`
+}
+
+// AccessPoint defines the credentials for a WiFi access point
+type AccessPoint struct {
+	Password string `yaml:"password,omitempty"`
 }
 
 // NetplanService is the interface for the netplan service
@@ -116,17 +123,35 @@ func (np *Netplan) Store(ethernet Ethernet) error {
 		ethernet.Addresses = addresses
 	}
 
-	// Initialize the list of interfaces
-	if np.deviceNetplan.Network.Ethernets == nil {
-		np.deviceNetplan.Network.Ethernets = map[string]Ethernet{}
-	}
+	// Update the relevant connection according to its type (ethernet, wifi)
+	switch ethernet.AccessPoints {
+	case nil: // This is an ethernet connection
+		if np.deviceNetplan.Network.Ethernets == nil {
+			np.deviceNetplan.Network.Ethernets = map[string]Ethernet{}
+		}
+		if !ethernet.Use {
+			// Remove the configuration if it is not to be used
+			delete(np.deviceNetplan.Network.Ethernets, ethernet.Name)
+		} else {
+			// Update the configuration for the interface
+			np.deviceNetplan.Network.Ethernets[ethernet.Name] = ethernet
+		}
+		// Remove the config from the wifi map (just in case it's there)
+		delete(np.deviceNetplan.Network.WiFis, ethernet.Name)
 
-	if !ethernet.Use {
-		// Remove the configuration if it is not to be used
+	default: // This is a wifi connection
+		if np.deviceNetplan.Network.WiFis == nil {
+			np.deviceNetplan.Network.WiFis = map[string]Ethernet{}
+		}
+		if !ethernet.Use {
+			// Remove the configuration if it is not to be used
+			delete(np.deviceNetplan.Network.WiFis, ethernet.Name)
+		} else {
+			// Update the configuration for the interface
+			np.deviceNetplan.Network.WiFis[ethernet.Name] = ethernet
+		}
+		// Remove the config from the ethernet map (just in case it's there)
 		delete(np.deviceNetplan.Network.Ethernets, ethernet.Name)
-	} else {
-		// Update the configuration for the interface
-		np.deviceNetplan.Network.Ethernets[ethernet.Name] = ethernet
 	}
 
 	return serializeNetplan(np.deviceNetplan)

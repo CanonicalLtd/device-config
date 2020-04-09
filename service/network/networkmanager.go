@@ -20,7 +20,6 @@ package network
 import (
 	"fmt"
 	"github.com/CanonicalLtd/device-config/service/dbus"
-	"log"
 )
 
 // NMService is the interface for the netplan service
@@ -76,17 +75,22 @@ func (np *NetManager) Current() *NetplanYAML {
 			addresses = append(addresses, fmt.Sprintf("%s/%d", a.Address, a.Prefix))
 		}
 
+		var accessPoints map[string]AccessPoint
+		if ifaceConfig.IsWifi {
+			accessPoints = map[string]AccessPoint{ifaceConfig.SSID: {Password: ifaceConfig.Password}}
+		}
+
 		eth := Ethernet{
-			Use:         ifaceConfig.State >= 100,
-			Name:        iface.Name,
-			DHCP4:       dhcp4,
-			Addresses:   addresses,
-			NameServers: map[string][]string{"addresses": ifaceConfig.NameServers},
-			Gateway4:    ifaceConfig.Gateway,
+			Use:          ifaceConfig.State >= 100,
+			Name:         iface.Name,
+			DHCP4:        dhcp4,
+			Addresses:    addresses,
+			NameServers:  map[string][]string{"addresses": ifaceConfig.NameServers},
+			Gateway4:     ifaceConfig.Gateway,
+			AccessPoints: accessPoints,
 		}
 		np.deviceNetplan.Network.Ethernets[iface.Name] = eth
 	}
-	log.Println("---", np.deviceNetplan)
 	return np.deviceNetplan
 }
 

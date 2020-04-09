@@ -29,12 +29,15 @@ import (
 // InterfaceConfig defines the configuration of an interface
 type InterfaceConfig struct {
 	Use         bool     `json:"use"`
+	IsWifi      bool     `json:"isWifi"`
 	Method      string   `json:"method"`
 	Interface   string   `json:"interface"`
 	NameServers []string `json:"nameServers"`
 	Address     string   `json:"address"`
 	Mask        string   `json:"mask"`
 	Gateway     string   `json:"gateway"`
+	SSID        string   `json:"ssid"`
+	Password    string   `json:"password"`
 }
 
 // Network is the API to get the network interface config
@@ -57,9 +60,13 @@ func (srv Web) Network(w http.ResponseWriter, r *http.Request) {
 		// Get the current interface config
 		eth, ok := netYAML.Network.Ethernets[iface.Name]
 		if !ok {
-			// The interface is not configured
-			interfaces = append(interfaces, cfg)
-			continue
+			// Check if it is a wifi interface
+			eth, ok = netYAML.Network.WiFis[iface.Name]
+			if !ok {
+				// The interface is not configured
+				interfaces = append(interfaces, cfg)
+				continue
+			}
 		}
 
 		srv.decodeNetplanInterface(&cfg, eth)
@@ -100,6 +107,14 @@ func (srv Web) decodeNetplanInterface(cfg *InterfaceConfig, eth network.Ethernet
 			cfg.Mask = addressPlusMask[1]
 		}
 	}
+	if eth.AccessPoints != nil && len(eth.AccessPoints) == 0 {
+		for k, v := range eth.AccessPoints {
+			cfg.IsWifi = true
+			cfg.SSID = k
+			cfg.Password = v.Password
+			break
+		}
+	}
 }
 
 // NetworkInterface is the API to store the network interface configuration
@@ -137,6 +152,12 @@ func (srv Web) encodeNetplanInterface(req *InterfaceConfig) network.Ethernet {
 		}
 		eth.Addresses = []string{addr}
 	}
+	if req.IsWifi {
+		eth.AccessPoints = map[string]network.AccessPoint{
+			req.SSID: {Password: req.Password},
+		}
+	}
+
 	return eth
 }
 
