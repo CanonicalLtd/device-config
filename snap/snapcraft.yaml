@@ -8,6 +8,11 @@ confinement: strict
 grade: stable
 base: core18
 
+plugs:
+  web-resources:
+    interface: content
+    target: $SNAP/static
+
 apps:
   run:
     command: bin/run
