@@ -107,7 +107,7 @@ func (srv Web) decodeNetplanInterface(cfg *InterfaceConfig, eth network.Ethernet
 			cfg.Mask = addressPlusMask[1]
 		}
 	}
-	if eth.AccessPoints != nil && len(eth.AccessPoints) == 0 {
+	if eth.AccessPoints != nil && len(eth.AccessPoints) != 0 {
 		for k, v := range eth.AccessPoints {
 			cfg.IsWifi = true
 			cfg.SSID = k

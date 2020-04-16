@@ -72,6 +72,9 @@ func (np *mockNetplan) Current() *network.NetplanYAML {
 				"enp3s0": {DHCP4: "true"},
 				"eth1":   {Addresses: []string{"192.168.2.200/192.168.2.255"}, Gateway4: "192.168.2.1", NameServers: map[string][]string{"addresses": {"8.8.8.8"}}},
 			},
+			WiFis: map[string]network.Ethernet{
+				"wlan0": {DHCP4: "true", AccessPoints: map[string]network.AccessPoint{"AirportWifi": {Password: "TrustMe!"}}},
+			},
 		},
 	}
 }
@@ -145,6 +148,7 @@ func mockInterfacesValid() ([]network.HardwareInterface, error) {
 		{Name: "enp3s0", MACAddress: "enp3s0-mac-address"},
 		{Name: "eth0", MACAddress: "eth0-mac-address"},
 		{Name: "eth1", MACAddress: "eth1-mac-address"},
+		{Name: "wlan0", MACAddress: "wlan0-mac-address"},
 	}, nil
 }
 

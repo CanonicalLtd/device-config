@@ -88,6 +88,7 @@ func NewNetplan(dBus dbus.Service) *Netplan {
 		log.Printf("Error parsing the netplan file: %v", err)
 		return &Netplan{defaultNetplan(), dBus}
 	}
+
 	return &Netplan{deviceNetplan, dBus}
 }
 
