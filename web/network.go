@@ -100,7 +100,7 @@ func (srv Web) decodeNetplanInterface(cfg *InterfaceConfig, eth network.Ethernet
 	if eth.NameServers != nil {
 		cfg.NameServers = eth.NameServers["addresses"]
 	}
-	if eth.Addresses != nil {
+	if eth.Addresses != nil && len(eth.Addresses) > 0 {
 		addressPlusMask := strings.Split(eth.Addresses[0], "/")
 		cfg.Address = addressPlusMask[0]
 		if len(addressPlusMask) > 1 {
