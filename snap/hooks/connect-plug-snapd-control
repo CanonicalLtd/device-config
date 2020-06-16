@@ -1,0 +1,8 @@
+#!/bin/sh
+set -x -e
+exec 1>$SNAP_DATA/snapd-log.out 2>&1
+
+snapctl set snapcontrol="true"
+
+# Run the configure script to save the setting
+$SNAP/meta/hooks/configure
