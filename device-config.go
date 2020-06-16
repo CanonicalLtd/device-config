@@ -12,6 +12,7 @@ import (
 	"github.com/CanonicalLtd/device-config/service/dbus"
 	"github.com/CanonicalLtd/device-config/service/network"
 	"github.com/CanonicalLtd/device-config/service/snapd"
+	"github.com/CanonicalLtd/device-config/service/system"
 	"github.com/CanonicalLtd/device-config/web"
 	"log"
 	"os"
@@ -32,9 +33,10 @@ func main() {
 		log.Fatal(err)
 	}
 	timeSrv := service.NewTime(dBus)
+	systemSrv := system.NewSystem()
 	netSrv := network.Factory(settings, dBus)
 
-	srv := web.NewWebService(settings, authSrv, netSrv, snapdClient, timeSrv)
+	srv := web.NewWebService(settings, authSrv, netSrv, snapdClient, timeSrv, systemSrv)
 
 	// Start the web service
 	log.Fatal(srv.Start())

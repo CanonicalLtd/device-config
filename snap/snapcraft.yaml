@@ -24,6 +24,7 @@ apps:
       - time-control
       - timeserver-control
       - timezone-control
+      - system-observe
       #- snapd-control          # this privileged interface for proxy setting
 
 parts:

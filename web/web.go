@@ -23,6 +23,7 @@ import (
 	"github.com/CanonicalLtd/device-config/service"
 	"github.com/CanonicalLtd/device-config/service/network"
 	"github.com/CanonicalLtd/device-config/service/snapd"
+	"github.com/CanonicalLtd/device-config/service/system"
 	"github.com/gorilla/mux"
 	"log"
 	"net"
@@ -33,21 +34,23 @@ import (
 
 // Web implements the web service
 type Web struct {
-	Settings *config.Settings
-	Auth     service.AuthService
-	NetSrv   network.Service
-	Snapd    snapd.Client
-	TimeSrv  service.TimeService
+	Settings  *config.Settings
+	Auth      service.AuthService
+	NetSrv    network.Service
+	Snapd     snapd.Client
+	TimeSrv   service.TimeService
+	SystemSrv system.Service
 }
 
 // NewWebService starts a new web service
-func NewWebService(settings *config.Settings, auth service.AuthService, network network.Service, snapd snapd.Client, t service.TimeService) *Web {
+func NewWebService(settings *config.Settings, auth service.AuthService, network network.Service, snapd snapd.Client, t service.TimeService, sys system.Service) *Web {
 	return &Web{
-		Settings: settings,
-		Auth:     auth,
-		NetSrv:   network,
-		Snapd:    snapd,
-		TimeSrv:  t,
+		Settings:  settings,
+		Auth:      auth,
+		NetSrv:    network,
+		Snapd:     snapd,
+		TimeSrv:   t,
+		SystemSrv: sys,
 	}
 }
 
