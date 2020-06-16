@@ -19,11 +19,13 @@ import React, {Component} from 'react';
 import api from "./api";
 import {formatError, T} from "./Utils";
 import AlertBox from "./AlertBox";
+import SystemResources from "./SystemResources";
 
 class Services extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            system: {cpu:0, memory:0, disk:0},
             services: [],
             error: '',
         };
@@ -31,6 +33,12 @@ class Services extends Component {
 
     componentDidMount() {
         this.getServices()
+        this.getSystemResources()
+    }
+
+    poll = () => {
+        // Polls every 2s
+        setTimeout(this.getSystemResources.bind(this), 2000);
     }
 
     getServices = () => {
@@ -40,6 +48,19 @@ class Services extends Component {
         .catch(e => {
             this.setState({error: formatError(e.response.data)});
         })
+    }
+
+    getSystemResources() {
+        api.systemResourcesGet().then(response => {
+            this.setState({system: response.data.record})
+        })
+            .catch(e => {
+                console.log(formatError(e.response.data))
+                this.setState({error: formatError(e.response.data), message: ''});
+            })
+            .finally( ()=> {
+                this.poll()
+            })
     }
 
     renderError() {
@@ -52,6 +73,10 @@ class Services extends Component {
         return (
             <div>
                 <h2>{T('service-status')}</h2>
+
+                <section>
+                    <SystemResources system={this.state.system} />
+                </section>
 
                 <section className="row">
                     {this.renderError()}

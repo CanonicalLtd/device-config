@@ -107,6 +107,7 @@ func (srv Web) Router() *mux.Router {
 	router.Handle("/v1/time", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Time))).Methods("GET")
 	router.Handle("/v1/time", srv.MiddlewareWithAuth(http.HandlerFunc(srv.TimeConfig))).Methods("POST")
 	router.Handle("/v1/services", srv.MiddlewareWithAuth(http.HandlerFunc(srv.AppServices))).Methods("GET")
+	router.Handle("/v1/system", srv.MiddlewareWithAuth(http.HandlerFunc(srv.SystemResources))).Methods("GET")
 	router.Handle("/v1/snaps", srv.MiddlewareWithAuth(http.HandlerFunc(srv.SnapList))).Methods("GET")
 	router.Handle("/v1/snaps/{snap}", srv.MiddlewareWithAuth(http.HandlerFunc(srv.SnapSet))).Methods("PUT")
 	router.Handle("/logout", Middleware(http.HandlerFunc(srv.Logout))).Methods("GET")
