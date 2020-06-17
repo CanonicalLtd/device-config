@@ -23,20 +23,26 @@ import (
 	"testing"
 )
 
-func TestWeb_AppConfig(t *testing.T) {
+func TestWeb_SystemResources(t *testing.T) {
 	tests := []struct {
 		name       string
+		cpuErr     bool
+		memErr     bool
+		diskErr    bool
 		wantStatus int
 	}{
-		{"valid", http.StatusOK},
+		{"valid", false, false, false, http.StatusOK},
+		{"cpu-error", true, false, false, http.StatusBadRequest},
+		{"mem-error", false, true, false, http.StatusBadRequest},
+		{"disk-error", false, false, true, http.StatusBadRequest},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{}, &mockSystem{})
+			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{}, &mockSystem{tt.cpuErr, tt.memErr, tt.diskErr})
 
-			w := sendRequestWithAuth("GET", "/v1/config", nil, srv)
+			w := sendRequestWithAuth("GET", "/v1/system", nil, srv)
 			if w.Code != tt.wantStatus {
-				t.Errorf("AppServices() expected HTTP status '%d', got: %v", tt.wantStatus, w.Code)
+				t.Errorf("Proxy() expected HTTP status '%d', got: %v", tt.wantStatus, w.Code)
 			}
 		})
 	}
