@@ -22,6 +22,9 @@ import "time"
 // Snap holds the details of snap on a device
 type Snap struct {
 	Name          string    `json:"name"`
+	Title         string    `json:"title"`
+	Summary       string    `json:"summary"`
+	Description   string    `json:"description"`
 	InstalledSize int64     `json:"installedSize"`
 	InstalledDate time.Time `json:"installedDate"`
 	Status        string    `json:"status"`
