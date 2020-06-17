@@ -74,7 +74,7 @@ class HeaderSlim extends Component {
 
     render() {
         return (
-            <header id="navigation" class="p-navigation header-slim">
+            <header id="navigation" className="p-navigation header-slim">
                 <div className="p-navigation__banner row">
                     <div className="p-navigation__logo">
                         <div className="u-vertically-center">
