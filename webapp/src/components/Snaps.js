@@ -19,13 +19,16 @@ import React, {Component} from 'react';
 import {formatError, T} from "./Utils";
 import api from "./api";
 import AlertBox from "./AlertBox";
-import {Button, Card} from "@canonical/react-components";
+import {Button, Card, Textarea} from "@canonical/react-components";
+import ReactMarkDown from "react-markdown"
+
 
 class Snaps extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            snaps: [{"name":"pc-kernel",description:"desc 1","installedSize":220545024,"installedDate":"2020-06-10T07:03:52.564637288Z","status":"active","channel":"18/stable","confinement":"strict","version":"4.15.0-106.107","revision":529,"devmode":false,"config":"{}"},{"name":"snapd","installedSize":31272960,"installedDate":"2020-06-16T23:20:18.759193735Z","status":"active","channel":"latest/stable","confinement":"strict","version":"2.45.1","revision":8140,"devmode":false,"config":"{}"}],
+            //snaps: [{"name":"pc-kernel",description:"**Note: you do not need to install _snapd_ manually if you already have _snap_ installed.** Snaps are app packages for desktop, cloud and IoT that update automatically","installedSize":220545024,"installedDate":"2020-06-10T07:03:52.564637288Z","status":"active","channel":"18/stable","confinement":"strict","version":"4.15.0-106.107","revision":529,"devmode":false,"config":"{}"},{"name":"snapd","installedSize":31272960,"installedDate":"2020-06-16T23:20:18.759193735Z","status":"active","channel":"latest/stable","confinement":"strict","version":"2.45.1","revision":8140,"devmode":false,"config":"{}"}],
+            snaps: [],
             settings: {},
             show: '',
         };
@@ -52,7 +55,7 @@ class Snaps extends Component {
     handleShowSettings = (e) => {
         e.preventDefault();
         var snap = e.target.getAttribute('data-key');
-        if (this.state.snapSettings === snap) {
+        if ((this.state.snapSettings === snap) && (this.state.show==='settings')) {
             this.setState({snapSettings: null, settings: {}, show:''})
         } else {
             var s = this.findSnap(snap)
@@ -67,7 +70,7 @@ class Snaps extends Component {
     handleShowInfo = (e) => {
         e.preventDefault();
         let snap = e.target.getAttribute('data-key');
-        if (this.state.snapSettings === snap) {
+        if ((this.state.snapSettings === snap) && (this.state.show==='info')) {
             this.setState({snapSettings: null, settings: {}, show:''})
         } else {
             let s = this.findSnap(snap)
@@ -108,10 +111,7 @@ class Snaps extends Component {
                 <td colSpan="5">
                     <form>
                         <fieldset>
-                            <label htmlFor={this.state.snapSettings}>
-                                {T('snap-settings')}:
-                                <textarea className="col-12" rows="4" value={this.state.settings} data-key={this.state.snapSettings} onChange={this.handleSettingsChange} />
-                            </label>
+                            <Textarea label={T('snap-settings')} rows="4" grow={true} defaultValue={this.state.settings} data-key={this.state.snapSettings} onChange={this.handleSettingsChange} />
                         </fieldset>
                         <button className="p-button--brand" onClick={this.handleSettingsUpdate} data-key={snap.name}>{T('update')}</button>
                     </form>
@@ -132,7 +132,7 @@ class Snaps extends Component {
             <tr>
                 <td colSpan="5">
                     <Card title={snap.title || snap.name}>
-                        {snap.description}
+                        <ReactMarkDown source={snap.description} />
                     </Card>
                 </td>
             </tr>
@@ -163,7 +163,7 @@ class Snaps extends Component {
                         <thead>
                         <tr>
                             <th className="small">{T('snap')}</th><th className="small">{T('channel')}</th><th>{T('version')}</th><th className="xsmall">{T('status')}</th>
-                            <th className="small">{T('settings')}</th>
+                            <th className="small">{T('details')}</th>
                         </tr>
                         </thead>
                         {this.state.snaps.map((s) => {
