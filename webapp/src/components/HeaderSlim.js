@@ -79,6 +79,9 @@ class HeaderSlim extends Component {
                                 <img src="/static/images/logo.png" alt="ubuntu" />
                             </a>
                         </div>
+                        <div className="system">
+                            <span>{this.props.config.snapVersion}</span>
+                        </div>
                     </div>
 
                     <nav className="p-navigation__nav">
