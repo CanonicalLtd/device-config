@@ -4952,3 +4952,9 @@ form#lang-form option {
   background-color: #F00;
   border-radius: 50%;
   box-shadow: rgba(0, 0, 0, 0.2) 0 0px 1px 0px, inset #441313 0 0px 9px, #F00 0 1px 5px; }
+
+h5 {
+  text-transform: uppercase;
+  color: #666666;
+  font-weight: 400;
+  font-size: 0.76rem; }

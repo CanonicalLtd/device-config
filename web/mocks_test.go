@@ -155,3 +155,30 @@ func mockInterfacesValid() ([]network.HardwareInterface, error) {
 func mockInterfacesNone() ([]network.HardwareInterface, error) {
 	return []network.HardwareInterface{}, fmt.Errorf("MOCK error")
 }
+
+type mockSystem struct {
+	cpuErr  bool
+	memErr  bool
+	diskErr bool
+}
+
+func (sys *mockSystem) CPU() (float64, error) {
+	if sys.cpuErr {
+		return 0, fmt.Errorf("MOCK cpu error")
+	}
+	return 65.5, nil
+}
+
+func (sys *mockSystem) Memory() (float64, error) {
+	if sys.memErr {
+		return 0, fmt.Errorf("MOCK memory error")
+	}
+	return 75.5, nil
+}
+
+func (sys *mockSystem) Disk() (float64, error) {
+	if sys.diskErr {
+		return 0, fmt.Errorf("MOCK disk error")
+	}
+	return 85.5, nil
+}

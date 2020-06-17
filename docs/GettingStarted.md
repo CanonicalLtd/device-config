@@ -15,6 +15,7 @@ sudo snap connect device-config-demo:network-setup-control :network-setup-contro
 sudo snap connect device-config-demo:time-control :time-control
 sudo snap connect device-config-demo:timeserver-control :timeserver-control
 sudo snap connect device-config-demo:timezone-control :timezone-control
+sudo snap connect device-config-demo:system-observe :system-observe
 ```
 The snap uses some privileged interfaces, that need to be connected. The option
 to set the proxy configuration needs the `snapd-control` interface, which will

@@ -33,7 +33,7 @@ class Footer extends Component {
                                 <a className="p-footer__link" href="https://ubuntu.com/legal/data-privacy">{T('privacy')}</a>
                             </li>
                             <li className="p-footer__item">
-                                <a className="p-footer__link" href="https://github.com/CanonicalLtd/imagebuild/issues/new">{T('report-a-bug')}</a>
+                                <a className="p-footer__link" href="https://github.com/CanonicalLtd/device-config/issues/new">{T('report-a-bug')}</a>
                             </li>
                         </ul>
                     </nav>

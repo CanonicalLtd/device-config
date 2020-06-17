@@ -59,6 +59,10 @@ let service = {
         return axios.get(constants.baseUrl + 'services');
     },
 
+    systemResourcesGet: () => {
+        return axios.get(constants.baseUrl + 'system');
+    },
+
     snapsGet: () => {
         return axios.get(constants.baseUrl + 'snaps');
     },
