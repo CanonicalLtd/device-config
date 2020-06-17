@@ -18,6 +18,7 @@
 import React, { Component } from 'react';
 import {checkSession, getLanguage, T} from "./Utils";
 import Constants from "./constants";
+import {Select} from "@canonical/react-components";
 
 
 let links = ['network','time'];
@@ -55,18 +56,14 @@ class HeaderSlim extends Component {
 
     renderLanguage() {
         let language = getLanguage()
-        let languages = Constants.languages
+        let languages = Constants.languages.map(lang => {
+            return {value: lang, label: T(lang)}
+        })
+
         return (
             <li className="p-navigation__link">
                 <form id="lang-form">
-                    <select onChange={this.handleLanguageChange}>
-                    {languages.map(lang => {
-                        let selected = lang===language ? 'selected' : ''
-                        return (
-                            <option key={lang} value={lang} selected={selected}>{T(lang)}</option>
-                        )
-                    })}
-                    </select>
+                    <Select onChange={this.handleLanguageChange} options={languages} defaultValue={language} />
                 </form>
             </li>
         )
@@ -74,13 +71,16 @@ class HeaderSlim extends Component {
 
     render() {
         return (
-            <header id="navigation" class="p-navigation header-slim">
+            <header id="navigation" className="p-navigation header-slim">
                 <div className="p-navigation__banner row">
                     <div className="p-navigation__logo">
                         <div className="u-vertically-center">
                             <a href="/" className="p-navigation__link">
                                 <img src="/static/images/logo.png" alt="ubuntu" />
                             </a>
+                        </div>
+                        <div className="system">
+                            <span>{this.props.config.snapVersion}</span>
                         </div>
                     </div>
 

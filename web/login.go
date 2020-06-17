@@ -21,6 +21,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -44,6 +45,9 @@ func (srv Web) Login(w http.ResponseWriter, r *http.Request) {
 		formatStandardResponse("decode-json", err.Error(), w)
 		return
 	}
+
+	// Allow using `-` instead of `:`
+	data.MacAddress = strings.ReplaceAll(data.MacAddress, "-", ":")
 
 	// Validate the request
 	expires := time.Now().Add(24 * time.Hour)

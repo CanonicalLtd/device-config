@@ -8,10 +8,11 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "js-cookie": "^2.2.1",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "react-gauge-chart": "^0.2.5",
-    "react-scripts": "3.4.0"
+    "react-markdown": "^4.3.1",
+    "react-scripts": "^3.4.1"
   },
   "scripts": {
     "build-css": "node-sass src/ -o src/",
@@ -37,6 +38,6 @@
   },
   "devDependencies": {
     "node-sass": "^4.14.1",
-    "vanilla-framework": "^2.7.1"
+    "vanilla-framework": "^2.13.0"
   }
 }

@@ -26,6 +26,7 @@ export default {
     'dns': 'Name servers (DNS)',
     'dns-help': 'Comma-separated list of IP addresses',
     'de': 'German',
+    'details': 'Details',
     'en': 'English',
     'ftp': 'FTP',
     'gateway': 'Gateway',

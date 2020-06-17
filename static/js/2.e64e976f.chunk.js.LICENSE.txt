@@ -25,6 +25,13 @@ object-assign
  * Released under the MIT license
  */
 
+/*!
+ * repeat-string <https://github.com/jonschlinkert/repeat-string>
+ *
+ * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
 /**
  * @license
  * Lodash <https://lodash.com/>
@@ -34,7 +41,7 @@ object-assign
  * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
  */
 
-/** @license React v0.19.0
+/** @license React v0.19.1
  * scheduler.production.min.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -44,6 +51,15 @@ object-assign
  */
 
 /** @license React v16.13.0
+ * react-is.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.13.1
  * react-dom.production.min.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -52,7 +68,7 @@ object-assign
  * LICENSE file in the root directory of this source tree.
  */
 
-/** @license React v16.13.0
+/** @license React v16.13.1
  * react.production.min.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.

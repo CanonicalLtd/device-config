@@ -23,28 +23,20 @@ import Footer from './components/Footer';
 import Login from './components/Login';
 import {getLanguage, parseRoute, saveLanguage} from './components/Utils'
 
-import createHistory from 'history/createBrowserHistory'
 import Network from "./components/Network";
 import Proxy from "./components/Proxy";
 import Time from "./components/Time";
 import Snaps from "./components/Snaps";
 import Services from "./components/Services";
-const history = createHistory()
 
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
         language: getLanguage(),
-        location: history.location,
         token: props.token || {},
         proxy: {},
     }
-  }
-
-  handleNavigation(location) {
-    this.setState({ location: location })
-    window.scrollTo(0, 0)
   }
 
   changeLanguage = (l) => {
@@ -88,7 +80,6 @@ class App extends Component {
 
   render() {
     const r = parseRoute()
-    console.log(r)
 
     return (
         <div className="App">

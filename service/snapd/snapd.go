@@ -87,6 +87,9 @@ func (a *ClientAdapter) List(names []string, opts *client.ListOptions) ([]Snap, 
 
 		ss = append(ss, Snap{
 			Name:          s.Name,
+			Title:         s.Title,
+			Summary:       s.Summary,
+			Description:   s.Description,
 			InstalledSize: s.InstalledSize,
 			InstalledDate: s.InstallDate,
 			Status:        s.Status,
