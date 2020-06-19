@@ -6,6 +6,7 @@
 This configuration application for Ubuntu Core provides a password-protected web interface
 to configure a device, listening on one specific interface. The features
 that are provided are:
+![login screen](docs/images/login-small.png)
 
 - Wired network configuration
 - System proxy configuration
@@ -13,6 +14,7 @@ that are provided are:
 - System time zone configuration
 - Basic health check of the system
 
+A walk through of the [user interface](docs/Screenshots.md) is provided.
  
  ## Development Environment
  The build needs Go 13.* and npm installed.
