@@ -47,7 +47,7 @@ The valid options are:
 ** Needs `devmode` or the `snapd-control` interface to be connected
 
 ## Accessing the web interface
-The web interface is accessible at [http://<ip-address>:8888/](http://<ip-address>:8888/)
+The web interface is accessible at [http://ip-address:8888/](http://<ip-address>:8888/)
 
 To web interface requires authentication using a valid MAC address from the
 device. On most devices this will be printed on the device, so it needs local
