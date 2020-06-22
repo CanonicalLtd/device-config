@@ -15,12 +15,13 @@
  *
  */
 
-import React, { Component } from 'react';
-import api from './api';
-import {T, setSession} from './Utils';
-import AlertBox from './AlertBox';
+import React, {Component} from 'react';
+import {T} from "./Utils";
+import AuthForm from "./AuthForm";
+import AlertBox from "./AlertBox";
+import api from "./api";
 
-class Login extends Component {
+class FactoryReset extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -29,29 +30,23 @@ class Login extends Component {
         };
     }
 
-    handleMacAddressChange = (e) => {
-        e.preventDefault()
-        this.setState({macAddress: e.target.value})
-    }
-
-    login() {
-        api.loginRequest({macAddress: this.state.macAddress}).then(response => {
-            if (!response.data.code) {
-                setSession(response.data.username, response.data.sessionId)
-                window.location.href = "/"
-                return
-            }
-
-            this.setState({error: T(response.data.code) + ": " + response.data.message})
+    reset() {
+        api.factoryReset({macAddress: this.state.macAddress}).then(response => {
+            // Will trigger a reboot
         }).catch(e => {
             console.log(e.response)
             this.setState({error: T(e.response.data.code) + ": " + e.response.data.message})
         })
     }
 
+    handleMacAddressChange = (e) => {
+        e.preventDefault()
+        this.setState({macAddress: e.target.value})
+    }
+
     handleSubmit = (e) => {
         e.preventDefault()
-        this.login()
+        this.reset()
     }
 
     renderError() {
@@ -65,21 +60,14 @@ class Login extends Component {
     render() {
         return (
             <div>
-                <div className="row">
-                    <h2>{T("login")}</h2>
-                    <p>{T("login-description")}</p>
-                </div>
+                <h2>{T('factory-reset')}</h2>
+                <p>{T('factory-reset-desc')}</p>
 
                 {this.renderError()}
-                <form>
-                    <label htmlFor="macaddress">{T('macaddress')}:</label>
-                    <input name="macaddress" type="text" value={this.state.macAddress} onChange={this.handleMacAddressChange} />
-                    <button className="p-button--positive" onClick={this.handleSubmit}>{T("submit")}</button>
-                </form>
-
+                <AuthForm macAddress={this.state.macAddress} onChange={this.handleMacAddressChange} onClick={this.handleSubmit} />
             </div>
         );
     }
 }
 
-export default Login;
+export default FactoryReset;

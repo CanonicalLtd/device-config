@@ -25,6 +25,7 @@ import (
 // AppConfig holds the config for application
 type AppConfig struct {
 	SnapVersion    string   `json:"snapVersion"`
+	FactoryReset   bool     `json:"factoryReset"`
 	SnapControl    bool     `json:"snapControl"`
 	HideInterfaces []string `json:"hideInterfaces"`
 }
@@ -32,7 +33,9 @@ type AppConfig struct {
 // AppConfig is the API to get the application config
 func (srv Web) AppConfig(w http.ResponseWriter, r *http.Request) {
 	// Get the current settings
-	cfg := AppConfig{SnapControl: srv.Settings.SnapControl, HideInterfaces: srv.Settings.HideInterfaces, SnapVersion: os.Getenv("SNAP_VERSION")}
+	cfg := AppConfig{
+		SnapControl: srv.Settings.SnapControl, FactoryReset: srv.Settings.FactoryReset,
+		HideInterfaces: srv.Settings.HideInterfaces, SnapVersion: os.Getenv("SNAP_VERSION")}
 
 	// Return the response - snapd returns in AppConfig format
 	formatAppConfigResponse(cfg, w)

@@ -27,6 +27,10 @@ let service = {
         return axios.post(constants.baseUrl + 'login', query);
     },
 
+    factoryReset:  (query, cancelCallback) => {
+        return axios.post(constants.baseUrl + 'factory-reset', query);
+    },
+
     networkGet: () => {
         return axios.get(constants.baseUrl + 'network');
     },

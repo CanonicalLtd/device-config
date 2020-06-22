@@ -31,6 +31,9 @@ class HeaderSlim extends Component {
         if (this.props.config.snapControl) {
             links.unshift('services','snaps','proxy')
         }
+        if (this.props.config.factoryReset) {
+            links.push('factory-reset')
+        }
     }
 
     link(l) {

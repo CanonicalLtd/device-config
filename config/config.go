@@ -32,6 +32,7 @@ const (
 	DefaultPort              = "8888"
 	DefaultDocRoot           = "./static"
 	DefaultIndexTemplate     = "index.html"
+	DefaultFactoryReset      = false
 	DefaultSnapControl       = false
 	DefaultUseNetworkManager = false
 	paramsEnvVar             = "SNAP_DATA"
@@ -46,6 +47,7 @@ type Settings struct {
 	Port                   string
 	DocRoot                string
 	IndexTemplate          string
+	FactoryReset           bool
 	SnapControl            bool
 	UseNetworkManager      bool
 }
@@ -59,6 +61,7 @@ func DefaultArgs() *Settings {
 		Port:                   DefaultPort,
 		DocRoot:                DefaultDocRoot,
 		IndexTemplate:          DefaultIndexTemplate,
+		FactoryReset:           DefaultFactoryReset,
 		SnapControl:            DefaultSnapControl,
 		UseNetworkManager:      DefaultUseNetworkManager,
 	}
