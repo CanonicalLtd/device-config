@@ -18,7 +18,9 @@
 package web
 
 import (
+	"bytes"
 	"github.com/CanonicalLtd/device-config/config"
+	"github.com/CanonicalLtd/device-config/service/network"
 	"net/http"
 	"testing"
 )
@@ -38,11 +40,41 @@ func TestWeb_SystemResources(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{}, &mockSystem{tt.cpuErr, tt.memErr, tt.diskErr})
+			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{}, &mockSystem{tt.cpuErr, tt.memErr, tt.diskErr, false})
 
 			w := sendRequestWithAuth("GET", "/v1/system", nil, srv)
 			if w.Code != tt.wantStatus {
 				t.Errorf("Proxy() expected HTTP status '%d', got: %v", tt.wantStatus, w.Code)
+			}
+		})
+	}
+}
+
+func TestWeb_FactoryReset(t *testing.T) {
+	resetOk := []byte(`{"macAddress":"eth1-mac-address"}`)
+	resetInvalid := []byte(`{"macAddress":"invalid"}`)
+	tests := []struct {
+		name       string
+		data       []byte
+		resetErr   bool
+		wantStatus int
+	}{
+		{"valid", resetOk, false, http.StatusOK},
+		{"valid-with-error", resetOk, true, http.StatusBadRequest},
+		{"invalid-reset", resetInvalid, false, http.StatusBadRequest},
+		{"invalid-data", []byte(`\u1000`), false, http.StatusBadRequest},
+		{"invalid-empty", nil, false, http.StatusBadRequest},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Mock the retrieval of network interfaces
+			network.Interfaces = mockInterfacesValid
+
+			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{}, &mockSystem{resetErr: tt.resetErr})
+
+			w := sendRequest("POST", "/v1/factory-reset", bytes.NewReader(tt.data), srv)
+			if w.Code != tt.wantStatus {
+				t.Errorf("FactoryReset() expected HTTP status '%d', got: %v", tt.wantStatus, w.Code)
 			}
 		})
 	}

@@ -1,4 +1,4 @@
 #!/bin/sh
 
 cd $SNAP_COMMON
-$($SNAP/usr/bin/grub-editenv /boot/grub/grubenv set force_factory_reset="true")
+$($SNAP/usr/bin/grub-editenv /var/lib/snapd/hostfs/boot/grub/grubenv set force_factory_reset="true")

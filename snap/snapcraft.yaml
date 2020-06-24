@@ -14,11 +14,9 @@ plugs:
 # this privileged interface for factory reset
 #  boot-config:
 #    interface: system-files
-#    read:
-#      - /boot
 #    write:
-#      - /boot/grub/grubenv
-#      - /boot/grub/grubenv.new
+#      - /var/lib/snapd/hostfs/boot/grub/grubenv
+
 
 apps:
   run:
@@ -56,8 +54,9 @@ parts:
     organize:
       "*": /bin/
 
-  grub:
-    plugin: nil
-    stage-packages:
-      - to amd64:
-          - grub-common
+  # this is need for factory reset
+#  grub:
+#    plugin: nil
+#    stage-packages:
+#      - to amd64:
+#          - grub-common
