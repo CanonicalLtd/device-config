@@ -13,6 +13,7 @@ import (
 	"github.com/CanonicalLtd/device-config/service/network"
 	"github.com/CanonicalLtd/device-config/service/snapd"
 	"github.com/CanonicalLtd/device-config/service/system"
+	"github.com/CanonicalLtd/device-config/service/transfer"
 	"github.com/CanonicalLtd/device-config/web"
 	"log"
 	"os"
@@ -35,8 +36,9 @@ func main() {
 	timeSrv := service.NewTime(dBus)
 	systemSrv := system.NewSystem()
 	netSrv := network.Factory(settings, dBus)
+	xferSrv := transfer.NewTransfer(dBus, snapdClient)
 
-	srv := web.NewWebService(settings, authSrv, netSrv, snapdClient, timeSrv, systemSrv)
+	srv := web.NewWebService(settings, authSrv, netSrv, snapdClient, timeSrv, systemSrv, xferSrv)
 
 	// Start the web service
 	log.Fatal(srv.Start())

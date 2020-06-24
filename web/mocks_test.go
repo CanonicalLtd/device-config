@@ -23,6 +23,7 @@ import (
 	"github.com/CanonicalLtd/device-config/service"
 	"github.com/CanonicalLtd/device-config/service/network"
 	"github.com/CanonicalLtd/device-config/service/snapd"
+	"github.com/CanonicalLtd/device-config/service/transfer"
 	"github.com/snapcore/snapd/client"
 	"time"
 )
@@ -125,6 +126,13 @@ func (snap *mockSnapd) List(names []string, opts *client.ListOptions) ([]snapd.S
 	return []snapd.Snap{}, nil
 }
 
+func (snap *mockSnapd) SetProxy(http, https, ftp string) error {
+	if snap.setConfError {
+		return fmt.Errorf("MOCK snapd setconf error")
+	}
+	return nil
+}
+
 type mockTime struct{}
 
 func (t *mockTime) Current() *service.Time {
@@ -181,4 +189,14 @@ func (sys *mockSystem) Disk() (float64, error) {
 		return 0, fmt.Errorf("MOCK disk error")
 	}
 	return 85.5, nil
+}
+
+type mockTransfer struct{}
+
+func (xfer *mockTransfer) Export() (*transfer.Config, error) {
+	panic("implement me")
+}
+
+func (xfer *mockTransfer) Import(cfg transfer.Config) error {
+	panic("implement me")
 }

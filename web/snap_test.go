@@ -36,7 +36,7 @@ func TestWeb_SnapList(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
-				srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{snapsErr: tt.setErr}, &mockTime{}, &mockSystem{})
+				srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{snapsErr: tt.setErr}, &mockTime{}, &mockSystem{}, &mockTransfer{})
 
 				w := sendRequestWithAuth("GET", "/v1/snaps", nil, srv)
 				if w.Code != tt.wantStatus {
@@ -66,7 +66,7 @@ func TestWeb_SnapSet(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
-				srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{setConfError: tt.setErr}, &mockTime{}, &mockSystem{})
+				srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{setConfError: tt.setErr}, &mockTime{}, &mockSystem{}, &mockTransfer{})
 
 				w := sendRequestWithAuth("PUT", "/v1/snaps/my-snap", bytes.NewReader(tt.data), srv)
 				if w.Code != tt.wantStatus {
