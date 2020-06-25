@@ -57,6 +57,8 @@ export default {
     'proxy-help': 'IP address and port',
     'proxy-updated': 'Submitted request to update proxy settings',
     'report-a-bug': 'Report a bug on this site',
+    'factory-reset': 'Factory Reset',
+    'factory-reset-desc': 'Reset the device to its factory state, losing all the current configuration. The device will reboot and this browser will lose its connection to the device. Enter the MAC address of one of the network interfaces to continue.',
     'save': 'Save',
     'select-interface': 'Select an interface',
     'service-status': 'Service Status',

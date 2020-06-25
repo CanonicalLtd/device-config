@@ -47,7 +47,7 @@ func NewAuthService(store datastore.DataStore) *Auth {
 // CreateSession creates a new session, validating the token
 func (auth *Auth) CreateSession(token string, expires time.Time) (*datastore.Session, error) {
 	// Check the token against the MAC addresses
-	if err := checkMacAddress(token); err != nil {
+	if err := CheckMacAddress(token); err != nil {
 		return nil, err
 	}
 
@@ -66,7 +66,8 @@ func (auth *Auth) ValidateSession(username, sessionID string) (*datastore.Sessio
 	return auth.DataStore.GetSession(username, sessionID)
 }
 
-func checkMacAddress(token string) error {
+// CheckMacAddress validates an entered MAC address is valid for the device
+func CheckMacAddress(token string) error {
 	// Get the hardware interfaces
 	interfaces, err := network.Interfaces()
 	if err != nil {

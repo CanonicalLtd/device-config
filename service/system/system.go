@@ -18,15 +18,19 @@
 package system
 
 import (
+	"github.com/godbus/dbus"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/disk"
 	"github.com/shirou/gopsutil/mem"
 	"log"
 	"os"
+	"os/exec"
+	"path/filepath"
 )
 
 const (
 	snapData = "SNAP_DATA"
+	snap     = "SNAP"
 )
 
 // Service interface for system resources
@@ -34,6 +38,7 @@ type Service interface {
 	CPU() (float64, error)
 	Memory() (float64, error)
 	Disk() (float64, error)
+	FactoryReset() error
 }
 
 // System implements a system service
@@ -81,4 +86,35 @@ func (sys *System) Disk() (float64, error) {
 	}
 
 	return v.UsedPercent, nil
+}
+
+// FactoryReset triggers a factory reset of the device
+func (sys *System) FactoryReset() error {
+	// Set the factory reset variable in grubenv
+	p := filepath.Join(os.Getenv(snap), "bin", "factory-reset")
+	out, err := exec.Command(p).CombinedOutput()
+	if err != nil {
+		log.Println(string(out))
+		log.Println("Error running factory-reset:", err)
+		return err
+	}
+
+	// Reboot
+	return reboot()
+}
+
+func reboot() error {
+	bus, err := dbus.SystemBus()
+	if err != nil {
+		log.Printf("Failed to access system dbus: %v", err)
+		return err
+	}
+
+	systemd1 := bus.Object("org.freedesktop.systemd1", "/org/freedesktop/systemd1")
+	call := systemd1.Call("org.freedesktop.systemd1.Manager.Reboot", 0)
+	if call.Err != nil {
+		log.Printf("Failed to invoke device reboot: %v", call.Err)
+	}
+
+	return call.Err
 }

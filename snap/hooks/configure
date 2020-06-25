@@ -5,12 +5,16 @@ exec 1>$SNAP_DATA/hook-log.out 2>&1
 # Get the parameters from the snap settings
 interface=$(snapctl get interface)
 listenon=$(snapctl get listenon)
+factoryreset=$(snapctl get factoryreset)
 snapcontrol=$(snapctl get snapcontrol)
 nm=$(snapctl get nm)
 hide=$(snapctl get hide)
 
 if [ -z "$snapcontrol" ]; then
   snapcontrol="false"
+fi
+if [ -z "$factoryreset" ]; then
+  factoryreset="false"
 fi
 if [ -z "$nm" ]; then
   nm="false"
@@ -19,9 +23,9 @@ fi
 # Store the settings
 cd $SNAP
 if [ -z "$interface" ]; then
-  bin/device-config -configure -snapcontrol="$snapcontrol" -nm="$nm" -listenon="$listenon" -hide="$hide"
+  bin/device-config -configure -snapcontrol="$snapcontrol" -factoryreset="$factoryreset" -nm="$nm" -listenon="$listenon" -hide="$hide"
 else
-  bin/device-config -configure -snapcontrol="$snapcontrol" -nm="$nm" -listenon="$listenon" -hide="$hide" -interface="$interface"
+  bin/device-config -configure -snapcontrol="$snapcontrol" -factoryreset="$factoryreset" -nm="$nm" -listenon="$listenon" -hide="$hide" -interface="$interface"
 fi
 
 # Restart the service
