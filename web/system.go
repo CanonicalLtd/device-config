@@ -17,7 +17,13 @@
 
 package web
 
-import "net/http"
+import (
+	"encoding/json"
+	"github.com/CanonicalLtd/device-config/service"
+	"io"
+	"net/http"
+	"strings"
+)
 
 // SystemResources is the monitor of system resources
 type SystemResources struct {
@@ -50,4 +56,37 @@ func (srv Web) SystemResources(w http.ResponseWriter, r *http.Request) {
 		Disk:   disk,
 	}
 	formatRecordResponse(rec, w)
+}
+
+// FactoryReset triggers a factory reset on the device
+func (srv Web) FactoryReset(w http.ResponseWriter, r *http.Request) {
+	// Decode the JSON body
+	data := loginData{}
+	err := json.NewDecoder(r.Body).Decode(&data)
+	switch {
+	// Check we have some data
+	case err == io.EOF:
+		formatStandardResponse("reset-data", "No reset data supplied", w)
+		return
+		// Check for parsing errors
+	case err != nil:
+		formatStandardResponse("decode-json", err.Error(), w)
+		return
+	}
+
+	// Allow using `-` instead of `:`
+	data.MacAddress = strings.ReplaceAll(data.MacAddress, "-", ":")
+
+	// Check that the entered MAC address is valid
+	if err := service.CheckMacAddress(data.MacAddress); err != nil {
+		formatStandardResponse("reset", err.Error(), w)
+		return
+	}
+
+	// Trigger the factory reset
+	if err := srv.SystemSrv.FactoryReset(); err != nil {
+		formatStandardResponse("reset", err.Error(), w)
+		return
+	}
+	formatStandardResponse("", "", w)
 }

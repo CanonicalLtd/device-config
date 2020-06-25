@@ -3,7 +3,6 @@ version: "0.1"
 summary: Ubuntu Device Configuration
 description: |
   Device configuration for Ubuntu Core.
-#icon: icons/verticals.png
 confinement: strict
 grade: stable
 base: core18
@@ -12,6 +11,12 @@ plugs:
   web-resources:
     interface: content
     target: $SNAP/static
+# this privileged interface for factory reset
+#  boot-config:
+#    interface: system-files
+#    write:
+#      - /var/lib/snapd/hostfs/boot/grub/grubenv
+
 
 apps:
   run:
@@ -25,7 +30,9 @@ apps:
       - timeserver-control
       - timezone-control
       - system-observe
-      #- snapd-control          # this privileged interface for proxy setting
+#      - snapd-control          # this privileged interface for proxy setting
+#      - boot-config            # this privileged interface for factory reset
+#      - shutdown               # this privileged interface for factory reset
 
 parts:
   application:
@@ -47,3 +54,9 @@ parts:
     organize:
       "*": /bin/
 
+  # this is need for factory reset
+#  grub:
+#    plugin: nil
+#    stage-packages:
+#      - to amd64:
+#          - grub-common

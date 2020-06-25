@@ -145,10 +145,10 @@ func (t *mockTime) Apply(ntp bool, timezone, setTime string) error {
 
 func mockInterfacesValid() ([]network.HardwareInterface, error) {
 	return []network.HardwareInterface{
-		{Name: "enp3s0", MACAddress: "enp3s0-mac-address"},
-		{Name: "eth0", MACAddress: "eth0-mac-address"},
-		{Name: "eth1", MACAddress: "eth1-mac-address"},
-		{Name: "wlan0", MACAddress: "wlan0-mac-address"},
+		{Name: "enp3s0", MACAddress: "enp3s0:mac:address"},
+		{Name: "eth0", MACAddress: "eth0:mac:address"},
+		{Name: "eth1", MACAddress: "eth1:mac:address"},
+		{Name: "wlan0", MACAddress: "wlan0:mac:address"},
 	}, nil
 }
 
@@ -157,9 +157,10 @@ func mockInterfacesNone() ([]network.HardwareInterface, error) {
 }
 
 type mockSystem struct {
-	cpuErr  bool
-	memErr  bool
-	diskErr bool
+	cpuErr   bool
+	memErr   bool
+	diskErr  bool
+	resetErr bool
 }
 
 func (sys *mockSystem) CPU() (float64, error) {
@@ -181,4 +182,11 @@ func (sys *mockSystem) Disk() (float64, error) {
 		return 0, fmt.Errorf("MOCK disk error")
 	}
 	return 85.5, nil
+}
+
+func (sys *mockSystem) FactoryReset() error {
+	if sys.resetErr {
+		return fmt.Errorf("MOCK reset error")
+	}
+	return nil
 }

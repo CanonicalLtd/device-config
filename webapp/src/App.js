@@ -18,23 +18,23 @@
 import React, { Component } from 'react';
 import Header from './components/Header';
 import HeaderSlim from './components/HeaderSlim';
-import Index from './components/Index';
+import Index from './components/PageIndex';
 import Footer from './components/Footer';
-import Login from './components/Login';
+import Login from './components/PageLogin';
 import {getLanguage, parseRoute, saveLanguage} from './components/Utils'
 
-import Network from "./components/Network";
-import Proxy from "./components/Proxy";
-import Time from "./components/Time";
-import Snaps from "./components/Snaps";
-import Services from "./components/Services";
+import Network from "./components/PageNetwork";
+import Proxy from "./components/PageProxy";
+import Time from "./components/PageTime";
+import Snaps from "./components/PageSnaps";
+import Services from "./components/PageServices";
+import FactoryReset from "./components/PageFactoryReset";
 
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
         language: getLanguage(),
-        token: props.token || {},
         proxy: {},
     }
   }
@@ -94,6 +94,7 @@ class App extends Component {
             {r.section==='time'? this.renderTime(r.sectionId, r.subsection) : ''}
             {r.section==='services'? this.renderServices(r.sectionId, r.subsection) : ''}
             {r.section==='snaps'? this.renderSnaps(r.sectionId, r.subsection) : ''}
+            {r.section==='factory-reset'? <FactoryReset /> : ''}
           </div>
 
           <Footer />
