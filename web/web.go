@@ -114,6 +114,8 @@ func (srv Web) Router() *mux.Router {
 	router.Handle("/v1/system", srv.MiddlewareWithAuth(http.HandlerFunc(srv.SystemResources))).Methods("GET")
 	router.Handle("/v1/snaps", srv.MiddlewareWithAuth(http.HandlerFunc(srv.SnapList))).Methods("GET")
 	router.Handle("/v1/snaps/{snap}", srv.MiddlewareWithAuth(http.HandlerFunc(srv.SnapSet))).Methods("PUT")
+	router.Handle("/v1/transfer/export", srv.MiddlewareWithAuth(http.HandlerFunc(srv.TransferExport))).Methods("GET")
+	router.Handle("/v1/transfer/import", srv.MiddlewareWithAuth(http.HandlerFunc(srv.TransferImport))).Methods("POST")
 	router.Handle("/logout", Middleware(http.HandlerFunc(srv.Logout))).Methods("GET")
 
 	// Serve the static path
@@ -129,7 +131,7 @@ func (srv Web) Router() *mux.Router {
 	router.Handle("/time", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
 	router.Handle("/services", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
 	router.Handle("/snaps", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
-	router.Handle("/factory-reset", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
+	router.Handle("/settings", srv.MiddlewareWithAuth(http.HandlerFunc(srv.Index))).Methods("GET")
 	router.NotFoundHandler = Middleware(http.HandlerFunc(srv.Index))
 
 	return router

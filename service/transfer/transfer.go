@@ -65,13 +65,22 @@ func (x *Transfer) Export() (*Config, error) {
 	if err != nil {
 		return cfg, err
 	}
-	proxy, ok := system["proxy"].(map[string]string)
+	if system["proxy"] == nil {
+		return cfg, err
+	}
+	proxy, ok := system["proxy"].(map[string]interface{})
 	if !ok {
 		return cfg, err
 	}
-	cfg.ProxyHTTP = proxy["http"]
-	cfg.ProxyHTTPS = proxy["https"]
-	cfg.ProxyFTP = proxy["ftp"]
+	if proxy["http"] != nil {
+		cfg.ProxyHTTP = proxy["http"].(string)
+	}
+	if proxy["https"] != nil {
+		cfg.ProxyHTTPS = proxy["https"].(string)
+	}
+	if proxy["ftp"] != nil {
+		cfg.ProxyFTP = proxy["ftp"].(string)
+	}
 
 	return cfg, nil
 }

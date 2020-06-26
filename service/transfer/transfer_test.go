@@ -35,7 +35,7 @@ func (snap *mockSnapd) AppServices(names []string) ([]*client.AppInfo, error) {
 
 func (snap *mockSnapd) Conf(name string) (map[string]interface{}, error) {
 	if name == "system" {
-		proxy := map[string]string{"https": "https://proxy", "http": "http://proxy", "ftp": "ftp://proxy"}
+		proxy := map[string]interface{}{"https": "https://proxy", "http": "http://proxy", "ftp": "ftp://proxy"}
 		return map[string]interface{}{"proxy": proxy}, nil
 	}
 	return nil, fmt.Errorf("MOCK conf error")

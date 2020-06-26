@@ -18,13 +18,15 @@
 package web
 
 import (
+	"bytes"
 	"encoding/base64"
+	"fmt"
 	"github.com/CanonicalLtd/device-config/service/transfer"
 	"gopkg.in/yaml.v2"
 	"io"
 	"io/ioutil"
 	"net/http"
-	"strings"
+	"time"
 )
 
 // TransferExport generates a file to export the current configuration
@@ -42,9 +44,12 @@ func (srv Web) TransferExport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Base64 encode the data and submit it
-	dataEnc := base64.StdEncoding.EncodeToString(data)
-	io.Copy(w, strings.NewReader(dataEnc))
+	// Set the download headers
+	name := fmt.Sprintf("%d.cfg", time.Now().Unix())
+	w.Header().Set("Content-Disposition", "attachment; filename="+name)
+	w.Header().Set("Content-Type", "application/x-yaml")
+
+	io.Copy(w, bytes.NewReader(data))
 }
 
 // TransferImport gets an import configuration file and configures the current system

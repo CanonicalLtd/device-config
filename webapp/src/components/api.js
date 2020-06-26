@@ -75,6 +75,13 @@ let service = {
         return axios.put(constants.baseUrl + 'snaps/' + snap, settings);
     },
 
+    transferExport: () => {
+        return constants.baseUrl + 'transfer/export';
+    },
+
+    transferImport: (cfg) => {
+        return axios.post(constants.baseUrl + 'transfer/import', cfg);
+    },
 }
 
 export default service
