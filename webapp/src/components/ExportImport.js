@@ -64,12 +64,12 @@ class ExportImport extends Component {
             return
         }
         let status = 'Success:'
-        if (this.messageType==='negative') {
+        if (this.state.messageType==='negative') {
             status = 'Error:'
         }
 
         return (
-            <Notification type={this.messageType} status={status}>
+            <Notification type={this.state.messageType} status={status}>
                 {this.state.message}
             </Notification>
         )
