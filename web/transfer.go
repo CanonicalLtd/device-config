@@ -61,6 +61,11 @@ func (srv Web) TransferImport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if len(body) == 0 {
+		formatStandardResponse("transfer", "no import file provided", w)
+		return
+	}
+
 	// Decode the base64-encoded data
 	data, err := base64.StdEncoding.DecodeString(string(body))
 	if err != nil {

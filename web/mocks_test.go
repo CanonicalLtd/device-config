@@ -199,12 +199,24 @@ func (sys *mockSystem) FactoryReset() error {
 	return nil
 }
 
-type mockTransfer struct{}
+type mockTransfer struct {
+	withErr bool
+}
 
 func (xfer *mockTransfer) Export() (*transfer.Config, error) {
-	panic("implement me")
+	if xfer.withErr {
+		return nil, fmt.Errorf("MOCK transfer error")
+	}
+	return &transfer.Config{
+		NTP:        true,
+		Timezone:   "Europe/London",
+		ProxyHTTPS: "192.168.2.1",
+	}, nil
 }
 
 func (xfer *mockTransfer) Import(cfg transfer.Config) error {
-	panic("implement me")
+	if xfer.withErr {
+		return fmt.Errorf("MOCK transfer error")
+	}
+	return nil
 }
