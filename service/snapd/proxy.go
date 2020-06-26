@@ -15,29 +15,31 @@
  *
  */
 
-package web
+package snapd
 
-import (
-	"github.com/CanonicalLtd/device-config/config"
-	"net/http"
-	"testing"
-)
-
-func TestWeb_AppConfig(t *testing.T) {
-	tests := []struct {
-		name       string
-		wantStatus int
-	}{
-		{"valid", http.StatusOK},
+// SetProxy sets the proxy configuration
+func (a *ClientAdapter) SetProxy(http, https, ftp string) error {
+	// Set up the proxy settings
+	settings := map[string]interface{}{}
+	if len(http) > 0 {
+		settings["http"] = http
+	} else {
+		settings["http"] = nil
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{}, &mockSystem{}, &mockTransfer{})
-
-			w := sendRequestWithAuth("GET", "/v1/config", nil, srv)
-			if w.Code != tt.wantStatus {
-				t.Errorf("AppServices() expected HTTP status '%d', got: %v", tt.wantStatus, w.Code)
-			}
-		})
+	if len(https) > 0 {
+		settings["https"] = https
+	} else {
+		settings["https"] = nil
 	}
+	if len(ftp) > 0 {
+		settings["ftp"] = ftp
+	} else {
+		settings["ftp"] = nil
+	}
+
+	cfg := map[string]interface{}{"proxy": settings}
+
+	// Save the proxy settings
+	_, err := a.SetConf("system", cfg)
+	return err
 }

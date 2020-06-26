@@ -40,7 +40,7 @@ func TestWeb_SystemResources(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{}, &mockSystem{tt.cpuErr, tt.memErr, tt.diskErr, false})
+			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{}, &mockSystem{tt.cpuErr, tt.memErr, tt.diskErr, false}, &mockTransfer{})
 
 			w := sendRequestWithAuth("GET", "/v1/system", nil, srv)
 			if w.Code != tt.wantStatus {
@@ -70,7 +70,7 @@ func TestWeb_FactoryReset(t *testing.T) {
 			// Mock the retrieval of network interfaces
 			network.Interfaces = mockInterfacesValid
 
-			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{}, &mockSystem{resetErr: tt.resetErr})
+			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{}, &mockSystem{resetErr: tt.resetErr}, &mockTransfer{})
 
 			w := sendRequest("POST", "/v1/factory-reset", bytes.NewReader(tt.data), srv)
 			if w.Code != tt.wantStatus {

@@ -28,7 +28,7 @@ import Proxy from "./components/PageProxy";
 import Time from "./components/PageTime";
 import Snaps from "./components/PageSnaps";
 import Services from "./components/PageServices";
-import FactoryReset from "./components/PageFactoryReset";
+import Settings from "./components/PageSettings";
 
 class App extends Component {
   constructor(props) {
@@ -94,7 +94,7 @@ class App extends Component {
             {r.section==='time'? this.renderTime(r.sectionId, r.subsection) : ''}
             {r.section==='services'? this.renderServices(r.sectionId, r.subsection) : ''}
             {r.section==='snaps'? this.renderSnaps(r.sectionId, r.subsection) : ''}
-            {r.section==='factory-reset'? <FactoryReset /> : ''}
+            {r.section==='settings'? <Settings config={this.props.config} /> : ''}
           </div>
 
           <Footer />

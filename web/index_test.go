@@ -37,7 +37,7 @@ func TestWeb_Index(t *testing.T) {
 			cfg := config.DefaultArgs()
 			cfg.DocRoot = "../static"
 			cfg.IndexTemplate = tt.template
-			srv := NewWebService(cfg, &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{}, &mockSystem{})
+			srv := NewWebService(cfg, &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{}, &mockSystem{}, &mockTransfer{})
 
 			w := sendRequest("GET", "/", nil, srv)
 			if w.Code != tt.wantStatus {
@@ -65,7 +65,7 @@ func TestWeb_NoAuth(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{}, &mockSystem{})
+			srv := NewWebService(config.DefaultArgs(), &mockAuth{}, &mockNetplan{}, &mockSnapd{}, &mockTime{}, &mockSystem{}, &mockTransfer{})
 
 			w := sendRequest("GET", tt.url, nil, srv)
 			if w.Code != tt.wantStatus {

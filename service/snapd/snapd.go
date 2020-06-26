@@ -29,6 +29,8 @@ type Client interface {
 	Conf(name string) (map[string]interface{}, error)
 	List(names []string, opts *client.ListOptions) ([]Snap, error)
 	SetConf(name string, patch map[string]interface{}) (string, error)
+
+	SetProxy(http, https, ftp string) error
 }
 
 // ClientAdapter adapts our expectations to the snapd client API.

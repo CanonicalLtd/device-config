@@ -51,28 +51,7 @@ func (srv Web) ProxyUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Set up the proxy settings
-	settings := map[string]interface{}{}
-	if len(req.HTTP) > 0 {
-		settings["http"] = req.HTTP
-	} else {
-		settings["http"] = nil
-	}
-	if len(req.HTTPS) > 0 {
-		settings["https"] = req.HTTPS
-	} else {
-		settings["https"] = nil
-	}
-	if len(req.FTP) > 0 {
-		settings["ftp"] = req.FTP
-	} else {
-		settings["ftp"] = nil
-	}
-
-	cfg := map[string]interface{}{"proxy": settings}
-
-	// Save the proxy settings
-	_, err := srv.Snapd.SetConf("system", cfg)
-	if err != nil {
+	if err := srv.Snapd.SetProxy(req.HTTP, req.HTTPS, req.FTP); err != nil {
 		formatStandardResponse("proxy-update", err.Error(), w)
 		return
 	}

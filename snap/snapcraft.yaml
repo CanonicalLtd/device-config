@@ -1,4 +1,4 @@
-name: <name>-device-config
+name: device-config
 version: "0.1"
 summary: Ubuntu Device Configuration
 description: |
@@ -12,10 +12,10 @@ plugs:
     interface: content
     target: $SNAP/static
 # this privileged interface for factory reset
-#  boot-config:
-#    interface: system-files
-#    write:
-#      - /var/lib/snapd/hostfs/boot/grub/grubenv
+  boot-config:
+    interface: system-files
+    write:
+      - /var/lib/snapd/hostfs/boot/grub/grubenv
 
 
 apps:
@@ -30,9 +30,9 @@ apps:
       - timeserver-control
       - timezone-control
       - system-observe
-#      - snapd-control          # this privileged interface for proxy setting
-#      - boot-config            # this privileged interface for factory reset
-#      - shutdown               # this privileged interface for factory reset
+      - snapd-control          # this privileged interface for proxy setting
+      - boot-config            # this privileged interface for factory reset
+      - shutdown               # this privileged interface for factory reset
 
 parts:
   application:
@@ -55,8 +55,8 @@ parts:
       "*": /bin/
 
   # this is need for factory reset
-#  grub:
-#    plugin: nil
-#    stage-packages:
-#      - to amd64:
-#          - grub-common
+  grub:
+    plugin: nil
+    stage-packages:
+      - to amd64:
+          - grub-common
