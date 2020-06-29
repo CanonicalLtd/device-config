@@ -19,14 +19,14 @@ import React, {Component} from 'react';
 
 class Footer extends Component {
     renderBullets() {
-        if ((!this.props.config.custom.bullet) || (this.props.config.custom.bullet.length===0)) {
+        if ((!this.props.config.custom.bullets) || (this.props.config.custom.bullets.length===0)) {
             return
         }
 
         let index = 0
         return (
             <ul className="p-footer__links">
-                {this.props.config.custom.bullet.map(b => {
+                {this.props.config.custom.bullets.map(b => {
                     index++
                     return (
                         <li key={index} className="p-footer__item">

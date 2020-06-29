@@ -37,7 +37,9 @@ func (srv Web) AppConfig(w http.ResponseWriter, r *http.Request) {
 	// Get the current settings
 	cfg := AppConfig{
 		SnapControl: srv.Settings.SnapControl, FactoryReset: srv.Settings.FactoryReset,
-		HideInterfaces: srv.Settings.HideInterfaces, SnapVersion: os.Getenv("SNAP_VERSION")}
+		HideInterfaces: srv.Settings.HideInterfaces, SnapVersion: os.Getenv("SNAP_VERSION"),
+		Custom: srv.Settings.Custom,
+	}
 
 	// Return the response - snapd returns in AppConfig format
 	formatAppConfigResponse(cfg, w)

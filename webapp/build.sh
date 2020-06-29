@@ -10,6 +10,7 @@ cp build/* ../static/
 cp -r build/static/css ../static/
 cp -r build/static/js ../static/
 cp -r build/static/images ../static/
+cp -r build/static/custom ../static/
 
 # cleanup
 rm -rf ./build

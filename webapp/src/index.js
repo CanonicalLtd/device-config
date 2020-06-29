@@ -26,7 +26,7 @@ getAppConfig( (cfg) => {
     if (!cfg.custom) {
         cfg.custom = {
             copyright: T('copyright'), title: T('title'), subtitle: T('subtitle'),
-            bullet: [
+            bullets: [
                 {text: T('legal'), url: 'https://ubuntu.com/legal'},
                 {text: T('privacy'), url: 'https://ubuntu.com/legal/data-privacy'},
                 {text: T('report-a-bug'), url: 'https://github.com/CanonicalLtd/device-config/issues/new'},

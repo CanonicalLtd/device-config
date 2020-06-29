@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Restart the service when UI customisations are disconnected
+snapctl restart "${SNAP_NAME}".run
