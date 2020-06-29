@@ -50,6 +50,7 @@ type Settings struct {
 	FactoryReset           bool
 	SnapControl            bool
 	UseNetworkManager      bool
+	Custom                 Custom
 }
 
 // DefaultArgs checks the environment variables
@@ -76,14 +77,19 @@ func ReadParameters() *Settings {
 	dat, err := ioutil.ReadFile(p)
 	if err != nil {
 		log.Printf("Error reading config parameters: %v", err)
+		config.Custom = readCustomSettings()
 		return config
 	}
 
 	err = json.Unmarshal(dat, config)
 	if err != nil {
 		log.Printf("Error parsing config parameters: %v", err)
+		config.Custom = readCustomSettings()
 		return config
 	}
+
+	// Add the custom settings
+	config.Custom = readCustomSettings()
 
 	return config
 }

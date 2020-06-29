@@ -19,9 +19,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
-import {getAppConfig} from "./components/Utils";
+import {T, getAppConfig} from "./components/Utils";
 
 
 getAppConfig( (cfg) => {
+    if (!cfg.custom) {
+        cfg.custom = {
+            copyright: T('copyright'), title: T('title'), subtitle: T('subtitle'),
+            bullet: [
+                {text: T('legal'), url: 'https://ubuntu.com/legal'},
+                {text: T('privacy'), url: 'https://ubuntu.com/legal/data-privacy'},
+                {text: T('report-a-bug'), url: 'https://github.com/CanonicalLtd/device-config/issues/new'},
+            ]
+        }
+    }
     ReactDOM.render(<App config={cfg} />, document.getElementById('root'));
 })

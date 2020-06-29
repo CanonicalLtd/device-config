@@ -16,26 +16,37 @@
  */
 
 import React, {Component} from 'react';
-import {T} from './Utils'
 
 class Footer extends Component {
+    renderBullets() {
+        if ((!this.props.config.custom.bullet) || (this.props.config.custom.bullet.length===0)) {
+            return
+        }
+
+        let index = 0
+        return (
+            <ul className="p-footer__links">
+                {this.props.config.custom.bullet.map(b => {
+                    index++
+                    return (
+                        <li key={index} className="p-footer__item">
+                            <a className="p-footer__link" href={b.url}>{b.text}</a>
+                        </li>
+                    )
+                })}
+            </ul>
+        )
+    }
+
     render() {
         return (
             <div id="footer">
                 <div className="row footer">
-                    <p>{T('copyright')}</p>
+                    <p>{this.props.config.custom.copyright}</p>
                     <nav className="p-footer__nav" role="navigation">
-                        <ul className="p-footer__links">
-                            <li className="p-footer__item">
-                                <a className="p-footer__link" href="https://ubuntu.com/legal">{T('legal')}</a>
-                            </li>
-                            <li className="p-footer__item">
-                                <a className="p-footer__link" href="https://ubuntu.com/legal/data-privacy">{T('privacy')}</a>
-                            </li>
-                            <li className="p-footer__item">
-                                <a className="p-footer__link" href="https://github.com/CanonicalLtd/device-config/issues/new">{T('report-a-bug')}</a>
-                            </li>
-                        </ul>
+                        {
+                            this.renderBullets()
+                        }
                     </nav>
                 </div>
             </div>

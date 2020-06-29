@@ -17,7 +17,6 @@
 
 import React, { Component } from 'react';
 import HeaderSlim from "./HeaderSlim";
-import {T} from './Utils'
 
 
 class Header extends Component {
@@ -28,8 +27,8 @@ class Header extends Component {
                 <section className="p-strip--image is-dark header">
                     <div className="row">
                         <div className="col-5 title">
-                            <h1>{T('title')}</h1>
-                            <p>{T('subtitle')}</p>
+                            <h1>{this.props.config.custom.title}</h1>
+                            <p>{this.props.config.custom.subtitle}</p>
                         </div>
                     </div>
                 </section>

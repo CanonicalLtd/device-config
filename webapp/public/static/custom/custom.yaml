@@ -1,0 +1,14 @@
+title: "Ubuntu Core Configuration"
+subtitle: "Configuration service for Ubuntu Core devices."
+
+copyright: "© 2020 Canonical Ltd. Ubuntu and Canonical are registered trademarks of Canonical Ltd."
+
+- bullet:
+    text: "Legal information"
+    url: "https://ubuntu.com/legal"
+- bullet:
+    text: "Privacy"
+    url: "https://ubuntu.com/legal/data-privacy"
+- bullet:
+    text: "Report a bug on this site"
+    url: "https://github.com/CanonicalLtd/device-config/issues/new"

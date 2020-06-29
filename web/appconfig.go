@@ -18,16 +18,18 @@
 package web
 
 import (
+	"github.com/CanonicalLtd/device-config/config"
 	"net/http"
 	"os"
 )
 
 // AppConfig holds the config for application
 type AppConfig struct {
-	SnapVersion    string   `json:"snapVersion"`
-	FactoryReset   bool     `json:"factoryReset"`
-	SnapControl    bool     `json:"snapControl"`
-	HideInterfaces []string `json:"hideInterfaces"`
+	SnapVersion    string        `json:"snapVersion"`
+	FactoryReset   bool          `json:"factoryReset"`
+	SnapControl    bool          `json:"snapControl"`
+	HideInterfaces []string      `json:"hideInterfaces"`
+	Custom         config.Custom `json:"custom"`
 }
 
 // AppConfig is the API to get the application config
