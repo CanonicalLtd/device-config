@@ -76,7 +76,7 @@ class HeaderSlim extends Component {
                     <div className="p-navigation__logo">
                         <div className="u-vertically-center">
                             <a href="/" className="p-navigation__link">
-                                <img src="/static/images/logo.png" alt="ubuntu" />
+                                <img src="/static/custom/logo.png" alt="ubuntu" />
                             </a>
                         </div>
                         <div className="system">

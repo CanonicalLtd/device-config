@@ -23,12 +23,13 @@ import (
 )
 
 type indexData struct {
+	Title  string
 	Common commonData
 }
 
 // Index is the front page of the web application
 func (srv Web) Index(w http.ResponseWriter, r *http.Request) {
-	data := indexData{commonData{Username: getUsername(r)}}
+	data := indexData{Title: srv.Settings.Custom.Title, Common: commonData{Username: getUsername(r)}}
 
 	t, err := srv.templates(srv.Settings.IndexTemplate)
 	if err != nil {

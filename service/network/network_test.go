@@ -83,7 +83,7 @@ func Test_virtualInterfaces(t *testing.T) {
 		sysdev string
 		want   []string
 	}{
-		{"valid", "../../config", []string{"config.go", "config_test.go"}},
+		{"valid", "../../config", []string{"config.go", "config_test.go", "custom.go"}},
 		{"invalid-path", "does-not-exist", []string{}},
 	}
 	for _, tt := range tests {

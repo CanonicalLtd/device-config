@@ -18,16 +18,18 @@
 package web
 
 import (
+	"github.com/CanonicalLtd/device-config/config"
 	"net/http"
 	"os"
 )
 
 // AppConfig holds the config for application
 type AppConfig struct {
-	SnapVersion    string   `json:"snapVersion"`
-	FactoryReset   bool     `json:"factoryReset"`
-	SnapControl    bool     `json:"snapControl"`
-	HideInterfaces []string `json:"hideInterfaces"`
+	SnapVersion    string        `json:"snapVersion"`
+	FactoryReset   bool          `json:"factoryReset"`
+	SnapControl    bool          `json:"snapControl"`
+	HideInterfaces []string      `json:"hideInterfaces"`
+	Custom         config.Custom `json:"custom"`
 }
 
 // AppConfig is the API to get the application config
@@ -35,7 +37,9 @@ func (srv Web) AppConfig(w http.ResponseWriter, r *http.Request) {
 	// Get the current settings
 	cfg := AppConfig{
 		SnapControl: srv.Settings.SnapControl, FactoryReset: srv.Settings.FactoryReset,
-		HideInterfaces: srv.Settings.HideInterfaces, SnapVersion: os.Getenv("SNAP_VERSION")}
+		HideInterfaces: srv.Settings.HideInterfaces, SnapVersion: os.Getenv("SNAP_VERSION"),
+		Custom: srv.Settings.Custom,
+	}
 
 	// Return the response - snapd returns in AppConfig format
 	formatAppConfigResponse(cfg, w)

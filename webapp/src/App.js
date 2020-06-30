@@ -97,7 +97,7 @@ class App extends Component {
             {r.section==='settings'? <Settings config={this.props.config} /> : ''}
           </div>
 
-          <Footer />
+          <Footer config={this.props.config} />
         </div>
     );
   }
