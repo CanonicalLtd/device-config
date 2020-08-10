@@ -20,6 +20,7 @@ package snapd
 import (
 	"encoding/json"
 	"github.com/snapcore/snapd/client"
+	"regexp"
 	"sync"
 )
 
@@ -75,8 +76,26 @@ func (a *ClientAdapter) List(names []string, opts *client.ListOptions) ([]Snap, 
 		return nil, err
 	}
 
-	ss := []Snap{}
+	// Get the system settings
+	var systemConf string
+	sysConfig, err := a.Conf("system")
+	if err == nil {
+		resp, err := serializeResponse(sysConfig)
+		if err == nil {
+			systemConf = string(resp)
+		}
+	}
+	var coreSnap = regexp.MustCompile(`^core[0-9]*$`)
+
+	ss := []Snap{
+		{Name: "system", Config: systemConf},
+	}
 	for _, s := range snaps {
+		if coreSnap.MatchString(s.Name) {
+			// Ignore the core* snap as they are covered by the virtual `system` snap
+			continue
+		}
+
 		// Get the config for the snap (ignore errors)
 		var conf string
 		c, err := a.Conf(s.Name)
