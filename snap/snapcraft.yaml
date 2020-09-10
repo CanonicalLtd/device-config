@@ -71,7 +71,7 @@ parts:
     source: snap/local
     plugin: dump
     organize:
-      "*": /bin/
+      "*": bin/
 
   # this is need for factory reset
 #  grub:
